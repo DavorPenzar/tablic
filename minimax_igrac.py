@@ -130,6 +130,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
         funkciji MinimaxIgrac1.heuristika).  Ako su karte u ruci s kojima se trenutno
         igra podijeljene u zadnjem dijeljenju u igri, zadnje mora biti vrijednosti True
         (radi tocnog racunanja heuristicke vrijednosti listova stabla stanja igre).
+
         Objekti sigurnoNema i vjerojatnoNema slicni su kao u funkciji
         MinimaxIgrac1.vjerojatnaRuka, samo sto je u ovom slucaju vjerojatnoNema
         ugnjezdena lista duljine n koja na indeksu k zadaje listu karata koje k-ti
@@ -315,8 +316,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
         Inicijaliziraj objekt klase MinimaxIgrac1.
 
         Argumenti maxDubina, maxT zadaju parametre dubina, T u funkciji MinimaxIgrac1
-        pri racunanju sljedeceg poteza.  Nakon zadnjeg dijeljenja za dubinu se uzima
-        vrijednost Tablic.inicijalniBrojKarata_ruka(), neovisno o argumentu maxDubina.
+        pri racunanju sljedeceg poteza.
 
         """
 
@@ -339,44 +339,10 @@ class MinimaxIgrac1 (Tablic.Igrac):
         self.__sigurnoNema = None
         self.__vjerojatnoNema = None
 
-    def __copy__ (self):
-        igrac = MinimaxIgrac1(self.dohvatiIndeks(), self.dohvatiIme(), self.__maxDubina, self.__maxT)
-
-        igrac.__k = self.__k
-
-        igrac.__n = self.__n
-
-        igrac.__bodovi = self.__bodovi
-        igrac.__skupljeno = self.__skupljeno
-
-        igrac.__zadnji = self.__zadnji
-
-        igrac.__sigurnoNema = self.__sigurnoNema
-        igrac.__vjerojatnoNema = self.__vjerojatnoNema
-
-        return igrac
-
-    def __deepcopy__ (self, memodict = dict()):
-        igrac = MinimaxIgrac1(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict), copy.deepcopy(self.__maxDubina, memodict), copy.deepcopy(self.__maxT, memodict))
-
-        igrac.__k = copy.deepcopy(self.__k, memodict)
-
-        igrac.__n = copy.deepcopy(self.__n, memodict)
-
-        igrac.__bodovi = copy.deepcopy(self.__bodovi, memodict)
-        igrac.__skupljeno = copy.deepcopy(self.__skupljeno, memodict)
-
-        igrac.__zadnji = copy.deepcopy(self.__zadnji, memodict)
-
-        igrac.__sigurnoNema = copy.deepcopy(self.__sigurnoNema, memodict)
-        igrac.__vjerojatnoNema = copy.deepcopy(self.__vjerojatnoNema, memodict)
-
-        return igrac
-
     def hocuRazlog (self):
         return False
 
-    def saznajBrojIgraca (self, n : int, imena : list):
+    def saznajBrojIgraca (self, n : int):
         """
         Pripremi se za igranje nove igre od n igraca.
 
@@ -408,7 +374,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
         self.__sigurnoNema |= (ruka | stol)
         self.__vjerojatnoNema = [[0 for i in range(PohlepniLog1.dohvatiBrojIndeksa())] for j in range(self.__n)]
 
-    def vidiPotez (self, i : int, ruka : set, stol : set, karta : Karta, skupljeno : set):
+    def vidiPotez (self, i : int, ime : str, ruka : set, stol : set, karta : Karta, skupljeno : set):
         """
         Azuriraj znanja i pretpostavke o trenutnoj igri s obzirom na odigrani potez.
 
@@ -426,6 +392,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
             # Nakon sto je odigrao ovu kartu, nije poznato ima li i-ti igrac jos takvih karata.
             self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(karta)] = 0
 
+            tudaRuka = MinimaxIgrac1.vjerojatnaRuka(self.__sigurnoNema, self.__vjerojatnoNema[i])
             # Ako igrac nije nista kupio sa stola, pregledavanje podigranih karata (znakova).
             podigrani = set()
             if not skupljeno:
@@ -436,16 +403,25 @@ class MinimaxIgrac1 (Tablic.Igrac):
                             postoji = True
 
                             break
-                    if postoji:
+                    if postoji and not any(u.znak == x for u in tudaRuka):
                         podigrani |= {x}
 
+            #if not skupljeno and not podigrani:
+             #   for x, Y in Tablic.moguciPotezi(stol):
+              #  	if len(Y) == 1:
+               #         if Y[0] is Karta.Znak.BR2:
+                #            self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] += 1
+                 #       elif Y[0] is Karta.Znak.BR10:
+                  #  		self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] += 1
+                   #     self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Y[0]))] += 1
+
             # Za svaku od podigranih karata umanjivanje vjerojatnosti da i-ti igrac nema tu kartu.
-            for x in podigrani:
-                if x is Karta.Znak.BR2:
-                    self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] -= 1
-                elif x is Karta.Znak.BR10:
-                    self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] -= 1
-                self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(x))] -= 1
+            #for x in podigrani:
+             #   if x is Karta.Znak.BR2:
+              #      self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] -= 1
+               # elif x is Karta.Znak.BR10:
+                #    self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] -= 1
+                #self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(Karta(x))] -= 1
 
             # Racunanje vrijednosti odigranog poteza i karata koje i-ti igrac vjerojatno ima.
             vrijednost = (Tablic.vrijednostKarata(skupljeno | {karta}) if skupljeno else 0) + int(skupljeno == stol) * Tablic.vrijednostTable()
@@ -453,30 +429,32 @@ class MinimaxIgrac1 (Tablic.Igrac):
 
             # Za svaki potez vrijedniji od odigranog, a koji ne zahtijeva igranje neke podigrane karte, uvecanje vrijednosti da igrac nema kartu kojom se taj potez igra.
             for potez in PohlepniIgrac1.izborPoteza(tudaRuka, stol):
-                if potez['vrijednost'] + potez['tabla'] <= vrijednost:
+                if potez['vrijednost'] + potez['tabla'] < vrijednost or (potez['vrijednost'] + potez['tabla'] == vrijednost and vrijednost > 0):
                     break
-                if PohlepniLog1.prevediKartu(potez['karta']) != PohlepniLog1.prevediKartu(karta) and not potez['karta'].znak in podigrani:
+                elif (potez['vrijednost'] + potez['tabla'] == 0 and not podigrani and not skupljeno) or not potez['karta'].znak in podigrani:
                     self.__vjerojatnoNema[i][PohlepniLog1.prevediKartu(potez['karta'])] += 1
+
+        
 
         # Azuriranje podataka o kartama koje igraci sigurno nemaju.
         self.__sigurnoNema |= {karta}
 
-#       # Ako je zadnje dijeljenje nije bilo posljednje u igri i ako je ostala samo jedna karta znaka odigrane karte u igri, pretpostavljanje da svi igraci imaju tu kartu.
-#       if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 3:
-#           if karta.znak is Karta.Znak.BR2:
-#               k = PohlepniLog1.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))
-#               for j in range(self.__n):
-#                   if j != self.dohvatiIndeks():
-#                       self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
-#           elif karta.znak is Karta.Znak.BR10:
-#               k = PohlepniLog1.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))
-#               for j in range(self.__n):
-#                   if j != self.dohvatiIndeks():
-#                       self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
-#           k = PohlepniLog1.prevediKartu(Karta(karta.znak))
-#           for j in range(self.__n):
-#               if j != self.dohvatiIndeks():
-#                   self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
+        # Ako je zadnje dijeljenje nije bilo posljednje u igri i ako je ostala samo jedna karta znaka odigrane karte u igri, pretpostavljanje da svi igraci imaju tu kartu.
+        if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 3:
+            if karta.znak is Karta.Znak.BR2:
+                k = PohlepniLog1.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))
+                for j in range(self.__n):
+                    if j != self.dohvatiIndeks():
+                        self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
+            elif karta.znak is Karta.Znak.BR10:
+                k = PohlepniLog1.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))
+                for j in range(self.__n):
+                    if j != self.dohvatiIndeks():
+                        self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
+            k = PohlepniLog1.prevediKartu(Karta(karta.znak))
+            for j in range(self.__n):
+                if j != self.dohvatiIndeks():
+                    self.__vjerojatnoNema[j][k] = -Tablic.inicijalniBrojKarata_ruka()
 
     def odigraj (self, ruka : set, stol : set, ponovi = False) -> tuple:
         """
@@ -492,7 +470,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
                                       self.__bodovi, self.__skupljeno,
                                       self.__n, self.dohvatiIndeks(), self.dohvatiIndeks(),
                                       not self.__k, self.__zadnji,
-                                      self.__maxDubina if self.__k else Tablic.inicijalniBrojKarata_ruka(), self.__maxT)
+                                      6 if not self.__k else self.__maxDubina, self.__maxT)
 
 #       t1 = time.time()
 
@@ -512,60 +490,31 @@ class MinimaxIgrac1 (Tablic.Igrac):
         # Odigraj najpovoljniji potez.
         return (grana[0]['karta'], grana[0]['skupljeno'])
 
-    def dohvatiMaxDubinu (self) -> int:
-        """
-        Dohvati koristenu dubinu minimax algoritma.
-
-        """
-
-        return copy.deepcopy(self.__maxDubina)
-
-    def dohvatiMaxT (self) -> float:
-        """
-        Dohvati vremensko ogranicenje minimax algoritma.
-
-        """
-
-        return copy.deepcopy(self.__maxT)
-
-    def dohvatiBodove (self, i = None) -> list:
+    def bodovi (self) -> list:
         """
         Dohvati trenutno bodovno stanje.
 
-        Ako i nije None, povratna vrijednost su bodovi i-tog igraca.  Ako je i None,
-        onda je povratna vrijednost lista kojoj su na k-tom mjestu bodovi k-tog igraca.
-
         """
 
-        if not i is None:
-            return copy.deepcopy(self.__bodovi[i])
+        return self.__bodovi
 
-        return copy.deepcopy(self.__bodovi)
-
-    def dohvatiSkupljeno (self, i = None) -> list:
+    def skupljeno (self) -> list:
         """
         Dohvati trenutno stanje broja skupljenih karata.
 
-        Ako i nije None, povratna vrijednost je broj skupljenih karata i-tog igraca.
-        Ako je i None, onda je povratna vrijednost lista kojoj je na k-tom mjestu broj
-        skupljenih karata k-tog igraca.
-
         """
-
-        if not i is None:
-            return copy.deepcopy(self.__skupljeno[i])
 
         return self.__skupljeno
 
-    def dohvatiZadnjeg (self):
+    def zadnji (self):
         """
         Dohvati informaciju o tome tko je zadnji kupio.
 
         """
 
-        return copy.deepcopy(self.__zadnji)
+        return self.__zadnji
 
-    def dohvatiSigurnoNema (self) -> set:
+    def sigurnoNema () -> set:
         """
         Dohvati trenutna saznanja o kartama koje drugi igraci sigurno nemaju.
 
@@ -573,7 +522,7 @@ class MinimaxIgrac1 (Tablic.Igrac):
 
         return copy.deepcopy(self.__sigurnoNema)
 
-    def dohvatiVjerojatnoNema (self, i = None) -> list:
+    def vjerojatnoNema (i = None) -> list:
         """
         Dohvati trenutna saznanja o kartama koje drugi igraci vjerojatno nemaju.
 

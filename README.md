@@ -8,7 +8,7 @@ Implementacija igre tablić i "robota igrača" za igru tablić
 
 ### Tip igre
 
-Igra tablić društvena je kartaška igra koja se igra sa standardnim francuskim špilom karata bez *jokera*.
+Igra tablić društvena je kartaška igra koja se igra s jednim standardnim francuskim špilom karata bez *jokera* (4 boje i 13 znakova, to jest 52 karte).
 
 ### Broj igrača
 

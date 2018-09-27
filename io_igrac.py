@@ -6,11 +6,15 @@ Implementacija klase IOIgrac za stdin/stdout igraca igre tablic.
 import copy
 import math
 import random
+import six
 
 from skupovi import partitivniSkup, unijeDisjunktnih
 from karta import Karta
 from engine import Tablic
-from pohlepni_igrac import PohlepniIgrac1
+from pohlepni_igrac import PohlepniIgrac
+
+if six.PY3:
+    unicode = str
 
 class IOIgrac (Tablic.Igrac):
     """
@@ -23,15 +27,16 @@ class IOIgrac (Tablic.Igrac):
         """
         Dohvati "lijepi string" objekta x.
 
-        Ako je x objekt klase Karta.Boja, vraca se string formata '??'' ako je boja
-        nedefinirana (Karta.Boja.NA), a inace naziv boje malim slovima.  Ako je x
-        objekt klase Karta.Znak, vraca se string '??' ako je znak nedefiniran
-        (Karta.Znak.NA), a inace 'A' za A, broj za kartu broja i 'J', 'Q', 'K' za J, Q,
-        K respektivno.  Ako je x objekt klase Karta, vraca se string formata
-        '[boja] [znak]', gdje je '[boja]' "lijepi string" boje karte, a '[znak]' lijepi
-        string znaka karte.  Ako se x moze pretvoriti u objekt klase Karta, vraca se
-        "lijepi string" karte u koju se pretvara.  Ako je x kolekcija, vraca se string
-        formata '[' + "lijepi stringovi" elemenata razmaknuti stringom ', ' + ']'.
+        Ako je x objekt klase Karta.Boja, vraca se string formata '??'' ako je
+        boja nedefinirana (Karta.Boja.NA), a inace naziv boje malim slovima.
+        Ako je x objekt klase Karta.Znak, vraca se string '??' ako je znak
+        nedefiniran (Karta.Znak.NA), a inace 'A' za A, broj za kartu broja i
+        'J', 'Q', 'K' za J, Q, K respektivno.  Ako je x objekt klase Karta,
+        vraca se string formata '[boja] [znak]', gdje je '[boja]' "lijepi
+        string" boje karte, a '[znak]' lijepi string znaka karte.  Ako se x
+        moze pretvoriti u objekt klase Karta, vraca se "lijepi string" karte u
+        koju se pretvara.  Ako je x kolekcija, vraca se string formata
+        '[' + "lijepi stringovi" elemenata razmaknuti stringom ', ' + ']'.
         Inace se vraca str(x).
 
         """
@@ -46,23 +51,22 @@ class IOIgrac (Tablic.Igrac):
             else:
                 return x.name.upper()
         elif isinstance(x, Karta):
-            return '{0:s} {1:s}'.format(IOIgrac.lijepiString(x.boja), IOIgrac.lijepiString(x.znak))
+            return '{0:s} {1:s}'.format(IOIgrac.lijepiString(x.boja),
+                                        IOIgrac.lijepiString(x.znak))
 
 #       try:
 #           return IOIgrac.lijepiString(Karta(x))
 #       except (TypeError, ValueError):
 #           pass
 
-        if isinstance(x, str):
-            return x
-        elif isinstance(x, dict):
-            return '[' + str.join(', ', [IOIgrac.lijepiString(y) + ': ' + IOIgrac.lijepiString(z) for y, z in x.items()]) + ']'
-        elif hasattr(x, '__iter__'):
+        if isinstance(x, dict):
+            return '{' + str.join(', ', [IOIgrac.lijepiString(y) + ' : ' + IOIgrac.lijepiString(z) for y, z in six.iteritems(x)]) + '}'
+        elif hasattr(x, '__iter__') and not isinstance(x, (str, unicode)):
             return '[' + str.join(', ', [IOIgrac.lijepiString(y) for y in x]) + ']'
 
         return str(x)
 
-    def __init__ (self, i : int, ime = None):
+    def __init__ (self, i, ime = None):
         """
         Inicijaliziraj objekt klase IOIgrac.
 
@@ -70,7 +74,7 @@ class IOIgrac (Tablic.Igrac):
 
         Tablic.Igrac.__init__(self, i, ime)
 
-        self.__k = 52
+        self.__k = None
 
         self.__n = None
         self.__imena = None
@@ -78,9 +82,9 @@ class IOIgrac (Tablic.Igrac):
     def __copy__ (self):
         igrac = IOIgrac(self.dohvatiIndeks(), self.dohvatiIme())
 
-        igrac.__k = self.__k
+        igrac.__k = self.__k # broj karata u spilu
 
-        igrac.__n = self.__n
+        igrac.__n = self.__n # broj igraca
         igrac.__imena = self.__imena
 
         return igrac
@@ -97,19 +101,19 @@ class IOIgrac (Tablic.Igrac):
 
     def hocuRazlog (self):
         """
-        Vrati True (stdin/stdout igrac vjerijatno zeli znati razlog ilegalnog poteza).
+        Vrati True (stdin/stdout igrac zeli znati razlog ilegalnog poteza).
 
         """
 
         return True
 
-    def saznajBrojIgraca (self, n : int, imena : list):
+    def saznajBrojIgraca (self, n, imena):
         """
         Ispisi na stdout koliko igraca je u partiji i ispisi njihova imena.
 
         """
 
-        self.__k -= Tablic.inicijalniBrojKarata_stol()
+        self.__k = 52 - Tablic.inicijalniBrojKarata_stol()
 
         self.__n = n
         self.__imena = imena
@@ -119,7 +123,7 @@ class IOIgrac (Tablic.Igrac):
             print("\t{0:d}.\t{1:s}{2:s}".format(i + 1, self.__imena[i], ' (*)' if i == self.dohvatiIndeks() else ''))
         print("\n")
 
-    def saznajNovoDijeljenje (self, ruka : set, stol : set):
+    def saznajNovoDijeljenje (self, ruka, stol):
         """
         Ispisi na stdout kako izgledaju stol i ruka nakon novog dijeljenja.
 
@@ -135,7 +139,7 @@ class IOIgrac (Tablic.Igrac):
         print('U ruci:')
         print("\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(ruka), reverse = True))))
 
-    def vidiPotez (self, i : int, ruka : set, stol : set, karta : Karta, skupljeno : set):
+    def vidiPotez (self, i, ruka, stol, karta, skupljeno):
         """
         Ispisi potez na stdout.
 
@@ -144,24 +148,24 @@ class IOIgrac (Tablic.Igrac):
         print('{0:s} igra:'.format(self.__imena[i]))
         print("\t{0:s} {1:s} {2:s}\n".format(IOIgrac.lijepiString(karta), ('<' if skupljeno else '>'), IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True))))
 
-    def odigraj (self, ruka : set, stol : set, ponovi = False) -> tuple:
+    def odigraj (self, ruka, stol, ponovi = False):
         """
         Ucitaj potez sa stdin.
 
-        Karte se mogu pisati implicitno, zadavajuci samo znak karte, ili eksplicitno.
-        Pri zadavanju skupa karata za skupiti moze se napisati 'AUTO'
-        (case-insensitive) pri cemu se uzima po pohlepnom algoritmu najpovoljniji potez
-        kojim se skupljaju, medu ostalim, sve vec zadane karte za skupiti.  Inace se
-        zavrsetak karata za skupiti zadaje praznim unosom.
+        Karte se mogu pisati implicitno, zadavajuci samo znak karte, ili
+        eksplicitno.  Pri zadavanju skupa karata za skupiti moze se napisati
+        'AUTO' (case-insensitive) pri cemu se uzima po pohlepnom algoritmu
+        najpovoljniji potez kojim se skupljaju, medu ostalim, sve vec zadane
+        karte za skupiti.  Inace se zavrsetak karata za skupiti zadaje praznim
+        unosom.
 
         """
 
-        # Ako treba, ispisi razlog ponavljanja poteza.  Inace javi da je igrac
-        # na redu.
+        # Ako treba, ispisi razlog ponavljanja poteza.  Inace javi da je igrac na redu.
         if isinstance(ponovi, tuple):
             ponovi, razlog = ponovi
         if ponovi:
-            greske = []
+            greske = list()
             for greska in razlog:
                 if isinstance(greska, Karta):
                     greske.append('Karta {0:s} nije u ruci.'.format(IOIgrac.lijepiString(greska)))
@@ -184,16 +188,19 @@ class IOIgrac (Tablic.Igrac):
 
         # Ucitaj kartu za odigrati.
         print('Karta:')
-        x = input("\t")
+        x = six.moves.input("\t")
         karta = Karta(x)
         # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka u ruci.
         if karta.boja is Karta.Boja.NA:
-            if karta.znak is Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or karta.znak is Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka):
-                # Ako je zadan znak 2/10 i u ruci postoji tref 2/karo 10 i neka druga karta znaka 2/10, provjeri zeli li igrac igrati tref 2/karo 10 ili neku drugu.
+            if (karta.znak is Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or
+                karta.znak is Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka)):
+                # Ako je zadan znak 2/10 i u ruci postoji tref 2/karo 10 i neka
+                # druga karta znaka 2/10, provjeri zeli li igrac igrati
+                # tref 2/karo 10 ili neku drugu.
                 odgovor = ''
                 if sum(int(x.znak == karta.znak) for x in ruka) > 1:
                     while True:
-                        odgovor = input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak is Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
+                        odgovor = six.moves.input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak is Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
                         if not odgovor or odgovor.upper() in {'D', 'N'}:
                             break
                 if not odgovor or odgovor.upper() == 'D':
@@ -201,7 +208,7 @@ class IOIgrac (Tablic.Igrac):
                     karta = (Karta(Karta.Boja.TREF, Karta.Znak.BR2) if karta.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10))
                 else:
                     # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
-                    kandidati = []
+                    kandidati = list()
                     for x in ruka:
                         if x.znak == karta.znak and not x in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)}:
                             kandidati.append(x)
@@ -211,7 +218,7 @@ class IOIgrac (Tablic.Igrac):
                         pass
             else:
                 # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
-                kandidati = []
+                kandidati = list()
                 for x in ruka:
                     if x.znak == karta.znak:
                         kandidati.append(x)
@@ -224,7 +231,7 @@ class IOIgrac (Tablic.Igrac):
         print('Za skupiti:')
         skupljeno = set()
         while True:
-            x = input("\t")
+            x = six.moves.input("\t")
 
             # Ako je zadan prazni string, ucitavanje se prekida.
             if not x:
@@ -232,24 +239,29 @@ class IOIgrac (Tablic.Igrac):
 
             # Ako je zadano 'AUTO', trazi se najpovoljniji potez.
             if x.upper() == 'AUTO':
-                potezi = PohlepniIgrac1.izborPoteza({karta}, stol)
+                potezi = PohlepniIgrac.izborPoteza({karta}, stol)
                 for potez in potezi:
                     if skupljeno.issubset(potez['skupljeno']):
                         skupljeno = potez['skupljeno']
 
                         break
 
-                print()
+                print('')
 
                 break
 
             # Inace se unos prevodi u kartu.
             x = Karta(x)
             if x.boja is Karta.Boja.NA:
-                # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka medu preostalim kartama na stolu.  Tref 2 i karo 10 imaju prednost pred ostalim kartama (ako je medu preostalim kartama npr. 2 karte znaka 10 od kojih je jedna karo 10, implicitno zadavanje '10' prevodi se u karo 10).
+                # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka
+                # medu preostalim kartama na stolu.  Tref 2 i karo 10 imaju
+                # prednost pred ostalim kartama (ako je medu preostalim kartama
+                # npr. 2 karte znaka 10 od kojih je jedna karo 10, implicitno
+                # zadavanje '10' prevodi se u karo 10).
                 pronadeno = False
-                if x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak for y in stol - skupljeno):
-                    skupljeno |= {Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)}
+                if (x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and
+                    (any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak) for y in stol - skupljeno)):
+                    skupljeno |= ({Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)})
                     pronadeno = True
                 else:
                     for y in sorted(list(stol - skupljeno), reverse = True):

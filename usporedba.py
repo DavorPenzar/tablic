@@ -120,7 +120,7 @@ t1 = time.time()
 
 # Konacni ispis rezultata.
 print("\nKonacno")
-print("\t{0:.3f} s".format(float(t1 - t0)))
+print("\t{0:.3f} s".format(float(t1 - t)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 if nerjeseno:

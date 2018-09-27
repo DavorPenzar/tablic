@@ -98,7 +98,7 @@ for i in range(N):
         akumulirano[j] += konacni_rezultat[j]
     pobjednik = deducirajPobjednika(konacni_rezultat)
     if isinstance(pobjednik, tuple):
-        nerjeseno.append((i + 1, tuple(p for p in pobjednik)))
+        nerjeseno.append((i + 1, tuple(p + 1 for p in pobjednik)))
     else:
         pobjede[pobjednik] += 1
 

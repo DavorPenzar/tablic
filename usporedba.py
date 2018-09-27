@@ -20,7 +20,7 @@ k = 1
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce biti na potezu u partijama.  Svaki igrac
 # reprezentiran je rjecnikom s kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
-igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : float('inf')}},
+igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 2, 'maxT' : float('inf')}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def konacniRezultat (rezultat):
@@ -62,11 +62,12 @@ def deducirajPobjednika (konacni_rezultat):
     return pobjednik[0]
 
 # U listi akumulirano spremljeni su akumulirani brojevi bodova igraca kroz
-# partije, a u listi pobjede brojevi partija u kojima su pobjedili.  Na zadnjem
-# mjestu liste pobjede zapisan je broj suprotan broju partija u kojima nije
-# postojao igrac sa strogo najvise bodova (partija koje su zavrsile nerjeseno).
+# partije, a u listi pobjede brojevi partija u kojima su pobjedili.  U listi
+# nerjeseno spremljeni su parovi indeksa partije i tuple-a igraca koji su u tim
+# partijama dijelili prvo mjesto.
 akumulirano = [0 for i in range(len(igraci))]
-pobjede = [0 for i in range(len(igraci))] + [0]
+pobjede = [0 for i in range(len(igraci))]
+nerjeseno = list()
 
 # Pocetak ukupnog mjerenja vremena.
 t = time.time()
@@ -96,7 +97,7 @@ for i in range(N):
         akumulirano[j] += konacni_rezultat[j]
     pobjednik = deducirajPobjednika(konacni_rezultat)
     if isinstance(pobjednik, tuple):
-        pobjede[-1] -= 1
+        nerjeseno.append(i, pobjednik)
     else:
         pobjede[pobjednik] += 1
 
@@ -108,6 +109,10 @@ for i in range(N):
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
         print("\t{0:s}".format(repr(pobjede)))
+        if nerjeseno:
+            print("\tNerjesene:")
+            for r in nerjeseno:
+                print("\t\t{0:s}".format(r))
 
 # Kraj ukupnog mjerenja vremena.
 t1 = time.time()
@@ -117,3 +122,7 @@ print("\nKonacno")
 print("\t{0:.3f} s".format(float(t1 - t0)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
+if nerjeseno:
+    print("\tNerjesene:")
+    for r in nerjeseno:
+        print("\t\t{0:s}".format(r))

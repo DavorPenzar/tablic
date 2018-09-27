@@ -196,53 +196,42 @@ class MinimaxIgrac (Tablic.Igrac):
             vrijednost = (-float('inf'), -float('inf'))
             zadnjiPotez = (Karta(), list())
 
-            # Iteriranje po mogucim potezima.
-            for potez in PohlepniIgrac.izborPoteza(ruka if j == i else MinimaxIgrac.vjerojatnaRuka(sigurnoNema, vjerojatnoNema[j]), stol):
-                # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
-                # provjera je li takav potez vec obraden (ako je, obrada se preskce).
-                ovajPotez = (Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(potez['karta']))),
-                             sorted([Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in potez['skupljeno']], reverse = True))
-                if ovajPotez == zadnjiPotez:
-                    continue
-                else:
-                    # Ako ovakav potez jos nije obraden, spremanje njegovog
-                    # prototipa u varijablu zadnjiPotez.
-                    zadnjiPotez = ovajPotez
+            # Grananje u ovisnosti o tome koji je igrac na redu.
+            if j == i:
+                # Max-igrac je na redu.
 
-                # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
-                # definirana.
-                if potez['karta'].znak is Karta.Znak.NA:
-                    for boja in sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True):
-                        if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
-                            continue
-                        elif potez['karta'].znak is Karta.Znak.BR10 and boja is Karta.Boja.KARO:
-                            continue
-                        if not Karta(boja, potez['karta'].znak) in sigurnoNema:
-                            potez['karta'].boja = boja
+                # Iteriranje po mogucim potezima.
+                for potez in PohlepniIgrac.izborPoteza(ruka, stol):
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
+                    # provjera je li takav potez vec obraden (ako je, obrada se preskce).
+                    ovajPotez = (Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(potez['karta']))),
+                                 sorted([Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in potez['skupljeno']], reverse = True))
+                    if ovajPotez == zadnjiPotez:
+                        continue
+                    else:
+                        # Ako ovakav potez jos nije obraden, spremanje njegovog
+                        # prototipa u varijablu zadnjiPotez.
+                        zadnjiPotez = ovajPotez
 
-                            break
+                    # Kreiranje novih lista bodova i brojeva skupljenih karata.
+                    noviBodovi = copy.deepcopy(bodovi)
+                    novoSkupljeno = copy.deepcopy(skupljeno)
+                    noviBodovi[i] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
+                    if potez['skupljeno']:
+                        novoSkupljeno[i] += 1 + len(potez['skupljeno'])
 
-                # Kreiranje novih lista bodova i brojeva skupljenih karata.
-                noviBodovi = copy.deepcopy(bodovi)
-                novoSkupljeno = copy.deepcopy(skupljeno)
-                noviBodovi[j] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
-                if potez['skupljeno']:
-                    novoSkupljeno[j] += 1 + len(potez['skupljeno'])
+                    # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
+                    sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
+                                                        ruka - {potez['karta']}, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
+                                                        noviBodovi, novoSkupljeno,
+                                                        n, i, (i + 1) % n,
+                                                        zadnje, i if potez['skupljeno'] else zadnji,
+                                                        dubina if (i + 1) % n else (dubina - 1),
+                                                        alpha, beta)
 
-                # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
-                sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
-                                                    ruka - {potez['karta']} if j == i else ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
-                                                    noviBodovi, novoSkupljeno,
-                                                    n, i, (j + 1) % n,
-                                                    zadnje, j if potez['skupljeno'] else zadnji,
-                                                    dubina if (j + 1) % n else (dubina - 1),
-                                                    alpha, beta)
-
-                # Usporedba pronadenog najvjerojatnijeg slijeda nakon ovog
-                # poteza s dosad pronadenim najvjerojatnijim slijedom i
-                # adekvatno azuriranje varijabli.
-                if j == i:
-                    # Max-igrac je na redu.
+                    # Usporedba pronadenog najvjerojatnijeg slijeda nakon ovog
+                    # poteza s dosad pronadenim najvjerojatnijim slijedom i
+                    # adekvatno azuriranje varijabli.
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost > vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
@@ -258,8 +247,56 @@ class MinimaxIgrac (Tablic.Igrac):
                         break
                     if vrijednost > alpha:
                         alpha = vrijednost
-                else:
-                    # Jedan od min-igraca je na redu.
+                    if alpha >= beta:
+                        break
+            else:
+                # Jedan od min-igraca je na redu.
+
+                # Iteriranje po mogucim potezima.
+                for potez in PohlepniIgrac.izborPoteza(MinimaxIgrac.vjerojatnaRuka(sigurnoNema, vjerojatnoNema[j]), stol):
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
+                    # provjera je li takav potez vec obraden (ako je, obrada se preskce).
+                    ovajPotez = (Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(potez['karta']))),
+                                 sorted([Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in potez['skupljeno']], reverse = True))
+                    if ovajPotez == zadnjiPotez:
+                        continue
+                    else:
+                        # Ako ovakav potez jos nije obraden, spremanje njegovog
+                        # prototipa u varijablu zadnjiPotez.
+                        zadnjiPotez = ovajPotez
+
+                    # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
+                    # definirana.
+                    if potez['karta'].znak is Karta.Znak.NA:
+                        for boja in sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True):
+                            if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
+                                continue
+                            elif potez['karta'].znak is Karta.Znak.BR10 and boja is Karta.Boja.KARO:
+                                continue
+                            if not Karta(boja, potez['karta'].znak) in sigurnoNema:
+                                potez['karta'].boja = boja
+
+                                break
+
+                    # Kreiranje novih lista bodova i brojeva skupljenih karata.
+                    noviBodovi = copy.deepcopy(bodovi)
+                    novoSkupljeno = copy.deepcopy(skupljeno)
+                    noviBodovi[j] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
+                    if potez['skupljeno']:
+                        novoSkupljeno[j] += 1 + len(potez['skupljeno'])
+
+                    # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
+                    sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
+                                                        ruka - {potez['karta']} if j == i else ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
+                                                        noviBodovi, novoSkupljeno,
+                                                        n, i, (j + 1) % n,
+                                                        zadnje, j if potez['skupljeno'] else zadnji,
+                                                        dubina if (j + 1) % n else (dubina - 1),
+                                                        alpha, beta)
+
+                    # Usporedba pronadenog najvjerojatnijeg slijeda nakon ovog
+                    # poteza s dosad pronadenim najvjerojatnijim slijedom i
+                    # adekvatno azuriranje varijabli.
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost < vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
@@ -275,9 +312,8 @@ class MinimaxIgrac (Tablic.Igrac):
                         break
                     if vrijednost < beta:
                         beta = vrijednost
-
-                if alpha >= beta:
-                    break
+                    if alpha >= beta:
+                        break
 
             # Vracanje najvjerojatnijeg slijeda poteza i njegove
             # heuristicke vrijednosti.

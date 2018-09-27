@@ -14,7 +14,7 @@ Igra tablić društvena je kartaška igra koja se igra s jednim standardnim fran
 
 Broj igrača mora biti djelitelj broja 48 strogo veći od 1.
 
-**Napomena.** Igra se može smatrati kao igra skupina (na primjer, u 4 igrača kao jedan par protiv drugog para), ali u ovoj implementaciji igra je relaizirana samo kao igra samostalnih igrača.
+**Napomena.** Igra se može smatrati kao igra skupina (na primjer, u 4 igrača kao jedan par igrača protiv drugog para igrača, kao u *beli* - prvi i treći protiv drugog i četvrtog), ali u ovoj implementaciji igra je relaizirana samo kao igra samostalnih igrača.
 
 ### Tijek igre
 
@@ -22,10 +22,10 @@ Prije početka partije ustanovljuje se redoslijed igrača (njihovih poteza) koji
 
 Na početku partije postavljaju se 4 karte na stol (vidljive svima), a ostatak špila ostavlja se sa strane (tako da se preostale karte u špilu ne vide). Zatim se ponavljaju koraci:
 
-1. svim se igračima podijeli 6 karata ako je u špilu preostalo dovoljno karata, a inače se igračima karte u špilu ravnomjerno podijele; svaki igrač ima uvid samo u svoje karte i karte na stolu,
-2. ustanovljenim redoslijedom igrača, svaki igrač igra potez tako da
-    1. iz svoje ruke bira kartu koju će odigrati,
-    2. ako ne može ili ne želi skupiti ništa sa stola, odigranu kartu odlaže na stol (ta karta ostaje na stolu i, kao i ostale karte na stolu, vidljiva je svim igračima), a inače preostalim igračima pokazuje odigranu kartu, sa stola skuplja sve skupove karata koji se mogu zbrojiti u odigranu kartu (v. *Pravila zbrajanja karata* dolje) tako da ti skupovi **nemaju zajedničkih karata** (kartom *pik 7* ne mogu se skupiti karte *herc 3*, *karo 4*, *tref 4* iako je *(herc) 3* + *(karo) 4* = *(pik) 7* i *(herc) 3* + *(tref) 4* = *(pik) 7* jer u tom slučaju karta *herc 3* sudjeluje u oba zbroja, ali mogu se skupiti karte *herc 3*, *pik 3*, *karo 4*, *tref 4* jer je *(herc) 3* + *(karo) 4* = *(pik) 7*, *(pik) 3* + *(tref) 4* = *(pik) 7* i skupovi {*herc 3*, *karo 4*}, {*pik 3*, *tref 4*} nemaju zajedničkih karata); ako je igrač skupio karte sa stola, odigranu kartu i karte skupljene sa stola sprema u svoj skup skupljenih karata (te karte više ne sudjeluju u igri),
+1.  svim se igračima podijeli 6 karata ako je u špilu preostalo dovoljno karata, a inače se igračima karte u špilu ravnomjerno podijele; svaki igrač ima uvid samo u svoje karte i karte na stolu,
+2.  igrajući u krug ustanovljenim redoslijedom igrača dok igrač koj treba biti na redu u ruci ima barem jednu kartu, svaki igrač igra potez tako da
+    1.  iz svoje ruke bira kartu koju će odigrati,
+    2.  ako ne može ili ne želi skupiti ništa sa stola, odigranu kartu odlaže na stol (ta karta ostaje na stolu i, kao i ostale karte na stolu, vidljiva je svim igračima), a inače preostalim igračima pokazuje odigranu kartu, sa stola skuplja sve skupove karata koji se mogu zbrojiti u odigranu kartu (v. *Pravila zbrajanja karata* dolje) tako da ti skupovi **nemaju zajedničkih karata** (kartom *pik 7* ne mogu se skupiti karte *herc 3*, *karo 4*, *tref 4* iako je *(herc) 3* + *(karo) 4* = *(pik) 7* i *(herc) 3* + *(tref) 4* = *(pik) 7* jer u tom slučaju karta *herc 3* sudjeluje u oba zbroja, ali mogu se skupiti karte *herc 3*, *pik 3*, *karo 4*, *tref 4* jer je *(herc) 3* + *(karo) 4* = *(pik) 7*, *(pik) 3* + *(tref) 4* = *(pik) 7* i skupovi {*herc 3*, *karo 4*}, {*pik 3*, *tref 4*} nemaju zajedničkih karata); ako je igrač skupio karte sa stola, odigranu kartu i karte skupljene sa stola sprema u svoj skup skupljenih karata (te karte više ne sudjeluju u igri),
 3. kada nijedan igrač u svojoj ruci više nema karata, igra završava ako u špilu nije preostalo više karata, a inače se postupak ponavlja od koraka 1.
 
 Na kraju partije, ako postoji igrač koji je zadnji skupio nešto sa stola, karte koje su preostale na stolu dodaju se skupu skupljenih karata tog igrača (koji je zadnji skupio nešto sa stola), ali to se **ne smatra ostvarivanjem table** (v. *Ostvarivanje* table dolje).
@@ -73,15 +73,20 @@ Zbroj bodovnih vrijednosti svih karata u igri iznosi 22, stoga bez tabli zbroj b
 
 #### Ostvarivanje *table*
 
-Tijekom igre, svaki put kada neki igrač odigranom kartom skupi sve karte sa stola, taj mu se čin smatra ostvarivanjem table, što zapravo znači da je osvojio još jedan dodatni bod (bod koji ne ulazi u ranije spomenutu sumu bodova tijekom partije koja iznosi 22 odnosno 25). Naravno, kako svaki igrač kada je na potezu mora odigrati neku kartu iz ruke, igrač koji je na potezu neposredno nakon igrača koji je ostvario tablu odigranu kartu može jedino odložiti na stol (na stolu ne postoje karte koje bi se odigranom kartom mogle skupiti).
+Tijekom igre, svaki put kada neki igrač odigranom kartom skupi sve karte sa stola, taj mu se čin smatra ostvarivanjem table, što zapravo znači da je osvojio još jedan dodatni bod (bod koji ne ulazi u ranije spomenutu sumu bodova tijekom partije koja iznosi 22 odnosno 25). Naravno, kako svaki igrač, kada je na potezu, mora odigrati neku kartu iz ruke, igrač koji je na potezu neposredno nakon igrača koji je ostvario tablu odigranu kartu može jedino odložiti na stol (na stolu ne postoje karte koje bi se odigranom kartom mogle skupiti).
 
 ## Datoteke
 
-1. **skupovi.py** -- implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
-2. **karta.py** -- implementacija klase `Karta` za reprezentaciju karata u igri tablić,
-3. **engine.py** -- implementacija klase `Tablic` za simulaciju igranja igre tablić,
-4. **pohlepni_log.py** -- implementacija klasa zapisnika igre tablić za strojno učenje pohlepnih algoritama,
-5. **pohlepni_igrac.py** -- implementacija klasa igrača igre tablic koji igraju pohlepnim algoritmom,
-6. **io_igrac.py** -- implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
-7. **minimax_igrac.py** -- implementacija klasa igrača igre tablić koji igraju minimax algoritmom,
-8. **minimax_log.py** -- implementacija klasa zapisnika igre tablić za strojno učenje minimax algoritama.
+Kompletna implementacija igre napisana je objektno orijentirano u programskom jeziku Python.
+
+1. **skupovi.py** - implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
+2. **karta.py** - implementacija klase `Karta` za reprezentaciju karata u igri tablić,
+3. **engine.py** - implementacija klase `Tablic` za simulaciju igranja igre tablić,
+4. **pohlepni_log.py** - implementacija klase zapisnika igre tablić za strojno učenje pohlepnog algoritma,
+5. **minimax_log.py** - implementacija klase zapisnika igre tablić za strojno učenje minimax algoritma,
+6. **pohlepni_igrac.py** - implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
+7. **io_igrac.py** - implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
+8. **minimax_igrac.py** - implementacija klase igrača igre tablić koji igra minimax algoritmom.
+9. **usporedba.py** - skripta za testiranje igrača igre tablić.
+
+Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom. Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima.

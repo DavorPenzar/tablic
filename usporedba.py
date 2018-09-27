@@ -17,10 +17,11 @@ N = 10
 # Rezultat ce se ispisivati nakon svake k-te partije.
 k = 1
 
-# Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce biti na potezu u partijama.  Svaki igrac
-# reprezentiran je rjecnikom s kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
+# Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
+# biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
+# kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
-igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 2, 'maxT' : float('inf')}},
+igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def konacniRezultat (rezultat):
@@ -112,7 +113,7 @@ for i in range(N):
         if nerjeseno:
             print("\tNerjesene:")
             for r in nerjeseno:
-                print("\t\t{0:s}".format(r))
+                print("\t\t{0:s}".format(repr(r)))
 
 # Kraj ukupnog mjerenja vremena.
 t1 = time.time()
@@ -125,4 +126,4 @@ print("\t{0:s}".format(repr(pobjede)))
 if nerjeseno:
     print("\tNerjesene:")
     for r in nerjeseno:
-        print("\t\t{0:s}".format(r))
+        print("\t\t{0:s}".format(repr(r)))

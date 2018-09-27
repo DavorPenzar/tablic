@@ -416,7 +416,7 @@ class MinimaxIgrac (Tablic.Igrac):
         self.__zadnji = None
 
         self.__sigurnoNema = set()
-        self.__vjerojatnoNema = [[None if j == self.dohvatiIndeks() else 0 for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
+        self.__vjerojatnoNema = [[0 for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
 
     def saznajNovoDijeljenje (self, ruka, stol):
         """
@@ -430,7 +430,7 @@ class MinimaxIgrac (Tablic.Igrac):
         # Azuriranje podataka o kartama koje igraci sigurno nemaju i
         # resetiranje podataka o kartama koje igraci vjerojatno nemaju.
         self.__sigurnoNema |= ruka | stol
-        self.__vjerojatnoNema = [[None if j == self.dohvatiIndeks() else 0 for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
+        self.__vjerojatnoNema = [[0 for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
 
     def vidiPotez (self, i, ruka, stol, karta, skupljeno):
         """
@@ -455,25 +455,6 @@ class MinimaxIgrac (Tablic.Igrac):
             # jos takvih karata pa se ne pretpostavlja da ih nema.
             self.__vjerojatnoNema[i][karta_indeks] = 0
 
-            # Ako igrac nije nista kupio sa stola, pregledavanje podigranih karata (znakova).  Podigranim
-            # kartama smatraju se karte znakova koji se prije dodavanja ove karte nisu mogli zbrojiti na stolu i,
-            # ako se znak ove karte vec nalazi na stolu, karte tog znaka.
-            if skupljeno:
-                podigrani = set()
-            else:
-                podigrani = set(Tablic.moguciPotezi(stol | {karta}).keys()) - set(Tablic.moguciPotezi(stol).keys())
-                if any(x.znak == karta.znak for x in stol):
-                    podigrani |= {karta.znak}
-
-            # Za svaku od podigranih karata odustajanje od pretpostavki da i-ti igrac nema takvu kartu.
-            for x in podigrani:
-                if (x is Karta.Znak.BR2 and not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] is None):
-                    self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] = 0
-                elif (x is Karta.Znak.BR10 and not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] is None):
-                    self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] = 0
-                if not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(x))]:
-                    self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(x))] = 0
-
             # Racunanje vrijednosti odigranog poteza i karata koje i-ti igrac vjerojatno ima.
             vrijednost = ((Tablic.vrijednostKarata(skupljeno | {karta}) + int(skupljeno == stol) * Tablic.vrijednostTable()) if skupljeno else 0)
             tudaRuka = MinimaxIgrac.vjerojatnaRuka(self.__sigurnoNema, self.__vjerojatnoNema[i])
@@ -484,13 +465,16 @@ class MinimaxIgrac (Tablic.Igrac):
                 if (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable() < vrijednost or
                     potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable() == vrijednost and len(potez['skupljeno']) <= len(skupljeno)):
                     break
-                if PohlepniLog.prevediKartu(potez['karta']) == karta_indeks or potez['karta'].znak in podigrani:
+                if PohlepniLog.prevediKartu(potez['karta']) == karta_indeks:
                     continue
                 self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(potez['karta'])] = 1
 
         # Azuriranje podataka o kartama koje igraci sigurno nemaju.
         self.__sigurnoNema |= {karta}
 
+        # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za svih 4 karata ovog
+        # znaka poznato da ih igraci sigurno nemaju, postavljanje odgovarajucih vrijednosti
+        # u vjerojatnoNema na 0.
         if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
             R = [PohlepniLog.prevediKartu(Karta(karta.znak))]
             if karta.znak is Karta.Znak.BR2:
@@ -501,7 +485,7 @@ class MinimaxIgrac (Tablic.Igrac):
             for j in range(self.__n):
                 if j != self.dohvatiIndeks():
                     for r in R:
-                        self.__vjerojatnoNema[j][r] = None
+                        self.__vjerojatnoNema[j][r] = 0
 
     def odigraj (self, ruka, stol, ponovi = False):
         """

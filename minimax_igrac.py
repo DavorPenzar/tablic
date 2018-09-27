@@ -229,8 +229,7 @@ class MinimaxIgrac (Tablic.Igrac):
                 if potez['skupljeno']:
                     novoSkupljeno[j] += 1 + len(potez['skupljeno'])
 
-                # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog
-                # poteza.
+                # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
                 sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
                                                     ruka - {potez['karta']} if j == i else ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
                                                     noviBodovi, novoSkupljeno,
@@ -292,8 +291,7 @@ class MinimaxIgrac (Tablic.Igrac):
                                       n, i, j,
                                       zadnje, zadnji,
                                       dubina,
-                                      (-float('inf'), -float('inf')),
-                                      (float('inf'), float('inf')))
+                                      (-float('inf'), -float('inf')), (float('inf'), float('inf')))
 
         # Vracanje izracunatog najvjerojatnijeg slijeda poteza.
         return grana

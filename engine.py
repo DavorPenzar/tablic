@@ -316,15 +316,15 @@ class Tablic (object):
             Argument i zadaje redni broj igraca u igri (pocevsi od 0).
             Argument ime moze biti objekt klase str koji zadaje ime igraca, ili
             None u kojem slucaju se ime igraca postavlja na
-            "[klasa igraca] [i]" (na primjer "RandomIgrac 3" za objekt klase
-            RandomIgrac i i = 3).
+            "[klasa igraca] [i + 1]" (na primjer "RandomIgrac 3" za objekt
+            klase RandomIgrac i i = 2).
 
             """
 
             self.__i = i
 
             if ime is None:
-                self.__ime = '{0:s} {1:d}'.format(self.__class__.__name__, i)
+                self.__ime = '{0:s} {1:d}'.format(self.__class__.__name__, i + 1)
             else:
                 self.__ime = ime
 

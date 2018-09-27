@@ -275,7 +275,7 @@ class MinimaxIgrac (Tablic.Igrac):
                         # uvjet vremenskog prekoracenja).
                         break
                     if vrijednost < beta:
-                        alpha = vrijednost
+                        beta = vrijednost
 
                 if alpha >= beta:
                     break
@@ -433,11 +433,9 @@ class MinimaxIgrac (Tablic.Igrac):
 
             # Za svaku od podigranih karata odustajanje od pretpostavki da i-ti igrac nema takvu kartu.
             for x in podigrani:
-                if (not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] is None and
-                    x is Karta.Znak.BR2):
+                if (x is Karta.Znak.BR2 and not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] is None):
                     self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2))] = 0
-                elif (not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] is None and
-                      x is Karta.Znak.BR10):
+                elif (x is Karta.Znak.BR10 and not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] is None):
                     self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10))] = 0
                 if not self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(x))]:
                     self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(Karta(x))] = 0

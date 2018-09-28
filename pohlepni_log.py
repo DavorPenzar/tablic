@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase zapisnika igre tablic za strojno ucenje pohlepnog alg.
 
@@ -82,10 +84,10 @@ class PohlepniLog (Tablic.Log):
     def __deepcopy__ (self, memodict = dict()):
         return PohlepniLog(copy.deepcopy(self.dohvatiLog(), memodict))
 
-    def novaPartija (self, n):
+    def novaPartija (self, n, igraci):
         pass
 
-    def novoDijeljenje (self, k):
+    def novoDijeljenje (self, k, stol):
         pass
 
     def prevediPotez (self, i, igraci, ruka, stol, karta, skupljeno):
@@ -114,7 +116,7 @@ class PohlepniLog (Tablic.Log):
 
         # Zapis ruke u potez
         for x in ruka:
-            potez[PohlepniLog.prevediKartu(x)] += 1
+            potez[PohlepniLog.prevediKartu(x)] = 1
 
         # Zapis stola u potez.
         for x in stol:
@@ -125,3 +127,6 @@ class PohlepniLog (Tablic.Log):
 
         # Povrat zapisa poteza.
         return tuple(potez)
+
+    def kraj (self, rezultat):
+        pass

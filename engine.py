@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase Tablic za simulaciju igranja igre tablic.
 
@@ -107,6 +109,26 @@ class Tablic (object):
                 return x
 
             __next__ = next
+
+        @classmethod
+        def konacniRezultat (cls, rezultat):
+            """
+            Izracunaj konacni rezultat partije igre tablic.
+
+            Objekt rezultat sukladan je povratnoj vrijednosti funkcije
+            Tablic.dohvatiRezultat.
+
+            Povratna vrijednost funkcije Tablic.dohvatiRezultat rezultate
+            predstavlja "razlomljeno", to jest posebno prikazuje broj
+            skupljenih bodova skupljenim kartama, broj ostvarenih tabli i
+            otkriva koji je igrac skupio strogo najvise karata.  Povratna
+            vrijednost ove funkcije lista je jedinstvenih nenegativnih
+            cjelobrojnih vrijednosti koje zbrajaju bodove koje su igraci
+            skupili na pojedinom elementu igre.
+
+            """
+
+            return [r['skupljeno'] + r['table'] * Tablic.vrijednostTable() + int(r['max'][0]) * Tablic.vrijednostMax() for r in rezultat]
 
         def __init__ (self, log = list(), *args, **kwargs):
             """
@@ -243,20 +265,24 @@ class Tablic (object):
                 self.__log.append(potez)
 
         @abc.abstractmethod
-        def novaPartija (self, n):
+        def novaPartija (self, n, igraci):
             """
-            Pripremi zapisnik za zapisivanje poteza iz nove partije s n igraca.
+            Pripremi zapisnik za zapisivanje poteza iz nove partije.
+
+            Lista igraci (duljine n) kopija je igraca koji sudjeluju u partiji
+            redoslijedom kojim su na potezu.
 
             """
 
             return None
 
         @abc.abstractmethod
-        def novoDijeljenje (self, k):
+        def novoDijeljenje (self, k, stol):
             """
             Pripremi zapisnik za zapisivanje poteza nakon novog dijeljenja.
 
-            Broj k oznacava broj podijeljenih karata svakom igracu.
+            Broj k oznacava broj podijeljenih karata svakom igracu, a skup stol
+            oznacava trenutno stanje stola.
 
             """
 
@@ -276,6 +302,18 @@ class Tablic (object):
 
             return None
 
+        @abc.abstractmethod
+        def kraj (self, rezultat):
+            """
+            Saznaj za kraj igre i rezultat igre.
+
+            Objekt rezultat sukladan je povratnoj vrijednosti funkcije
+            Tablic.dohvatiRezultat, a objekt klase Tablic ga nad zapisnikom
+            poziva na kraju partije (kada je igracu koji je skupio strogo
+            najvise karata (ako takav postoji) to i zapisano).
+
+            """
+
     class PrazniLog (Log):
         """
         Klasa za definiranje najjednostavnijeg zapisnika (ne zapisuje nista).
@@ -288,10 +326,10 @@ class Tablic (object):
         def __deepcopy__ (self, memodict = dict()):
             return PrazniLog(copy.deepcopy(self.dohvatiLog(), memodict))
 
-        def novaPartija (self, n):
+        def novaPartija (self, n, igraci):
             pass
 
-        def novoDijeljenje (self, k):
+        def novoDijeljenje (self, k, stol):
             pass
 
         def prevediPotez (self, i, igraci, ruka, stol, karta, skupljeno):
@@ -751,7 +789,7 @@ class Tablic (object):
 
     def igraj (self, *logovi):
         """
-        Odigraj partiju i poteze zapisi u zapisnik log.
+        Odigraj brojPartija partija i poteze zapisi u zapisnik log.
 
         Objekt logovi mora biti tuple objekata podklase klase Tablic.Log.  Ako
         nije zadan nijedan zapisnik, povratna vrijednost funkcije je None.  Ako
@@ -759,9 +797,8 @@ class Tablic (object):
         Inace je povratna vrijednpst tuple zapisnika istim redom kojim su dani
         kao argumenti.
 
-        Nakon pokretanja funkcije funkcija jePokrenuta vracat ce True.
-
-        Nakon izvrsavanja funkcije funkcija jeZavrsena vracat ce True, a
+        Nakon pokretanja funkcije funkcija jePokrenuta vracat ce True, a nakon
+        izvrsavanja funkcije funkcija jeZavrsena vracat ce True, a
         dohvatiMax vracat ce tuple koji odgovara je li igrac skupio strogo
         najvise karata i koliko je karata skupio.
 
@@ -835,7 +872,9 @@ class Tablic (object):
                 for j in range(len(self.__igraci)):
                     self.__igraci[j]['ruka'] |= {self.__spil.get()}
                 if self.__spil.empty():
-                    break
+                    return i + 1
+
+            return Tablic.inicijalniBrojKarata_ruka()
 
         def __objaviNovoDijeljenje (stol):
             """
@@ -982,7 +1021,7 @@ class Tablic (object):
 
         # Logiraj i objavi pocetak nove partije.
         for i in range(len(logovi)):
-            logovi[i].novaPartija(len(self.__igraci))
+            logovi[i].novaPartija(len(self.__igraci), [copy.deepcopy(self.__igraci[j]['igrac']) for j in range(len(self.__igraci))])
         __objaviBrojIgraca()
 
         # Igraj partiju.
@@ -992,7 +1031,7 @@ class Tablic (object):
             # Podijeli, logiraj i objavi novo dijeljenje.
             k = __podijeli()
             for i in range(len(logovi)):
-                logovi[i].novoDijeljenje(k)
+                logovi[i].novoDijeljenje(k, copy.deepcopy(self.__stol))
             __objaviNovoDijeljenje(self.__stol)
 
             while self.__igraci[0]['ruka']:
@@ -1015,6 +1054,9 @@ class Tablic (object):
 
         # Zavrsi partiju.
         __zavrsi(zadnji)
+        rezultat = self.dohvatiRezultat()
+        for i in range(len(logovi)):
+            logovi[i].kraj(copy.deepcopy(rezultat))
 
         # Vracanje odgovarajuce povratne vrijednosti.
 

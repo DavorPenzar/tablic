@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase IOIgrac za stdin/stdout igraca igre tablic.
 
@@ -118,7 +120,7 @@ class IOIgrac (Tablic.Igrac):
         self.__n = n
         self.__imena = imena
 
-        print("Igra {0:d} igraca:".format(self.__n))
+        print("Partija za {0:d} igraca:".format(self.__n))
         for i in range(self.__n):
             print("\t{0:d}.\t{1:s}{2:s}".format(i + 1, self.__imena[i], ' (*)' if i == self.dohvatiIndeks() else ''))
         print("\n")

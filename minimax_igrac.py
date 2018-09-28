@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase igraca igre tablic koji igra minimax algoritmom.
 
@@ -80,10 +82,11 @@ class MinimaxIgrac (Tablic.Igrac):
         bodovi.
 
         Povratna vrijednost je tuple (heurBodovi, heurSkupljeno) gdje je
-            1.  heurBodovi  --  suma razlika bodova igraca s indeksom i i
-                                ostalih igraca,
-            2.  heurSkupljeno   --  suma razlika broja skupljenih karata igraca
-                                    s indeksom i i ostalih igraca.
+            1.  heurBodovi  --  broj bodova i-tog igraca umanjen za aritmeticku
+                                sredinu broja bodova ostalih igraca,
+            2.  heurSkupljeno   --  broj skupljenih karata i-tog igraca umanjen
+                                    za aritmeticku sredinu broja bodova ostalih
+                                    igraca.
 
         """
 
@@ -104,11 +107,12 @@ class MinimaxIgrac (Tablic.Igrac):
                 bodovi[M[0]] += Tablic.vrijednostMax()
 
         # Racunanje heuristicke vrijednosti stanja igre.
-        heurBodovi = 0
-        heurSkupljeno = 0
+        heurBodovi = float(bodovi[i])
+        heurSkupljeno = float(skupljeno[i])
         for j in range(n):
-            heurBodovi += bodovi[i] - bodovi[j]
-            heurSkupljeno += skupljeno[i] - skupljeno[j]
+            if j != i:
+                heurBodovi -= float(bodovi[j]) / (n - 1)
+                heurSkupljeno -= float(skupljeno[j]) / (n - 1)
 
         # Vracanje izracunate heuristicke vrijednosti stanja igre.
         return (heurBodovi, heurSkupljeno)
@@ -146,7 +150,7 @@ class MinimaxIgrac (Tablic.Igrac):
         ukljucivo).  Konkretno, gornja granica dubine stabla stanja igre iznosi
         n * dubina - j.  Ako se algoritam izvrsava dulje od T sekundi,
         izvrsavanje se prekida i vraca se dosad najvjerojatniji pronadeni
-        slijed poteza u igri.
+        slijed poteza u igri (stablo poteza obraduje se DFS-om).
 
         Povratna vrijednost lista je objekata klase dict koji zadaju redom
         poteze igraca s indeksima j, j + 1, j + 2, ..., n - 1, 0, 1, ...
@@ -187,25 +191,22 @@ class MinimaxIgrac (Tablic.Igrac):
                                                         zadnje and j == 0 and not ruka,
                                                         zadnji, stol))
 
-            # Granaje u ovisnosti o igracu na potezu.
-
-            # Inicijalizacija najvjerojatnijeg slijeda poteza (grana),
-            # njegove heuristicke vrijednosti (vrijednost) i zadnjeg
-            # promatranog poteza (zadnjiPotez).
-            grana = list()
-            vrijednost = (-float('inf'), -float('inf'))
-            zadnjiPotez = (Karta(), list())
-
             # Grananje u ovisnosti o tome koji je igrac na redu.
             if j == i:
                 # Max-igrac je na redu.
+
+                # Inicijalizacija najvjerojatnijeg slijeda poteza (grana),
+                # njegove heuristicke vrijednosti (vrijednost) i zadnjeg
+                # promatranog poteza (zadnjiPotez).
+                grana = list()
+                vrijednost = (-float('inf'), -float('inf'))
+                zadnjiPotez = (PohlepniLog.dohvatiBrojIndeksa(), list())
 
                 # Iteriranje po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(ruka, stol):
                     # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
                     # provjera je li takav potez vec obraden (ako je, obrada se preskce).
-                    ovajPotez = (Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(potez['karta']))),
-                                 sorted([Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in potez['skupljeno']], reverse = True))
+                    ovajPotez = (PohlepniLog.prevediKartu(potez['karta']), sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True))
                     if ovajPotez == zadnjiPotez:
                         continue
                     else:
@@ -235,15 +236,27 @@ class MinimaxIgrac (Tablic.Igrac):
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost > vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
-                    elif len(sadGrana) + 1 < len(grana):
+                    elif len(sadGrana) + 1 < len(grana) or not (dubina and len(ruka) - 1) and sadVrijednost <= vrijednost:
                         # Ako je algoritam morao zavrsiti prije dosega
                         # maksimalne dubine ili stanja bez potomka, to znaci
                         # dvije stvari:
                         # 1.  slijed najvjerojatnijih poteza bit ce kraci,
-                        # 2.  terminalni uvjet bio je vremensko prekoracenje.
-                        # U tom slucaju pretrazivanje poteza moze se prekinuti
-                        # (svaka sljedeca provjera takoder ce doseci terminalni
-                        # uvjet vremenskog prekoracenja).
+                        # 2.  terminalni uvjet bio je vremensko prekoracenje
+                        #     ili "ispraznjenje" vjerojatne ruke nekog
+                        #     min-igraca.
+                        # U svakom slucaju pretrazivanje poteza moze se
+                        # prekinuti (svaka sljedeca provjera takoder ce doseci
+                        # isti preuranjeni terminalni uvjet).
+                        #
+                        # Takoder, kako je svrha ovog minimax algoritma traziti
+                        # najbolji prvi potez zbog omogucavanja boljih kasnijih
+                        # poteza, ako je trenutna dubina stabla maksimalna ili
+                        # ako se i-ti igrac vise nema poteza za odigrati,
+                        # trazenje, koje se inace izvrsava po potezima uredenim
+                        # sortiranjem koje koristi pohlepni algoritam (prvi
+                        # potezi su najvrijedniji, a kasniji manje), se prekida
+                        # kad heuristicke vrijednosti poteza pocinju opadati
+                        # (jer je max-igrac na potezu).
                         break
                     if vrijednost > alpha:
                         alpha = vrijednost
@@ -252,12 +265,51 @@ class MinimaxIgrac (Tablic.Igrac):
             else:
                 # Jedan od min-igraca je na redu.
 
+                # Racunanje vjerojatne ruke trenutnog igraca.  Ako je vjerojatna ruka
+                # prazna, nema poteza koji bi se mogli promatrati, pa se takvo stanje
+                # smatra terminalnim (ali ono sigurno nije zavrsno stanje igre jer se
+                # ta mogucnost razmatra na pocetku funkcije).
+                tudaRuka = MinimaxIgrac.vjerojatnaRuka(sigurnoNema, vjerojatnoNema[j])
+                if not tudaRuka:
+                    return (list(), MinimaxIgrac.heuristika(bodovi, skupljeno,
+                                                            n, i,
+                                                            False))
+
+                # Inicijalizacija najvjerojatnijeg slijeda poteza (grana), njegove heuristicke
+                # vrijednosti (vrijednost) i zadnjeg promatranog poteza (zadnjiPotez).
+                grana = list()
+                vrijednost = (float('inf'), float('inf'))
+                zadnjiPotez = (PohlepniLog.dohvatiBrojIndeksa(), list(), (float('inf'), float('inf')))
+
+                # Inicijalizacija skupova indeksa karata koje omogucuju bolje
+                # odnosno jednakovrijedne poteze na prazne skupove.
+                bolji = set()
+                isti = set()
+
                 # Iteriranje po mogucim potezima.
-                for potez in PohlepniIgrac.izborPoteza(MinimaxIgrac.vjerojatnaRuka(sigurnoNema, vjerojatnoNema[j]), stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
-                    # provjera je li takav potez vec obraden (ako je, obrada se preskce).
-                    ovajPotez = (Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(potez['karta']))),
-                                 sorted([Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in potez['skupljeno']], reverse = True))
+                for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10).
+                    ovajPotez = (PohlepniLog.prevediKartu(potez['karta']),
+                                 sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True),
+                                 ((Tablic.vrijednostKarata(potez['skupljeno'] | {potez['karta']}) + int(potez['skupljeno'] == stol) * Tablic.vrijednostTable()) if potez['skupljeno'] else 0,
+                                  len(potez['skupljeno'])))
+
+                    # Ako je trenutni potez losiji od prethodnog (a potezi se
+                    # prolaze sortirani po odabiru pohlepnog algoritma, dakle i
+                    # svi sljedeci su onda losiji), sve karte koje su
+                    # omogucavale jednakovrijedan potez kao prosli smatraju se
+                    # kartama koje omogucavaju bolji potez, a skup karata koje
+                    # omogucavaju jednakovrijedne poteze inicijalizira se na
+                    # skup koji sadrzi samo ovu kartu.  Inace se ova karta
+                    # dodaje u skup karata koje omogucavaju potez
+                    # jednakovrijedan kao prethodni.
+                    if ovajPotez[2] < zadnjiPotez[2]:
+                        bolji |= isti
+                        isti = {ovajPotez[0]}
+                    else:
+                        isti |= {ovajPotez[0]}
+
+                    # Provjera je li ovakav potez vec obraden (ako je, obrada se preskce).
                     if ovajPotez == zadnjiPotez:
                         continue
                     else:
@@ -278,7 +330,14 @@ class MinimaxIgrac (Tablic.Igrac):
 
                                 break
 
-                    # Kreiranje novih lista bodova i brojeva skupljenih karata.
+                    # Kreiranje novih lista karata koje igraci vjerojatno nemaju, bodova i brojeva
+                    # skupljenih karata. Smatra se da j-ti igrac vjerojatno nema sve karte koje bi mu
+                    # omogucile bolji potez od ovog (osim ove karte ako se ona mozda vec pojavila s
+                    # mogucnosti boljeg poteza).
+                    if not zadnje:
+                        novoVjerojatnoNema = copy.deepcopy(vjerojatnoNema)
+                        for x in bolji - {ovajPotez[0]}:
+                            novoVjerojatnoNema[j][x] = 1
                     noviBodovi = copy.deepcopy(bodovi)
                     novoSkupljeno = copy.deepcopy(skupljeno)
                     noviBodovi[j] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
@@ -286,7 +345,7 @@ class MinimaxIgrac (Tablic.Igrac):
                         novoSkupljeno[j] += 1 + len(potez['skupljeno'])
 
                     # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
-                    sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
+                    sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema if zadnje else novoVjerojatnoNema,
                                                         ruka - {potez['karta']} if j == i else ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
                                                         noviBodovi, novoSkupljeno,
                                                         n, i, (j + 1) % n,
@@ -300,15 +359,27 @@ class MinimaxIgrac (Tablic.Igrac):
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost < vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
-                    elif len(sadGrana) + 1 < len(grana):
+                    elif len(sadGrana) + 1 < len(grana) or not (dubina and ruka) and sadVrijednost >= vrijednost:
                         # Ako je algoritam morao zavrsiti prije dosega
                         # maksimalne dubine ili stanja bez potomka, to znaci
                         # dvije stvari:
                         # 1.  slijed najvjerojatnijih poteza bit ce kraci,
-                        # 2.  terminalni uvjet bio je vremensko prekoracenje.
-                        # U tom slucaju pretrazivanje poteza moze se prekinuti
-                        # (svaka sljedeca provjera takoder ce doseci terminalni
-                        # uvjet vremenskog prekoracenja).
+                        # 2.  terminalni uvjet bio je vremensko prekoracenje
+                        #     ili "ispraznjenje" vjerojatne ruke nekog
+                        #     min-igraca.
+                        # U svakom slucaju pretrazivanje poteza moze se
+                        # prekinuti (svaka sljedeca provjera takoder ce doseci
+                        # isti preuranjeni terminalni uvjet).
+                        #
+                        # Takoder, kako je svrha ovog minimax algoritma traziti
+                        # najbolji prvi potez zbog omogucavanja boljih kasnijih
+                        # poteza, ako je trenutna dubina stabla maksimalna ili
+                        # ako se i-ti igrac vise nema poteza za odigrati,
+                        # trazenje, koje se inace izvrsava po potezima uredenim
+                        # sortiranjem koje koristi pohlepni algoritam (prvi
+                        # potezi su najvrijedniji, a kasniji manje), se prekida
+                        # kad heuristicke vrijednosti poteza pocinju rasti
+                        # (jer je min-igrac na potezu).
                         break
                     if vrijednost < beta:
                         beta = vrijednost
@@ -351,7 +422,6 @@ class MinimaxIgrac (Tablic.Igrac):
         # Inicijalizacija relevantnih varijabli.
 
         self.__k = None # broj karata u spilu
-
         self.__n = None # broj igraca
 
         self.__bodovi = None
@@ -366,7 +436,6 @@ class MinimaxIgrac (Tablic.Igrac):
         igrac = MinimaxIgrac(self.dohvatiIndeks(), self.dohvatiIme(), self.__maxDubina, self.__maxT)
 
         igrac.__k = self.__k
-
         igrac.__n = self.__n
 
         igrac.__bodovi = self.__bodovi
@@ -383,7 +452,6 @@ class MinimaxIgrac (Tablic.Igrac):
         igrac = MinimaxIgrac(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict), copy.deepcopy(self.__maxDubina, memodict), copy.deepcopy(self.__maxT, memodict))
 
         igrac.__k = copy.deepcopy(self.__k, memodict)
-
         igrac.__n = copy.deepcopy(self.__n, memodict)
 
         igrac.__bodovi = copy.deepcopy(self.__bodovi, memodict)

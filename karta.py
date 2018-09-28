@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase Karta za reprezentaciju karata u igri tablic.
 

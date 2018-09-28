@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase igraca igre tablic koji igra pohlepnim algoritmom.
 
@@ -48,10 +50,10 @@ class PohlepniIgrac (Tablic.Igrac):
         koji usporeduje poteze kao uredene 7-orke s vrijednostima
             --  potez['tabla'],
             --  potez['vrijednost'],
+            --  len(potez['skupljeno']),
             --  potez[Karta(Karta.Boja.KARO, Karta.Znak.BR10)],
             --  potez[Karta(Karta.Boja.TREF, Karta.Znak.BR2)],
             --  potez[Karta.Znak.A],
-            --  len(potez['skupljeno']),
             --  14 - int(potez['karta']).
 
         """
@@ -64,10 +66,10 @@ class PohlepniIgrac (Tablic.Igrac):
 
             return (x['tabla'],
                     x['vrijednost'],
+                    len(x['skupljeno']),
                     x[Karta(Karta.Boja.KARO, Karta.Znak.BR10)],
                     x[Karta(Karta.Boja.TREF, Karta.Znak.BR2)],
                     x[Karta.Znak.A],
-                    len(x['skupljeno']),
                     14 - int(x['karta']),
                     karta,
                     tuple(sorted(list(x['skupljeno']), reverse = True)))

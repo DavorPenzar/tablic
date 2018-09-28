@@ -1,21 +1,28 @@
+#!/usr/bin/env python
+
+# -*- coding: utf-8 -*-
+
 """
 Skripta za testiranje igraca igre tablic.
 
 """
 
+import sys
 import time
 
 from engine import Tablic
+from io_igrac import IOIgrac
 from pohlepni_log import PohlepniLog
 from minimax_log import MinimaxLog
 from pohlepni_igrac import PohlepniIgrac
 from minimax_igrac import MinimaxIgrac
+from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 10
+N = 500
 
 # Rezultat ce se ispisivati nakon svake k-te partije.
-k = 1
+k = 25
 
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
 # biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
@@ -24,29 +31,24 @@ k = 1
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
-def konacniRezultat (rezultat):
-    """
-    Izracunaj konacni rezultat partije igre tablic.
-
-    Povratna vrijednost funkcije Tablic.dohvatiRezultat rezultate predstavlja
-    "razlomljeno", to jest posebno prikazuje broj skupljenih bodova skupljenim
-    kartama, broj ostvarenih tabli i otkriva koji je igrac skupio strogo
-    najvise karata.  Povratna vrijednost ove funkcije je lista jedinstvenih
-    cjelobrojnih vrijednosti koje zbrajaju bodove koje su igraci skupili na
-    pojedinom elementu igre.
-
-    """
-
-    return [r['skupljeno'] + r['table'] * Tablic.vrijednostTable() + int(r['max'][0]) * Tablic.vrijednostMax() for r in rezultat]
+# Ako je pri pokretanju skripte zadan argument "-i", redoslijed igraca u tuple-u igraci se obrce.  Ostali
+# dodatni argumenti se ne prepoznaju.
+if len(sys.argv) == 2:
+    if sys.argv[1] == '-i':
+        igraci = tuple(reversed(igraci))
+    else:
+        raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
+elif len(sys.argv) != 1:
+    raise RuntimeError("Skripta se pokrece s argumentom `-i' (obrnuti redoslijed igraca) ili bez argumenata.")
 
 def deducirajPobjednika (konacni_rezultat):
     """
     Otkrij tko je skupio strogo najvise bodova.
 
-    Argument funkcije mora biti povratna vrijednost funkcije konacniRezultat iz
-    koje se trazi indeks igraca sa strogo najvecim brojem skupljenih bodova.
-    Ako vise igraca dijeli prvo mjesto, povratna vrijednost je uzlazno
-    sortirani tuple njihovih indeksa.
+    Argument funkcije mora biti povratna vrijednost funkcije
+    Tablic.Log.konacniRezultat iz koje se trazi indeks igraca sa strogo
+    najvecim brojem skupljenih bodova.  Ako vise igraca dijeli prvo mjesto,
+    povratna vrijednost je uzlazno sortirani tuple njihovih indeksa.
 
     """
 
@@ -93,7 +95,7 @@ for i in range(N):
 
     # Racunanje konacnog rezultata i pribrajanje listama akumulirano, pobjede.
     rezultat = igra.dohvatiRezultat()
-    konacni_rezultat = konacniRezultat(rezultat)
+    konacni_rezultat = Tablic.Log.konacniRezultat(rezultat)
     for j in range(len(igraci)):
         akumulirano[j] += konacni_rezultat[j]
     pobjednik = deducirajPobjednika(konacni_rezultat)
@@ -110,7 +112,8 @@ for i in range(N):
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
         print("\t{0:s}".format(repr(pobjede)))
-        if nerjeseno:
+        print("\t{0:d}".format(len(nerjeseno)))
+        if False and nerjeseno:
             print("\tNerjesene:")
             for r in nerjeseno:
                 print("\t\t{0:s}".format(repr(r)))
@@ -123,7 +126,8 @@ print("\nKonacno")
 print("\t{0:.3f} s".format(float(t1 - t)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
-if nerjeseno:
+print("\t{0:d}".format(len(nerjeseno)))
+if False and nerjeseno:
     print("\tNerjesene:")
     for r in nerjeseno:
         print("\t\t{0:s}".format(repr(r)))

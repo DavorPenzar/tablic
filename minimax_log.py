@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Implementacija klase zapisnika igre tablic za strojno ucenje minimax algoritma.
 
@@ -29,10 +31,10 @@ class MinimaxLog (Tablic.Log):
     def __deepcopy__ (self, memodict = dict()):
         return MinimaxLog(copy.deepcopy(self.dohvatiLog(), memodict))
 
-    def novaPartija (self, n):
+    def novaPartija (self, n, igraci):
         pass
 
-    def novoDijeljenje (self, k):
+    def novoDijeljenje (self, k, stol):
         pass
 
     def prevediPotez (self, i, igraci, ruka, stol, karta, skupljeno):
@@ -65,13 +67,12 @@ class MinimaxLog (Tablic.Log):
             9.  sljedeci element predstavlja odigranu kartu,
             10. zadnjih PohlepniLog.dohvatiBrojIndeksa() predstavlja skup
                 skupljenih karata, a svaki predstavlja broj takvih karata.
-        Skup karata koje igraci sigurno nemaju, stol, ruka i skupljeno
-        reprezentirani su kao skupovi ruka, stol u povratnoj vrijednosti
-        funkcije PohlepniLog.prevediPotez.  Karte koje igraci vjerojatno nemaju
-        slicno su predstavljeni, samo sto su moguce vrijednosti 0 (nije
-        vjerojatno da igrac nema takvu kartu) i 1 (igrac vjerojatno nema takvu
-        kartu) odnosno None ako su sve takve karte vec u skupu karata koje
-        igraci sigurno nemaju.
+        Skup karata koje igraci sigurno nemaju, ruka, stol, i skupljeno
+        reprezentirani su kao skupovi stol u povratnoj vrijednosti
+        funkcije PohlepniLog.prevediPotez, a skup karata koje igraci vjerojatno
+        nemaju predstavljen je kao skup ruka u povratnoj vrijednosti funkcije
+        PohlepniLog.prevediPotez (1 u skupu karata koje igrac vjerojatno nema
+        znaci da igrac vjerojatno nema tu kartu, a 0 da mozda ili sigurno ima).
 
         """
 
@@ -116,3 +117,6 @@ class MinimaxLog (Tablic.Log):
 
         # Povrat zapisa poteza.
         return tuple(potez)
+
+    def kraj (self, rezultat):
+        pass

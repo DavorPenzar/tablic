@@ -36,26 +36,26 @@ Tijekom igre, svaka karta ima svoju numeričku vrijednost (neovisnu o bodovnoj v
 
 Numeričke vrijednosti karata iznose:
 
-* za brojeve onoliko koliki je broj (npr. numerička vrijednost karte *herc 5* je 5, a karte *tref 8* je 8),
-* za *J* 12, za *Q* 13 i za *K* 14,
-* za *A* 1 ili 11 (kako igrač pri skupljanju želi i kako mu odgovara).
+*   za brojeve onoliko koliki je broj (npr. numerička vrijednost karte *herc 5* je 5, a karte *tref 8* je 8),
+*   za *J* 12, za *Q* 13 i za *K* 14,
+*   za *A* 1 ili 11 (kako igrač pri skupljanju želi i kako mu odgovara).
 
 Na primjer, kartom *karo J* može se skupiti:
 
-* *tref J* (12 = 12),
-* *pik 2*, *tref 10* (2 + 10 = 12),
-* *karo 2*, *karo 3*, *herc 7* (2 + 3 + 7 = 12),
-* *pik A*, *herc 3*, *pik 3*, *tref 5* (1 + 3 + 3 + 5 = 12),
-* *herc A*, *tref A* (1 + 11 = 12).
+*   *tref J* (12 = 12),
+*   *pik 2*, *tref 10* (2 + 10 = 12),
+*   *karo 2*, *karo 3*, *herc 7* (2 + 3 + 7 = 12),
+*   *pik A*, *herc 3*, *pik 3*, *tref 5* (1 + 3 + 3 + 5 = 12),
+*   *herc A*, *tref A* (1 + 11 = 12).
 
 Štoviše, kako nijedne dvije od gore spomenutih varijanti ne sadrže nijednu istu kartu, u teoriji je sve spomenute karte moguće odjednom skupiti sa stola (u praksi je, međutim, malo vjerojatno da će u nekom trenutku stol biti toliko *bogat* da će odjednom biti svih 5 kombinacija na stolu).
 
 Osim što više karata znaka *A* pri zbrajanju mogu imati različite vrijednosti (kao što je gore *(herc) A* + *(tref) A* = *(karo) J*), isto tako različite vrijednosti karata znaka *A* mogu se pojavljivati i s *različitih strana jednakosti*, to jest kartom *pik A* može se skupiti:
 
-* *herc A* (1 = 1 ili 11 = 11),
-* *herc A*, *tref 10* (1 + 10 = 11),
-* *herc A*, *karo A*, *pik 9* (1 + 1 + 9 = 11),
-* *herc A*, *karo A*, *tref A*, *herc 8* (1 + 1 + 1 + 8 = 11).
+*   *herc A* (1 = 1 ili 11 = 11),
+*   *herc A*, *tref 10* (1 + 10 = 11),
+*   *herc A*, *karo A*, *pik 9* (1 + 1 + 9 = 11),
+*   *herc A*, *karo A*, *tref A*, *herc 8* (1 + 1 + 1 + 8 = 11).
 
 ### Bodovanje
 
@@ -65,9 +65,9 @@ Osnovni broj bodova svakog igrača zbroj je bodovnih vrijednosti svih karata u n
 
 Bodovne vrijednosti karata iznose:
 
-* sve karte brojeva osim broja 10 i osim karte *tref 2* vrijede 0 bodova,
-* sve ostale karte osim karte *karo 10* vrijede 1 bod,
-* karta *karo 10* vrijedi 2 boda.
+*   sve karte brojeva osim broja 10 i osim karte *tref 2* vrijede 0 bodova,
+*   sve ostale karte osim karte *karo 10* vrijede 1 bod,
+*   karta *karo 10* vrijedi 2 boda.
 
 Zbroj bodovnih vrijednosti svih karata u igri iznosi 22, stoga bez tabli zbroj bodova svih igrača u jednoj partiji iznosi 22 ili 25 (ako postoji igrač koji je skupio strogo najveći broj bodova, što vrijedi 3 boda, onda je zbroj svih bodova 22 + 3 = 25).
 
@@ -79,14 +79,21 @@ Tijekom igre, svaki put kada neki igrač odigranom kartom skupi sve karte sa sto
 
 Kompletna implementacija igre napisana je objektno orijentirano u programskom jeziku Python.
 
-1. **skupovi.py** - implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
-2. **karta.py** - implementacija klase `Karta` za reprezentaciju karata u igri tablić,
-3. **engine.py** - implementacija klase `Tablic` za simulaciju igranja igre tablić,
-4. **pohlepni_log.py** - implementacija klase zapisnika igre tablić za strojno učenje pohlepnog algoritma,
-5. **minimax_log.py** - implementacija klase zapisnika igre tablić za strojno učenje minimax algoritma,
-6. **pohlepni_igrac.py** - implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
-7. **io_igrac.py** - implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
-8. **minimax_igrac.py** - implementacija klase igrača igre tablić koji igra minimax algoritmom.
-9. **usporedba.py** - skripta za testiranje igrača igre tablić.
+1.  **skupovi.py** - implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
+2.  **karta.py** - implementacija klase `Karta` za reprezentaciju karata u igri tablić,
+3.  **engine.py** - implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
+4.  **pohlepni_log.py** - implementacija klase zapisnika igre tablić za strojno učenje pohlepnog algoritma,
+5.  **minimax_log.py** - implementacija klase zapisnika igre tablić za strojno učenje minimax algoritma,
+6.  **pohlepni_igrac.py** - implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
+7.  **minimax_igrac.py** - implementacija klase igrača igre tablić koji igra minimax algoritmom,
+8.  **io_igrac.py** - implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
+9.  **promatrac_log.py** - implementacija klae `PromatracLog` koji ispisuje tijek igre na *stdout*,
+10. **usporedba.py** - skripta za testiranje igrača igre tablić.
 
 Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom. Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima.
+
+## Algoritmi
+
+### Pohlepni algoritam
+
+Igrač koji igra pohlepnim algoritmom u svakom potezu pokušava maksimalizirati trenutni dobitak (prvenstveno broj bodova, a zatim i broj skupljenih karata; ako može, ostvarit će tablu), a, ako ne može ništa skupiti, na stol odlaže kartu najmanje numeričke vrijednosti osim *A* (i osim *tref 2* i *karo 10*) zato što je vjerojatnije da će se karte većih numeričkih vrijednosti lakše složiti na stolu u daljnjem tijeku igre. Također, kada su dva poteza jednako vrijedna, iz istih razloga bira onaj kojim kupi kartu s manjom numeričkom vrijednosti. Karte znaka *A* i karte *tref 2* i *karo 10* pokušava ne odlagati na stol, ali isto tako one imaju prioritet pri skupljanju sa stola (i kao karte kojom igra i kao karte koje se sa stola uzimaju), pri čemu je karta *karo 10* najvećeg prioriteta, zatim *tref 2* i zatim sve karte znaka *A* (pri odlaganju na stol bez skupljanja karata redoslijed kojim ih *radije* odlaže je obratan).

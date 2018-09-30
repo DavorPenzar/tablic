@@ -7,6 +7,7 @@ Skripta za testiranje igraca igre tablic.
 
 """
 
+import random
 import sys
 import time
 
@@ -19,10 +20,10 @@ from minimax_igrac import MinimaxIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 500
+N = 10
 
 # Rezultat ce se ispisivati nakon svake k-te partije.
-k = 25
+k = 1
 
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
 # biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
@@ -31,15 +32,19 @@ k = 25
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
-# Ako je pri pokretanju skripte zadan argument "-i", redoslijed igraca u tuple-u igraci se obrce.  Ostali
-# dodatni argumenti se ne prepoznaju.
+# Ako je pri pokretanju skripte zadan argument "-i", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
+# se slucajnim izborom.  Ostali dodatni argumenti se ne prepoznaju.
 if len(sys.argv) == 2:
     if sys.argv[1] == '-i':
         igraci = tuple(reversed(igraci))
+    elif sys.argv[1] == '-p':
+        igraci = list(igraci)
+        random.shuffle(igraci)
+        igraci = tuple(igraci)
     else:
         raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
 elif len(sys.argv) != 1:
-    raise RuntimeError("Skripta se pokrece s argumentom `-i' (obrnuti redoslijed igraca) ili bez argumenata.")
+    raise RuntimeError("Skripta se pokrece s jednim argumentom `-i' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
 
 def deducirajPobjednika (konacni_rezultat):
     """
@@ -71,6 +76,47 @@ def deducirajPobjednika (konacni_rezultat):
 akumulirano = [0 for i in range(len(igraci))]
 pobjede = [0 for i in range(len(igraci))]
 nerjeseno = list()
+
+## * * *  FORMAT ISPISA  * * *
+##
+## Primjer testiranja 2 igraca.
+##
+## N.
+## 	t s (T s)
+## 	igrac1 vs. igrac2
+## 	[b1, b2]
+## 	[B1, B2]
+## 	[p1, p2]
+## 	n
+## Nerjesene:
+## 	(N1, (i11, i12))
+## 	(N2, (i21, i22))
+##
+## Legenda:
+##     N   --  redni broj partije,
+##     t   --  broj sekundi trajanja N-te partije,
+##     T   --  ukupni broj sekundi od pocetka testiranja,
+##     igrac1, igrac2  --  imena igraca redom kojim su na potezu,
+##     b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u N-toj partiji,
+##     B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 od
+##                 pocetka testiranja,
+##     p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 od pocetka
+##                 testiranja
+##     n   --  broj nerjesenih partija
+##     N1, N2  --  redom redni brojevi nerjesenih partija
+##     i11, i12    --  redni brojevi igraca koji su u N1-toj partiji imali
+##                     najvise bodova (redni brojevi u smislu reda poteza,
+##                     pocevsi s brojem 1),
+##     i21, i22    --  analogno kao i11, i12, ali za N2-tu partiju.
+##
+## Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
+## (ispisano vrijeme odnosi se na cijelo testiranje, a od bodova su ispisani
+## samo akumulirani bodovi)
+##
+## Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
+## donji kod se treba malo izmijeniti).
+##
+
 
 # Pocetak ukupnog mjerenja vremena.
 t = time.time()
@@ -113,6 +159,7 @@ for i in range(N):
         print("\t{0:s}".format(repr(akumulirano)))
         print("\t{0:s}".format(repr(pobjede)))
         print("\t{0:d}".format(len(nerjeseno)))
+        # Za ispis nerjesenih partija treba izbrisati "False and "
         if False and nerjeseno:
             print("\tNerjesene:")
             for r in nerjeseno:
@@ -127,6 +174,7 @@ print("\t{0:.3f} s".format(float(t1 - t)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 print("\t{0:d}".format(len(nerjeseno)))
+# Za ispis narjesenih partija treba izbrisati "False and "
 if False and nerjeseno:
     print("\tNerjesene:")
     for r in nerjeseno:

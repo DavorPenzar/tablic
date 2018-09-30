@@ -20,10 +20,10 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 10
+N = 50
 
 # Rezultat ce se ispisivati nakon svake k-te partije.
-k = 1
+k = 5
 
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
 # biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
@@ -32,10 +32,10 @@ k = 1
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
-# Ako je pri pokretanju skripte zadan argument "-i", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
+# Ako je pri pokretanju skripte zadan argument "-r", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
 # se slucajnim izborom.  Ostali dodatni argumenti se ne prepoznaju.
 if len(sys.argv) == 2:
-    if sys.argv[1] == '-i':
+    if sys.argv[1] == '-r':
         igraci = tuple(reversed(igraci))
     elif sys.argv[1] == '-p':
         igraci = list(igraci)
@@ -44,7 +44,7 @@ if len(sys.argv) == 2:
     else:
         raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
 elif len(sys.argv) != 1:
-    raise RuntimeError("Skripta se pokrece s jednim argumentom `-i' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
+    raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
 
 def deducirajPobjednika (konacni_rezultat):
     """

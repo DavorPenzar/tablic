@@ -12,11 +12,11 @@ import sys
 import time
 
 from engine import Tablic
-from io_igrac import IOIgrac
 from pohlepni_log import PohlepniLog
 from minimax_log import MinimaxLog
 from pohlepni_igrac import PohlepniIgrac
 from minimax_igrac import MinimaxIgrac
+from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.

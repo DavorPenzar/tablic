@@ -174,7 +174,7 @@ print("\t{0:.3f} s".format(float(t1 - t)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 print("\t{0:d}".format(len(nerjeseno)))
-# Za ispis narjesenih partija treba izbrisati "False and "
+# Za ispis nerjesenih partija treba izbrisati "False and "
 if False and nerjeseno:
     print("\tNerjesene:")
     for r in nerjeseno:

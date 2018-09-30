@@ -639,10 +639,13 @@ class Tablic (object):
 
         """
 
+        # Inicijalizacija rjecnika poteza na prazni rjecnik.
         M = dict()
 
+        # Racunanje svih nepraznih podskupova skupa S.
         P = partitivniSkup(S) - {frozenset()}
 
+        # Racunanje rjecnika poteza.
         for A in P:
             for x in sum(A):
                 x = Karta.Znak(x if x != 11 else 1)
@@ -651,6 +654,7 @@ class Tablic (object):
                 else:
                     M.update({x : {A}})
 
+        # Vracanje izracunatog rjecnika poteza.
         return M
 
     def __new__ (cls, *args, **kwargs):

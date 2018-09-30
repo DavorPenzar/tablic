@@ -681,19 +681,19 @@ class Tablic (object):
         self.__igraci = list()
         self.__stol = set()
 
-    def dodajIgraca (self, klasa = RandomIgrac, ime = None, *args, **kwargs):
+    def dodajIgraca (self, klasa = RandomIgrac, *args, **kwargs):
         """
         Dodaj igraca (objekt klase klasa) u igru.
 
-        Argumenti ime, *args, **kwargs prosljeduju se konstruktoru klase klasa
-        pri inicijalizaciji novog dodanog igraca.
+        Argumenti *args, **kwargs prosljeduju se konstruktoru klase klasa pri
+        inicijalizaciji novog dodanog igraca.
 
         """
 
         if self.__pokrenuta:
-            raise TypeError('Nemoguce je dodati igraca u pokrenutu igru.')
+            raise RuntimeError('Nemoguce je dodati igraca u pokrenutu igru.')
 
-        self.__igraci.append({'igrac' : klasa(len(self.__igraci), ime, *args, **kwargs),
+        self.__igraci.append({'igrac' : klasa(len(self.__igraci), *args, **kwargs),
                               'ruka' : set(),
                               'skupljeno' : set(),
                               'table' : 0,
@@ -1008,13 +1008,13 @@ class Tablic (object):
         # Provjera stanja igre.
 
         if self.__pokrenuta:
-            raise TypeError('Trenutna partija vec je pokrenuta.')
+            raise RuntimeError('Trenutna partija vec je pokrenuta.')
 
         if not self.__igraci:
-            raise TypeError('Trenutna partija nema igraca.')
+            raise RuntimeError('Trenutna partija nema igraca.')
 
         if len(self.__igraci) == 1 or (52 - Tablic.inicijalniBrojKarata_stol()) % len(self.__igraci):
-            raise TypeError('{0:d} nije valjani broj igraca u partiji igre tablic.'.format(len(self.__igraci)))
+            raise RuntimeError('{0:d} nije valjani broj igraca u partiji igre tablic.'.format(len(self.__igraci)))
 
         # Pokreni partiju.
         __pokreni()

@@ -14,7 +14,7 @@ Igra tablić društvena je kartaška igra koja se igra s jednim standardnim fran
 
 Broj igrača mora biti djelitelj broja 48 strogo veći od 1.
 
-**Napomena.** Igra se može smatrati kao igra skupina (na primjer, u 4 igrača kao jedan par igrača protiv drugog para igrača, kao u *beli* - prvi i treći protiv drugog i četvrtog), ali u ovoj implementaciji igra je relaizirana samo kao igra samostalnih igrača.
+**Napomena.** Igra se može smatrati kao igra skupina (na primjer, u 4 igrača kao jedan par igrača protiv drugog para igrača, kao u *beli* &mdash; prvi i treći protiv drugog i četvrtog), ali u ovoj implementaciji igra je relaizirana samo kao igra samostalnih igrača.
 
 ### Tijek igre
 
@@ -59,7 +59,7 @@ Osim što više karata znaka *A* pri zbrajanju mogu imati različite vrijednosti
 
 ### Bodovanje
 
-Cilj je svakog igrača skupiti što veći broj bodova. U stvari, igra se obično igra tako da se igra više partija za redom, i to tako da igrači X, Y, Z u partijama izmjenjuju redoslijede poteza (X, Y, Z), (Y, Z, X), (Z, X, Y), ..., a skupljeni bodovi se u partijama zbrajaju, i konačni je pobjednik onaj koji je ukupno skupio najveći broj bodova (a ne nužno onaj koji je u najviše partija imao najveći broj bodova).
+Cilj je svakog igrača skupiti što veći broj bodova. U stvari, igra se obično igra tako da se igra više partija za redom, i to tako da, na prmijer, igrači X, Y, Z u partijama izmjenjuju redoslijede poteza (X, Y, Z), (Y, Z, X), (Z, X, Y), &hellip;, a skupljeni bodovi se u partijama zbrajaju, i konačni je pobjednik onaj koji je ukupno skupio najveći broj bodova (a ne nužno onaj koji je u najviše partija imao najveći broj bodova).
 
 Osnovni broj bodova svakog igrača zbroj je bodovnih vrijednosti svih karata u njegovom skupu skupljenih karata. Na taj se broj nadodaje još broj ostvarenih tabli tijekom partije (v. *Ostvarivanje* table dolje) i, ako postoji igrač koji je skupio strogo najveći broj karata, njemu se još dodaju 3 boda (ako su dva ili više igrača skupili najviše karata, nikome se ne dodjeljuju ti dodatni bodovi).
 
@@ -79,18 +79,18 @@ Tijekom igre, svaki put kada neki igrač odigranom kartom skupi sve karte sa sto
 
 Kompletna implementacija igre napisana je objektno orijentirano u programskom jeziku Python.
 
-1.  **skupovi.py** - implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
-2.  **karta.py** - implementacija klase `Karta` za reprezentaciju karata u igri tablić,
-3.  **engine.py** - implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
-4.  **pohlepni_log.py** - implementacija klase zapisnika igre tablić za strojno učenje pohlepnog algoritma,
-5.  **minimax_log.py** - implementacija klase zapisnika igre tablić za strojno učenje minimax algoritma,
-6.  **pohlepni_igrac.py** - implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
-7.  **minimax_igrac.py** - implementacija klase igrača igre tablić koji igra minimax algoritmom,
-8.  **io_igrac.py** - implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
-9.  **promatrac_log.py** - implementacija klae `PromatracLog` koji ispisuje tijek igre na *stdout*,
-10. **usporedba.py** - skripta za testiranje igrača igre tablić.
+1.  **skupovi.py** &ndash; implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
+2.  **karta.py** &ndash; implementacija klase `Karta` za reprezentaciju karata u igri tablić,
+3.  **engine.py** &ndash; implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
+4.  **pohlepni_log.py** &ndash; implementacija klase zapisnika igre tablić za strojno učenje pohlepnog algoritma,
+5.  **minimax_log.py** &ndash; implementacija klase zapisnika igre tablić za strojno učenje minimax algoritma,
+6.  **pohlepni_igrac.py** &ndash; implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
+7.  **minimax_igrac.py** &ndash; implementacija klase igrača igre tablić koji igra minimax algoritmom,
+8.  **io_igrac.py** &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
+9.  **promatrac_log.py** &ndash; implementacija klae `PromatracLog` koji ispisuje tijek igre na *stdout*,
+10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić.
 
-Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom. Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima.
+Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom. Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
 
 ## Algoritmi
 
@@ -109,3 +109,23 @@ Stablo poteza pretražuje se DFS-om, a dubina stabla zadaje najveći broj poteza
 Još jedna nekonvencionalna preinaka minimax algoritma vremensko je ograničenje. Naime, kako se potezi razmatraju redoslijedom kojim ih pohlepni algoritam sortira, vjerojatnije je da će max-igraču i min-igračima više odgovarati potezi koji generiraju *lijeve* grane stabla pa se zbog brzine odluke može zadati maksimalno dopušteno vrijeme za pretraživanje stabla pod pretpostavkom da je nakon dovoljno vremena najbolji potez pronađen iako nije pretraženo cijelo stablo. Ipak, to vremensko ograničenje može se postaviti i na pozitivnu beskonačnost (`float('inf')`) što zapravo znači da vremenskog ograničenja nema.
 
 Način na koji se pretpostavlja da neki igrač nema neku kartu je takav da se njegov potez uspoređuje sa svim potezima koje bi mogao učiniti s kartama za koje nije poznato da ih sigurno nema i za koje se ne pretpostavlja da ih vjerojatno nema. Pretpostavlja se da igrač nema sve karte (osim onih koje su ekvivalentne numeričke i bodovne vrijednosti kao odigrana karta) koje omogućuju igranje poteza sa strogo većom bodovnom vrijednosti ili s jednakom bodovnom vrijednosti, ali sa skupljanjem strogo većeg broja karata sa stola. Pri svakom dijeljenju sve se prethodne pretpostavke zanemaruju, a nakon zadnjeg dijeljenja takve se pretpostavke više ne izvode (ako igraju 2 igrača, u potpunosti je poznato koje karte suparnik ima, a i u partijama s više igrača sigurnije je tako zbog dodanih vrijednosti na kraju igre).
+
+## Testiranje igrača
+
+Igrači se mogu testirati pokretanjem skripte *usporedba.py*. Skripta je napisana vrlo *algoritamski*, to jest dovoljne su minimalne promjene nekih varijabli na početku skripte (na primjer, broj partija, učestalost ispisa rezultata, *tuple* igrača&hellip;) za postizanje drugačijih rezultata. Elementi *tuple*-a igrača rječnici su s ključevima *klasa* (klasa čija će instanca biti taj igrač), *args* (*tuple* argumenata za inicijalizaciju igrača), *kwargs* (rječnik argumenata zadanih ključnom rječju za inicijalizaciju igrača). Igrač se inicijalizira pozivom `igrac['klasa'].init(i, *igrac['args'], **igrac['kwargs'])` (redni broj igrača `i` u partiji određuje objekt klase `Tablic`). Redoslijed igrača u *tuple*-u igrača zadaje red kojim su na potezu, osim ako se skripta ne pokreče kao `./usporedba.py -i` (uzima se obrnuti redsolijed) ili ` ./usporedba.py -p` (uzima se slučajni redoslijed).
+
+### Igranje protiv automatskih igrača
+
+Igranje protiv *robota* igrača moguće je dodavanjem igrača klase `IOIgrac` u igru u skripti *usporedba.py* i pokretanjem te skripte. S obzirom na to da se ispis kod `IOIgrac`-a vrši na *stdout*, a, između ostalog, igraču se ispisuju karte koje ima u ruci, s trenutnom implementacijom nije izvediva poštena partija između 2 *ljudska* igrača.
+
+#### Zadavanje poteza
+
+Potezi se zadaju pisanjem na *stdin*. Pri određivanju karte koju se želi igrati ili skupiti sa stola, najjednostavnije je pisati (mogući su razni oblici zadavanja karte, ali ovaj je najjasniji)
+
+*   *a* za kartu znaka A,
+*   broj karte broja,
+*   *j*, *q*, *k* za karte znakova *J*, *Q*, *K* respektivno.
+
+Naravno, unos nije *case-sensitive* (ekvivalentno je pisati *a* i *A*). Posebno određivanje boje karte moguće je pisanjem *tref 2* umjesto *2*, ali, osim u slučajevima karata *tref 2* i *karo 10*, boja karte nije bitna. Ako igrač ima barem dvije karte znaka *2* u ruci od kojih je jedna *tref 2* i ako napiše *2* kao kartu koju želi igrati, bit će upitan želi li igrati *tref 2* ili ne; ako ima samo kartu *tref 2* od karata znaka *2* ili ako kartu *tref 2* nema, upita o igranju karte *tref 2* ne će biti. S druge strane, ako je na stolu više karata znaka *2* i ako igrač napiše kao kartu koju želi skupiti sa stola *2*, prvo se uzima *tref 2*, a tek nakon nje i ostale (ako se želi skupiti više karata istog znaka, ne nužno *2*, sa stola, potrebno je toliko puta napisati taj znak koliko se tih karata želi skupiti). Sve ovo nalogno vrijedi i u slučaju karata znaka *10* i istaknute karte *karo 10*.
+
+U svakom trenutku pri biranju karata za skupiti sa stola moguće je napisati *auto* (također nije *case-sensitive*) pri čemu se bira potez kojeg bi pohlepni igrač s odigranom kartom igrao. Međutim, ako su na stolu, na primjer, karte *herc 4*, *herc 6*, *tref 10*, *karo A*, ako igrač igra kartu *pik A* i ako je za skup skupljenih karata pisao redom *6*, *auto*, sa stola će se uzeti *herc 4*, *herc 6*, *karo A* jer se u tom slučaju uzima karta znaka *6* sa stola iako bi pohlepni igrač s kartom *pik A* uzimao *tref 10*, *karo A*. Efekt stvarnog igranja poteza po izboru pohlepnog igrača postiže se tako da se napiše samo *auto*, bez zadavanja konkretnih karata prije (karte koje se eventualno zadaju prije pisanja *auto* nužno se uzimaju, a tek se povrh njih bira *najbogatiji* potez). Mogućnost pisanja *auto* ne bi se smijela *zloupotrebljavati* (previše koristiti) jer se time gubi smisao igranja igre kao čovjek: moguće je da igrač nije primijetio trenutno i beskontekstno najbolji potez, ali je unosom *auto* ipak skupio najbolji mogući skup karata sa stola, što stvarnim igranjem igre tablić papirnatim kartama ne bi mogao osim uz dobronamjernu intervenciju suigrača.

@@ -288,11 +288,13 @@ class MinimaxIgrac (Tablic.Igrac):
 
                 # Iteriranje po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10).
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i provjera je li takav
+                    # potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']),
                                  sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True),
-                                 ((Tablic.vrijednostKarata(potez['skupljeno'] | {potez['karta']}) + int(potez['skupljeno'] == stol) * Tablic.vrijednostTable()) if potez['skupljeno'] else 0,
-                                  len(potez['skupljeno'])))
+                                 ((potez['vrijednost'] + int(potez['skupljeno'] == stol) * Tablic.vrijednostTable()) if potez['skupljeno'] else 0, len(potez['skupljeno'])))
+                    if ovajPotez == zadnjiPotez:
+                        continue
 
                     # Ako je trenutni potez losiji od prethodnog (a potezi se
                     # prolaze sortirani po odabiru pohlepnog algoritma, dakle i
@@ -309,13 +311,8 @@ class MinimaxIgrac (Tablic.Igrac):
                     else:
                         isti |= {ovajPotez[0]}
 
-                    # Provjera je li ovakav potez vec obraden (ako je, obrada se preskce).
-                    if ovajPotez == zadnjiPotez:
-                        continue
-                    else:
-                        # Ako ovakav potez jos nije obraden, spremanje njegovog
-                        # prototipa u varijablu zadnjiPotez.
-                        zadnjiPotez = ovajPotez
+                    # Spremanje prototipa ovog poteza u varijablu zadnjiPotez.
+                    zadnjiPotez = ovajPotez
 
                     # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
                     # definirana.
@@ -346,7 +343,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
                     # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
                     sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema if zadnje else novoVjerojatnoNema,
-                                                        ruka - {potez['karta']} if j == i else ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
+                                                        ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
                                                         noviBodovi, novoSkupljeno,
                                                         n, i, (j + 1) % n,
                                                         zadnje, j if potez['skupljeno'] else zadnji,

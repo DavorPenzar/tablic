@@ -87,7 +87,7 @@ Kompletna implementacija igre napisana je objektno orijentirano u programskom je
 6.  **pohlepni_igrac.py** &ndash; implementacija klase igrača igre tablić koji igra pohlepnim algoritmom,
 7.  **minimax_igrac.py** &ndash; implementacija klase igrača igre tablić koji igra minimax algoritmom,
 8.  **io_igrac.py** &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
-9.  **promatrac_log.py** &ndash; implementacija klae `PromatracLog` koji ispisuje tijek igre na *stdout*,
+9.  **promatrac_log.py** &ndash; implementacija klase `PromatracLog` koji ispisuje tijek igre na *stdout*,
 10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić.
 
 Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom. Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.

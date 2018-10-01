@@ -77,44 +77,44 @@ akumulirano = [0 for i in range(len(igraci))]
 pobjede = [0 for i in range(len(igraci))]
 nerjeseno = list()
 
-## * * *  FORMAT ISPISA  * * *
+##  * * *  FORMAT ISPISA  * * *
 ##
-## Primjer testiranja 2 igraca.
+##  Primjer testiranja 2 igraca.
 ##
-## N.
-## 	t s (T s)
-## 	igrac1 vs. igrac2
-## 	[b1, b2]
-## 	[B1, B2]
-## 	[p1, p2]
-## 	n
-## Nerjesene:
-## 	(N1, (i11, i12))
-## 	(N2, (i21, i22))
+##  N.
+##  	t s (T s)
+##  	igrac1 vs. igrac2
+##  	[b1, b2]
+##  	[B1, B2]
+##  	[p1, p2]
+##  	n
+##  Nerjesene:
+##  	(N1, (i11, i12))
+##  	(N2, (i21, i22))
 ##
-## Legenda:
-##     N   --  redni broj partije,
-##     t   --  broj sekundi trajanja N-te partije,
-##     T   --  ukupni broj sekundi od pocetka testiranja,
-##     igrac1, igrac2  --  imena igraca redom kojim su na potezu,
-##     b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u N-toj partiji,
-##     B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 od
-##                 pocetka testiranja,
-##     p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 od pocetka
-##                 testiranja
-##     n   --  broj nerjesenih partija
-##     N1, N2  --  redom redni brojevi nerjesenih partija
-##     i11, i12    --  redni brojevi igraca koji su u N1-toj partiji imali
-##                     najvise bodova (redni brojevi u smislu reda poteza,
-##                     pocevsi s brojem 1),
-##     i21, i22    --  analogno kao i11, i12, ali za N2-tu partiju.
+##  Legenda:
+##      N   --  redni broj partije,
+##      t   --  broj sekundi trajanja N-te partije,
+##      T   --  ukupni broj sekundi od pocetka testiranja,
+##      igrac1, igrac2  --  imena igraca redom kojim su na potezu,
+##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u N-toj partiji,
+##      B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 od
+##                  pocetka testiranja,
+##      p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 od pocetka
+##                  testiranja
+##      n   --  broj nerjesenih partija
+##      N1, N2  --  redom redni brojevi nerjesenih partija
+##      i11, i12    --  redni brojevi igraca koji su u N1-toj partiji imali
+##                      najvise bodova (redni brojevi u smislu reda poteza,
+##                      pocevsi s brojem 1),
+##      i21, i22    --  analogno kao i11, i12, ali za N2-tu partiju.
 ##
-## Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
-## (ispisano vrijeme odnosi se na cijelo testiranje, a od bodova su ispisani
-## samo akumulirani bodovi)
+##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
+##  (ispisano vrijeme odnosi se na cijelo testiranje, a od bodova su ispisani
+##  samo akumulirani bodovi)
 ##
-## Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
-## donji kod se treba malo izmijeniti).
+##  Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
+##  donji kod se treba malo izmijeniti).
 ##
 
 

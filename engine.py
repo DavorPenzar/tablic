@@ -314,6 +314,8 @@ class Tablic (object):
 
             """
 
+            return None
+
     class PrazniLog (Log):
         """
         Klasa za definiranje najjednostavnijeg zapisnika (ne zapisuje nista).
@@ -339,6 +341,9 @@ class Tablic (object):
             """
 
             return None
+
+        def kraj (self, rezultat):
+            pass
 
     @six.add_metaclass(abc.ABCMeta)
     class Igrac (object):

@@ -798,7 +798,7 @@ class Tablic (object):
 
     def igraj (self, *logovi):
         """
-        Odigraj brojPartija partija i poteze zapisi u zapisnik log.
+        Odigraj brojPartija partija i poteze zapisi u zapisnike logovi.
 
         Objekt logovi mora biti tuple objekata podklase klase Tablic.Log.  Ako
         nije zadan nijedan zapisnik, povratna vrijednost funkcije je None.  Ako

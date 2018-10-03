@@ -20,17 +20,23 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 50
+N = 10
 
-# Rezultat ce se ispisivati nakon svake k-te partije.
-k = 5
+# Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
+# rezultat nakon 1. partije da se odmah vidi okvirno vrijeme potrebno za
+# igranje jedne partije.
+k = 1
+
+# Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
+ispisNerjesenih = False
 
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
 # biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
 # kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
-          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
+          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}},
+          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Tarantula'}})
 
 # Ako je pri pokretanju skripte zadan argument "-r", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
 # se slucajnim izborom.  Ostali dodatni argumenti se ne prepoznaju.
@@ -45,6 +51,11 @@ if len(sys.argv) == 2:
         raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
 elif len(sys.argv) != 1:
     raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
+
+# Ispis igraca redom kojim su na potezu.
+print('Igraci redom po potezima:')
+for igrac in igraci:
+    print(igrac)
 
 def deducirajPobjednika (konacni_rezultat):
     """
@@ -151,16 +162,15 @@ for i in range(N):
         pobjede[pobjednik] += 1
 
     # Eventualni ispis rezultata.
-    if not (i + 1) % k:
-        print('{0:d}.'.format(i + 1))
+    if not (i and (i + 1) % k):
+        print("\n{0:d}.".format(i + 1))
         print("\t{0:.3f} s ({1:.3f} s)".format(float(t1 - t0), float(t1 - t)))
         print("\t{0:s}".format(str.join(' vs. ', [igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca())])))
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
         print("\t{0:s}".format(repr(pobjede)))
         print("\t{0:d}".format(len(nerjeseno)))
-        # Za ispis nerjesenih partija treba izbrisati "False and "
-        if False and nerjeseno:
+        if ispisNerjesenih and nerjeseno:
             print("\tNerjesene:")
             for r in nerjeseno:
                 print("\t\t{0:s}".format(repr(r)))
@@ -174,8 +184,7 @@ print("\t{0:.3f} s".format(float(t1 - t)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 print("\t{0:d}".format(len(nerjeseno)))
-# Za ispis nerjesenih partija treba izbrisati "False and "
-if False and nerjeseno:
+if ispisNerjesenih and nerjeseno:
     print("\tNerjesene:")
     for r in nerjeseno:
         print("\t\t{0:s}".format(repr(r)))

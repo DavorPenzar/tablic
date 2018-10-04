@@ -80,9 +80,9 @@ print('Igraci redom po potezima:')
 for i in range(len(igraci)):
     print("\t{0:d}.\t{1:s}({2:s})".format(i + 1,
                                           igraci[i]['klasa'].__name__,
-                                          '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in igraci[i]['args']]),
+                                          '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in [i] + list(igraci[i]['args'])]),
                                                                    str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
-                                                                   ', ' if igraci[i]['args'] and igraci[i]['kwargs'] else '')))
+                                                                   ', ' if igraci[i]['kwargs'] else '')))
 
 # U listi akumulirano spremljeni su akumulirani brojevi bodova igraca kroz
 # partije, a u listi pobjede brojevi partija u kojima su pobjedili.  U listi

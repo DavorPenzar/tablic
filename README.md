@@ -116,7 +116,7 @@ Igrači se mogu testirati pokretanjem skripte *usporedba.py*. Skripta je napisan
 
 ### Igranje protiv automatskih igrača
 
-Igranje protiv *robota* igrača moguće je dodavanjem igrača klase `IOIgrac` u igru u skripti *usporedba.py* i pokretanjem te skripte. S obzirom na to da se ispis kod `IOIgrac`-a vrši na *stdout*, a, između ostalog, igraču se ispisuju karte koje ima u ruci, s trenutnom implementacijom nije izvediva poštena partija između 2 *ljudska* igrača.
+Igranje protiv *robota* igrača moguće je postavljanjem jednog od igrača u igri na objekt klase `IOIgrac` u skripti *usporedba.py* (u *tuple* `igraci` treba dodati objekt klase *dict* oblika `{'klasa' : IOIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Covjek'}}`; naravno, ime može biti po volji, a čak ga ni nije potrebno eksplicitno zadati odnosno može se zadati `{..., 'kwargs' : dict()}`) i pokretanjem te skripte. S obzirom na to da se ispis kod `IOIgrac`-a vrši na *stdout*, a, između ostalog, igraču se ispisuju karte koje ima u ruci, s trenutnom implementacijom nije izvediva poštena partija između 2 *ljudska* igrača.
 
 #### Zadavanje poteza
 

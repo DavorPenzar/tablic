@@ -8,6 +8,7 @@ Skripta za testiranje igraca igre tablic.
 """
 
 import random
+import six
 import sys
 import time
 
@@ -20,12 +21,12 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 10
+N = 100
 
 # Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
 # rezultat nakon 1. partije da se odmah vidi okvirno vrijeme potrebno za
 # igranje jedne partije.
-k = 1
+k = 10
 
 # Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
 ispisNerjesenih = False
@@ -35,27 +36,7 @@ ispisNerjesenih = False
 # kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
-          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}},
-          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Tarantula'}})
-
-# Ako je pri pokretanju skripte zadan argument "-r", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
-# se slucajnim izborom.  Ostali dodatni argumenti se ne prepoznaju.
-if len(sys.argv) == 2:
-    if sys.argv[1] == '-r':
-        igraci = tuple(reversed(igraci))
-    elif sys.argv[1] == '-p':
-        igraci = list(igraci)
-        random.shuffle(igraci)
-        igraci = tuple(igraci)
-    else:
-        raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
-elif len(sys.argv) != 1:
-    raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
-
-# Ispis igraca redom kojim su na potezu.
-print('Igraci redom po potezima:')
-for igrac in igraci:
-    print(igrac)
+          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def deducirajPobjednika (konacni_rezultat):
     """
@@ -79,6 +60,29 @@ def deducirajPobjednika (konacni_rezultat):
         return tuple(pobjednik)
 
     return pobjednik[0]
+
+# Ako je pri pokretanju skripte zadan argument "-r", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
+# se slucajnim izborom.  Ostali dodatni argumenti se ne prepoznaju.
+if len(sys.argv) == 2:
+    if sys.argv[1] == '-r':
+        igraci = tuple(reversed(igraci))
+    elif sys.argv[1] == '-p':
+        igraci = list(igraci)
+        random.shuffle(igraci)
+        igraci = tuple(igraci)
+    else:
+        raise RuntimeError("Dodatni argument `{0:s}' nije prepoznat.".format(sys.argv[1]))
+elif len(sys.argv) != 1:
+    raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
+
+# Ispis igraca redom kojim su na potezu.
+print('Igraci redom po potezima:')
+for i in range(len(igraci)):
+    print("\t{0:d}.\t{1:s}({2:s})".format(i + 1,
+                                          igraci[i]['klasa'].__name__,
+                                          '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in igraci[i]['args']]),
+                                                                   str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
+                                                                   ', ' if igraci[i]['args'] and igraci[i]['kwargs'] else '')))
 
 # U listi akumulirano spremljeni su akumulirani brojevi bodova igraca kroz
 # partije, a u listi pobjede brojevi partija u kojima su pobjedili.  U listi

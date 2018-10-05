@@ -255,7 +255,7 @@ class Karta (object):
             1.  su argumenti zadani implicitno i eksplicitno (kljucnim
                 rijecima), kao na primjer Karta(10, boja = 'karo'),
             2.  je zadan argument rjecnik s kljucevima koji nisu u skupu
-            {'boja', 'znak'},
+                {'boja', 'znak'},
             3.  je zadan 1 argument koji nije objekt klase int, float, complex,
                 str, unicode ili dict i nije iterabilan,
             4.  je neka vrijednost zadana objektom klase complex ciji

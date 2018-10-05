@@ -147,7 +147,10 @@ class IOIgrac (Tablic.Igrac):
 
         """
 
-        print('{0:s} igra:'.format(self.__imena[i]))
+        print('{0:s} igra.'.format(self.__imena[i]))
+        print('Na stolu:')
+        print("\t{0:s}".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
+        print('Potez:')
         print("\t{0:s} {1:s} {2:s}\n".format(IOIgrac.lijepiString(karta), ('<' if skupljeno else '>'), IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True))))
 
     def saznajRezultat (self, rezultat):

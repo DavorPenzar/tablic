@@ -21,12 +21,12 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 100
+N = 1
 
 # Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
 # rezultat nakon 1. partije da se odmah vidi okvirno vrijeme potrebno za
 # igranje jedne partije.
-k = 10
+k = 1
 
 # Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
 ispisNerjesenih = False
@@ -36,7 +36,7 @@ ispisNerjesenih = False
 # kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
-          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
+          {'klasa' : IOIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def deducirajPobjednika (konacni_rezultat):
     """

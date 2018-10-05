@@ -130,6 +130,9 @@ class PohlepniIgrac (Tablic.Igrac):
     def vidiPotez (self, i, ruka, stol, karta, skupljeno):
         pass
 
+    def saznajRezultat (self, rezultat):
+        pass
+
     def odigraj (self, ruka, stol, ponovi = False):
         """
         Pohlepnim algoritmom pronadi najpovoljniji potez i odigraj ga.

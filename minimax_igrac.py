@@ -552,6 +552,9 @@ class MinimaxIgrac (Tablic.Igrac):
                     for r in R:
                         self.__vjerojatnoNema[j][r] = 0
 
+    def saznajRezultat (self, rezultat):
+        pass
+
     def odigraj (self, ruka, stol, ponovi = False):
         """
         Minimax algoritmom pronadi najpovoljniji potez i odigraj ga.

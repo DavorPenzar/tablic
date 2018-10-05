@@ -150,6 +150,38 @@ class IOIgrac (Tablic.Igrac):
         print('{0:s} igra:'.format(self.__imena[i]))
         print("\t{0:s} {1:s} {2:s}\n".format(IOIgrac.lijepiString(karta), ('<' if skupljeno else '>'), IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True))))
 
+    def saznajRezultat (self, rezultat):
+        """
+        Ispisi rezultat na stdout.
+
+        """
+
+        # Dohvacanje konacnog rezultata.
+        konacni_rezultat = Tablic.Log.konacniRezultat(rezultat)
+
+        # Ispis rezultata.
+        print('Rezultat:')
+        for i in range(self.__n):
+            print("\t{0:s}{1:s}:".format(rezultat[i]['ime'], ' (*)' if i == self.dohvatiIndeks() else ''))
+            print("\t\tBodovi: {0:d}".format(rezultat[i]['skupljeno']))
+            print("\t\tTable: {0:d}".format(rrezultat[i]['table']))
+            print("\t\tBroj karata: {0:d}{1:s}".format(rezultat[i]['max'][1], ' [+]' if rezultat[i]['max'][0] else ''))
+            print("\t\tUkupno: {0:d}".format(konacni_rezultat[i]))
+
+        # Trazenje igraca s najvecim brojem bodova.
+        pobjednik = [0]
+        for i in range(1, self.__n):
+            if konacni_rezultat[i] > konacni_rezultat[pobjednik[0]]:
+                pobjednik = [i]
+            elif konacni_rezultat[i] == konacni_rezultat[pobjednik[0]]:
+                pobjednik.append(i)
+
+        # Ispis pobjednika ako postoji igrac sa strogo najvecim brojem bodova
+        # ili ispis svih igraca s najvecim brojem bodova inace.
+        print('{0:s}:'.format('Pobjednik' if len(pobjednik) == 1 else 'Nerjeseno izmedu'))
+        for p in pobjednik:
+            print("\t{0:s}{1:s}".format(rezultat[p]['ime'], ' (*)' if p == self.dohvatiIndeks() else ''))
+
     def odigraj (self, ruka, stol, ponovi = False):
         """
         Ucitaj potez sa stdin.

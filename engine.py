@@ -437,6 +437,20 @@ class Tablic (object):
             return None
 
         @abc.abstractmethod
+        def saznajRezultat (self, rezultat):
+            """
+            Neka igrac vidi konacni rezultat na kraju igre.
+
+            Objekt rezultat sukladan je povratnoj vrijednosti funkcije
+            Tablic.dohvatiRezultat, a objekt klase Tablic ga nad zapisnikom
+            poziva na kraju partije (kada je igracu koji je skupio strogo
+            najvise karata (ako takav postoji) to i zapisano).
+
+            """
+
+            return None
+
+        @abc.abstractmethod
         def odigraj (self, ruka, stol, ponovi = False):
             """
             Neka igrac odigra potez.
@@ -517,6 +531,9 @@ class Tablic (object):
             pass
 
         def vidiPotez (self, i, ruka, stol, karta, skupljeno):
+            pass
+
+        def saznajRezultat (self, rezultat):
             pass
 
         def odigraj (self, ruka, stol, ponovi = False):
@@ -998,6 +1015,15 @@ class Tablic (object):
             if not self.__stol:
                 self.__igraci[i]['table'] += 1
 
+        def __objaviRezultat (rezultat):
+            """
+            Pozovi Igrac.saznajRezultat na svakom igracu.
+
+            """
+
+            for i in range(len(self.__igraci)):
+                self.__igraci[i]['igrac'].saznajRezultat(copy.deepcopy(rezultat))
+
         logovi = list(logovi)
 
         # Provjera stanja igre.
@@ -1050,6 +1076,7 @@ class Tablic (object):
         # Zavrsi partiju.
         __zavrsi(zadnji)
         rezultat = self.dohvatiRezultat()
+        __objaviRezultat(rezultat)
         for i in range(len(logovi)):
             logovi[i].kraj(copy.deepcopy(rezultat))
 

@@ -87,7 +87,7 @@ class Karta (object):
 
         """
 
-        def __init__ (self, karta, unatrag = False):
+        def __init__ (self, karta, i, stop, inkr):
             """
             Inicijaliziraj iterator za iteriranje po objektu karta.
 
@@ -95,12 +95,9 @@ class Karta (object):
 
             self.__karta = karta
 
-            if unatrag:
-                self.__i = len(self.__karta) - 1
-                self.__inkr = -1
-            else:
-                self.__i = 0
-                self.__inkr = 1
+            self.__i = i
+            self.__stop = stop
+            self.__inkr = inkr
 
         def __copy__ (self):
             """
@@ -108,12 +105,7 @@ class Karta (object):
 
             """
 
-            iterator = __Iterator(self.__karta)
-
-            iterator.__i = self.__i
-            iterator.__inkr = self.__inkr
-
-            return iterator
+            return __Iterator(self.__karta, self.__i, self.__stop, self.__inkr)
 
         def __deepcopy__ (self, memodict = dict()):
             """
@@ -121,12 +113,10 @@ class Karta (object):
 
             """
 
-            iterator = __Iterator(copy.deepcopy(self.__karta, memodict))
-
-            iterator.__i = copy.deepcopy(self.__i, memodict)
-            iterator.__inkr = copy.deepcopy(self.__inkr, memodict)
-
-            return iterator
+            return __Iterator(copy.deepcopy(self.__karta, memodict),
+                              copy.deepcopy(self.__i, memodict),
+                              copy.deepcopy(self.__stop, memodict),
+                              copy.deepcopy(self.__inkr, memodict))
 
         def __iter__ (self):
             """
@@ -142,9 +132,9 @@ class Karta (object):
 
             """
 
-            try:
+            if self.__inkr > 0 and self.__i < self.__stop or self.__inkr < 0 and self.__i > self.__stop:
                 x = self.__karta[self.__i]
-            except KeyError:
+            else:
                 raise StopIteration()
 
             self.__i += self.__inkr
@@ -306,8 +296,10 @@ class Karta (object):
                     self.znak = args[0]
                 elif isinstance(args[0], (str, unicode)):
                     # Zadavanje karte stringom.
-                    if args[0]:
-                        # Rastavljanje nepraznog stringa.
+                    if args[0].upper() in Karta.Boja.__members__:
+                        self.boja = args[0]
+                    else:
+                        # Rastavljanje stringa.
                         karta = args[0].split()
                         if len(karta) == 1:
                             # Ako je string i nakon rastavljanja jedinstven,
@@ -490,7 +482,7 @@ class Karta (object):
 
         """
 
-        return Karta.__Iterator(self)
+        return Karta.__Iterator(self, *slice(None, None, 1).indices(len(self)))
 
     def __reversed__ (self):
         """
@@ -498,13 +490,16 @@ class Karta (object):
 
         """
 
-        return Karta.__Iterator(self, unatrag = True)
+        return Karta.__Iterator(self, *slice(None, None, -1).indices(len(self)))
 
     def __getitem__ (self, key):
         """
         Pokusaj dohvatiti element.
 
         """
+
+        if isinstance(key, slice):
+            return Karta.__Iterator(self, *key.indices(len(self)))
 
         if key == 0 or key == 'boja':
             return self.boja

@@ -37,21 +37,17 @@ class Tablic (object):
 
             """
 
-            def __init__ (self, log, unatrag = False):
+            def __init__ (self, log, i, stop, inkr):
                 """
                 Inicijaliziraj iterator za iteriranje po objektu log.
 
                 """
 
                 self.__log = log
-                self.__n = len(log)
 
-                if unatrag:
-                    self.__i = -1
-                    self.__inkr = -1
-                else:
-                    self.__i = 0
-                    self.__inkr = 1
+                self.__i = i
+                self.__stop = stop
+                self.__inkr = inkr
 
             def __copy__ (self):
                 """
@@ -59,13 +55,7 @@ class Tablic (object):
 
                 """
 
-                iterator = __Iterator(self.__log)
-
-                iterator.__n = self.__n
-                iterator.__i = self.__i
-                iterator.__inkr = self.__inkr
-
-                return iterator
+                return __Iterator(self.__log, self.__i, self.__stop, self.__inkr)
 
             def __deepcopy__ (self, memodict = dict()):
                 """
@@ -73,13 +63,10 @@ class Tablic (object):
 
                 """
 
-                iterator = __Iterator(copy.deepcopy(self.__log, memodict))
-
-                iterator.__n = copy.deepcopy(self.__n, memodict)
-                iterator.__i = copy.deepcopy(self.__i, memodict)
-                iterator.__inkr = copy.deepcopy(self.__inkr, memodict)
-
-                return iterator
+                return __Iterator(copy.deepcopy(self.__log, memodict),
+                                  copy.deepcopy(self.__i, memodict),
+                                  copy.deepcopy(self.__stop, memodict),
+                                  copy.deepcopy(self.__inkr, memodict))
 
             def __iter__ (self):
                 """
@@ -95,11 +82,7 @@ class Tablic (object):
 
                 """
 
-                if len(self.__log) != self.__n:
-                    raise RuntimeError('Duljina zapisnika se promijenila za '
-                                       'vrijeme iteriranja.')
-
-                if self.__i >= 0 and self.__i < self.__n:
+                if self.__inkr > 0 and self.__i < self.__stop or self.__inkr < 0 and self.__i > self.__stop:
                     x = self.__log[self.__i]
                 else:
                     raise StopIteration()
@@ -168,7 +151,7 @@ class Tablic (object):
 
             """
 
-            return Tablic.Log.__Iterator(self)
+            return Tablic.Log.__Iterator(self, *slice(None, None, 1).indices(len(self)))
 
         def __reversed__ (self):
             """
@@ -176,13 +159,16 @@ class Tablic (object):
 
             """
 
-            return Log.__Iterator(self, unatrag = True)
+            return Log.__Iterator(self, *slice(None, None, -1).indices(len(self)))
 
         def __getitem__ (self, key):
             """
             Pokusaj dohvatiti potez.
 
             """
+
+            if isinstance(key, slice):
+                return Log.__Iterator(self, *key.indices(len(self)))
 
             return copy.deepcopy(self.__log[key])
 

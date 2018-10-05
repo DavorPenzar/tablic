@@ -167,7 +167,7 @@ class IOIgrac (Tablic.Igrac):
         for i in range(self.__n):
             print("\t{0:s}{1:s}:".format(rezultat[i]['ime'], ' (*)' if i == self.dohvatiIndeks() else ''))
             print("\t\tBodovi: {0:d}".format(rezultat[i]['skupljeno']))
-            print("\t\tTable: {0:d}".format(rrezultat[i]['table']))
+            print("\t\tTable: {0:d}".format(rezultat[i]['table']))
             print("\t\tBroj karata: {0:d}{1:s}".format(rezultat[i]['max'][1], ' [+]' if rezultat[i]['max'][0] else ''))
             print("\t\tUkupno: {0:d}".format(konacni_rezultat[i]))
 
@@ -297,7 +297,7 @@ class IOIgrac (Tablic.Igrac):
                 # zadavanje '10' prevodi se u karo 10).
                 pronadeno = False
                 if (x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and
-                    (any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak) for y in stol - skupljeno)):
+                    any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak for y in stol - skupljeno)):
                     skupljeno |= ({Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)})
                     pronadeno = True
                 else:

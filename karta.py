@@ -428,7 +428,7 @@ class Karta (object):
                 else:
                     return enumeracija.NA
 
-            raise TypeError("Vrijednost `{0:s}'' nije valjana vrijednost za zadavanje enumeracije `{0:s}'.".format(repr(vrijednost), enumeracija.__name__))
+            raise TypeError("Vrijednost `{0:s}' nije valjana vrijednost za zadavanje enumeracije `{0:s}'.".format(repr(vrijednost), enumeracija.__name__))
 
         if name == 'boja':
             if 'boja' in self.__dict__:

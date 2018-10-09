@@ -109,6 +109,7 @@ nerjeseno = list()
 ##  Nerjesene:
 ##  	(r1, (i11, i12))
 ##  	(r2, (i21, i22))
+##      ...
 ##
 ##  Legenda:
 ##      r   --  redni broj partije,
@@ -120,23 +121,26 @@ nerjeseno = list()
 ##      igrac1, igrac2  --  imena igraca redom kojim su na potezu,
 ##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u r-toj
 ##                  partiji,
-##      B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 od
-##                  pocetka testiranja,
-##      p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 od pocetka
-##                  testiranja
-##      n   --  broj nerjesenih partija
-##      r1, r2  --  redom redni brojevi nerjesenih partija
+##      B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 u
+##                  prvih r partija,
+##      p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 u prvih r
+##                  partija,
+##      n   --  broj nerjesenih partija od prvih r partija,
+##      r1, r2  --  redom redni brojevi nerjesenih partija od prvih r partija,
 ##      i11, i12    --  redni brojevi igraca koji su u r1-toj partiji imali
 ##                      najvise bodova (redni brojevi u smislu reda poteza,
 ##                      pocevsi s brojem 1),
-##      i21, i22    --  analogno kao i11, i12, ali za r2-tu partiju.
+##      i21, i22    --  analogno kao i11, i12, ali za r2-tu partiju,
+##      ... --  ako je n > 2, preostali su retci analogni prethodnim dvama
+##              retcima, a odnose se redom na 3., 4. itd. nerjesenu partiju od
+##              prvih r partija,
 ##
 ##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
 ##  (ispis vremena je u obliku "mt s; T s" gdje je T akumulirani broj sekundi
 ##  trajanja svih partija, a od bodova su ispisani samo akumulirani bodovi).
 ##
 ##  Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
-##  donji kod se treba malo izmijeniti).
+##  varijabla ispisNerjesenih mora biti postavljena na True).
 ##
 
 # Igranje N partija.

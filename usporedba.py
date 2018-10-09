@@ -21,12 +21,12 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 100
+N = 10
 
 # Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
 # rezultat nakon 1. partije da se odmah vidi okvirno vrijeme potrebno za
 # igranje jedne partije.
-k = 10
+k = 1
 
 # Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
 ispisNerjesenih = False
@@ -84,6 +84,9 @@ for i in range(len(igraci)):
                                                                    str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
                                                                    ', ' if igraci[i]['kwargs'] else '')))
 
+# Varijabla T "pamti" akumulirani broj sekundi trajanja partija.
+T = 0.0
+
 # U listi akumulirano spremljeni su akumulirani brojevi bodova igraca kroz
 # partije, a u listi pobjede brojevi partija u kojima su pobjedili.  U listi
 # nerjeseno spremljeni su parovi indeksa partije i tuple-a igraca koji su u tim
@@ -96,45 +99,45 @@ nerjeseno = list()
 ##
 ##  Primjer testiranja 2 igraca.
 ##
-##  N.
-##  	t s (T s)
+##  r.
+##  	t s (mt s; T1 s + T2)
 ##  	igrac1 vs. igrac2
 ##  	[b1, b2]
 ##  	[B1, B2]
 ##  	[p1, p2]
 ##  	n
 ##  Nerjesene:
-##  	(N1, (i11, i12))
-##  	(N2, (i21, i22))
+##  	(r1, (i11, i12))
+##  	(r2, (i21, i22))
 ##
 ##  Legenda:
-##      N   --  redni broj partije,
-##      t   --  broj sekundi trajanja N-te partije,
-##      T   --  ukupni broj sekundi od pocetka testiranja,
+##      r   --  redni broj partije,
+##      t   --  broj sekundi trajanja r-te partije,
+##      mt  --  prosjecni broj sekundi trajanja prvih r partija,
+##      T1  --  akumulirani broj sekundi trajanja prvih r partija,
+##      T2  --  pretpostavljeni akumulirani broj preostalih partija izracunat
+##              po fromuli (N - r) * mt gdje je N ukupni broj partija,
 ##      igrac1, igrac2  --  imena igraca redom kojim su na potezu,
-##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u N-toj partiji,
+##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u r-toj
+##                  partiji,
 ##      B1, B2  --  akumulirani broj ostvarenih bodova igraca igrac1, igrac2 od
 ##                  pocetka testiranja,
 ##      p1, p2  --  broj pobjedenih partija igraca igrac1, igrac2 od pocetka
 ##                  testiranja
 ##      n   --  broj nerjesenih partija
-##      N1, N2  --  redom redni brojevi nerjesenih partija
-##      i11, i12    --  redni brojevi igraca koji su u N1-toj partiji imali
+##      r1, r2  --  redom redni brojevi nerjesenih partija
+##      i11, i12    --  redni brojevi igraca koji su u r1-toj partiji imali
 ##                      najvise bodova (redni brojevi u smislu reda poteza,
 ##                      pocevsi s brojem 1),
-##      i21, i22    --  analogno kao i11, i12, ali za N2-tu partiju.
+##      i21, i22    --  analogno kao i11, i12, ali za r2-tu partiju.
 ##
 ##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
-##  (ispisano vrijeme odnosi se na cijelo testiranje, a od bodova su ispisani
-##  samo akumulirani bodovi)
+##  (ispis vremena je u obliku "mt s; T s" gdje je T akumulirani broj sekundi
+##  trajanja svih partija, a od bodova su ispisani samo akumulirani bodovi).
 ##
 ##  Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
 ##  donji kod se treba malo izmijeniti).
 ##
-
-
-# Pocetak ukupnog mjerenja vremena.
-t = time.time()
 
 # Igranje N partija.
 for i in range(N):
@@ -154,6 +157,9 @@ for i in range(N):
     # Kraj mjerenja vremena partije.
     t1 = time.time()
 
+    # Dodavanje trajanja partije varijabli T.
+    T += float(t1 - t0)
+
     # Racunanje konacnog rezultata i pribrajanje listama akumulirano, pobjede.
     rezultat = igra.dohvatiRezultat()
     konacni_rezultat = Tablic.Log.konacniRezultat(rezultat)
@@ -168,7 +174,7 @@ for i in range(N):
     # Eventualni ispis rezultata.
     if not (i and (i + 1) % k):
         print("\n{0:d}.".format(i + 1))
-        print("\t{0:.3f} s ({1:.3f} s)".format(float(t1 - t0), float(t1 - t)))
+        print("\t{0:.3f} s ({1:.3f} s; {2:.3f} s + {3:.3f} s)".format(float(t1 - t0), T / (i + 1), T, (N - i - 1) * T / (i + 1)))
         print("\t{0:s}".format(str.join(' vs. ', [igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca())])))
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
@@ -179,12 +185,9 @@ for i in range(N):
             for r in nerjeseno:
                 print("\t\t{0:s}".format(repr(r)))
 
-# Kraj ukupnog mjerenja vremena.
-t1 = time.time()
-
 # Konacni ispis rezultata.
 print("\nKonacno")
-print("\t{0:.3f} s".format(float(t1 - t)))
+print("\t{0:.3f} s; {1:.3f} s".format(T / N, T))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 print("\t{0:d}".format(len(nerjeseno)))

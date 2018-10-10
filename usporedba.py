@@ -21,12 +21,13 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 10
+N = 4
 
 # Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
-# rezultat nakon 1. partije da se odmah vidi okvirno vrijeme potrebno za
-# igranje jedne partije.
-k = 1
+# rezultat nakon 1. partije (osim ako ona nije zadnja) da se odmah vidi okvirno
+# vrijeme potrebno za igranje jedne partije, a rezultat zadnje partije se ne
+# ispisuje.
+k = 2
 
 # Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
 ispisNerjesenih = False
@@ -99,7 +100,7 @@ nerjeseno = list()
 ##
 ##  Primjer testiranja 2 igraca.
 ##
-##  r.
+##  Partija r/N.
 ##  	t s (mt s; T1 s + T2)
 ##  	igrac1 vs. igrac2
 ##  	[b1, b2]
@@ -113,11 +114,12 @@ nerjeseno = list()
 ##
 ##  Legenda:
 ##      r   --  redni broj partije,
+##      N   --  ukupni broj partija,
 ##      t   --  broj sekundi trajanja r-te partije,
 ##      mt  --  prosjecni broj sekundi trajanja prvih r partija,
 ##      T1  --  akumulirani broj sekundi trajanja prvih r partija,
 ##      T2  --  pretpostavljeni akumulirani broj preostalih partija izracunat
-##              po fromuli (N - r) * mt gdje je N ukupni broj partija,
+##              po fromuli (N - r) * mt,
 ##      igrac1, igrac2  --  imena igraca redom kojim su na potezu,
 ##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u r-toj
 ##                  partiji,
@@ -138,6 +140,8 @@ nerjeseno = list()
 ##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
 ##  (ispis vremena je u obliku "mt s; T s" gdje je T akumulirani broj sekundi
 ##  trajanja svih partija, a od bodova su ispisani samo akumulirani bodovi).
+##  Rezultat zadnje partije se ne ispisuje, nego se samo ispisuje konacno
+##  stanje.
 ##
 ##  Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
 ##  varijabla ispisNerjesenih mora biti postavljena na True).
@@ -176,8 +180,8 @@ for i in range(N):
         pobjede[pobjednik] += 1
 
     # Eventualni ispis rezultata.
-    if not (i and (i + 1) % k):
-        print("\n{0:d}.".format(i + 1))
+    if not (i and (i + 1) % k or i + 1 == N):
+        print("\nPartija {0:d}/{1:d}:".format(i + 1, N))
         print("\t{0:.3f} s ({1:.3f} s; {2:.3f} s + {3:.3f} s)".format(float(t1 - t0), T / (i + 1), T, (N - i - 1) * T / (i + 1)))
         print("\t{0:s}".format(str.join(' vs. ', [igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca())])))
         print("\t{0:s}".format(repr(konacni_rezultat)))
@@ -190,7 +194,7 @@ for i in range(N):
                 print("\t\t{0:s}".format(repr(r)))
 
 # Konacni ispis rezultata.
-print("\nKonacno")
+print("\nKonacno ({0:d} partija):".format(N))
 print("\t{0:.3f} s; {1:.3f} s".format(T / N, T))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))

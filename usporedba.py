@@ -111,7 +111,7 @@ nerjeseno = list()
 ##  Nerjesene:
 ##  	(r1, (i11, i12))
 ##  	(r2, (i21, i22))
-##      ...
+##  	...
 ##
 ##  Legenda:
 ##      r   --  redni broj partije,

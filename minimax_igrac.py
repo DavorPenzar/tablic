@@ -485,7 +485,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
     def saznajNovoDijeljenje (self, ruka, stol):
         """
-        Pripremi se zaa novu etapu igre.
+        Pripremi se za novu etapu igre.
 
         """
 

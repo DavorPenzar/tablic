@@ -206,7 +206,7 @@ class Tablic (object):
 
             n = len(str(len(self.__log)))
 
-            return '{0:s}(['.format(self.__class__.__name__) + (("\n" + str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log))]) + "\n") if self.__log else '') + '])'
+            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log))]) if self.__log else ''))
 
         def __str__ (self):
             """
@@ -216,7 +216,7 @@ class Tablic (object):
 
             n = len(str(len(self.__log)))
 
-            return '{0:s}(['.format(self.__class__.__name__) + (("\n" + str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log))]) + "\n") if self.__log else '') + '])'
+            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log))]) if self.__log else ''))
 
         def __unicode__ (self):
             """
@@ -226,7 +226,7 @@ class Tablic (object):
 
             n = len(str(len(self.__log)))
 
-            return '{0:s}(['.format(self.__class__.__name__) + (("\n" + str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log))]) + "\n") if self.__log else '') + '])'
+            return unicode('{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log))]) if self.__log else '')))
 
         def dohvatiLog (self):
             """

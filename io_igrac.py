@@ -62,9 +62,9 @@ class IOIgrac (Tablic.Igrac):
 #           pass
 
         if isinstance(x, dict):
-            return '{' + str.join(', ', [IOIgrac.lijepiString(y) + ' : ' + IOIgrac.lijepiString(z) for y, z in six.iteritems(x)]) + '}'
+            return '{{0:s}}'.format(str.join(', ', ['{0:s} : {1:s}'.format(IOIgrac.lijepiString(y), IOIgrac.lijepiString(z)) for y, z in six.iteritems(x)]))
         elif hasattr(x, '__iter__') and not isinstance(x, (str, unicode)):
-            return '[' + str.join(', ', [IOIgrac.lijepiString(y) for y in x]) + ']'
+            return '[{0:s}]'.format(str.join(', ', [IOIgrac.lijepiString(y) for y in x]))
 
         return str(x)
 

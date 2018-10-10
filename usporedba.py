@@ -138,14 +138,19 @@ nerjeseno = list()
 ##              retcima, a odnose se redom na 3., 4. itd. nerjesenu partiju od
 ##              prvih r partija,
 ##
+##  Ako je n = 0, redak "n" zadnji je u ispisu za tu partiju.  Inace je,
+##  naravno, redaka ispod retka "Nerjesene:" ukupno n i odnose se redom na tih
+##  n nerjesenih partija.
+##
 ##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
 ##  (ispis vremena je u obliku "mt s; T s" gdje je T akumulirani broj sekundi
 ##  trajanja svih partija, a od bodova su ispisani samo akumulirani bodovi).
 ##  Rezultat zadnje partije se ne ispisuje, nego se samo ispisuje konacno
 ##  stanje.
 ##
-##  Moguce da se linije nakon linije "n" ne ce ispisivati (ako su od interesa,
-##  varijabla ispisNerjesenih mora biti postavljena na True).
+##  Moguce da se linije nakon linije "n" ne ce ispisivati cak i ako je n > 0
+##  (ako su od interesa, varijabla ispisNerjesenih mora biti postavljena na
+##  True).
 ##
 
 # Igranje N partija.

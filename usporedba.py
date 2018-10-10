@@ -166,7 +166,7 @@ for i in range(N):
     t0 = time.time()
 
     # Igranje partije.
-    igra.igraj(log)
+    igra.igraj()
 
     # Kraj mjerenja vremena partije.
     t1 = time.time()

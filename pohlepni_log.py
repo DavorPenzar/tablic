@@ -123,7 +123,7 @@ class PohlepniLog (Tablic.Log):
             potez[PohlepniLog.dohvatiBrojIndeksa() + PohlepniLog.prevediKartu(x)] += 1
 
         # Zapis odigrane karte u potez.
-        potez[2 * PohlepniLog.dohvatiBrojIndeksa()] = ( PohlepniLog.prevediKartu(karta))
+        potez[2 * PohlepniLog.dohvatiBrojIndeksa()] = (PohlepniLog.prevediKartu(karta))
 
         # Povrat zapisa poteza.
         return tuple(potez)

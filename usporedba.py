@@ -21,13 +21,13 @@ from io_igrac import IOIgrac
 from promatrac_log import PromatracLog
 
 # Broj partija za testiranje.
-N = 4
+N = 10
 
 # Rezultat ce se ispisivati nakon svake k-te partije.  Ipak, ispisuje se i
 # rezultat nakon 1. partije (osim ako ona nije zadnja) da se odmah vidi okvirno
 # vrijeme potrebno za igranje jedne partije, a rezultat zadnje partije se ne
 # ispisuje.
-k = 2
+k = 1
 
 # Detalji o nerjesenim partijama ispisuju se ako je ispisNerjesenih True.
 ispisNerjesenih = False
@@ -166,7 +166,7 @@ for i in range(N):
     t0 = time.time()
 
     # Igranje partije.
-    igra.igraj()
+    igra.igraj(log)
 
     # Kraj mjerenja vremena partije.
     t1 = time.time()

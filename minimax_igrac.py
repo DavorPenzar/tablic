@@ -356,7 +356,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost < vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
-                    elif len(sadGrana) + 1 < len(grana) or not (dubina and ruka) and sadVrijednost >= vrijednost:
+                    elif len(sadGrana) + 1 < len(grana) or not (dubina and len(ruka) - int(j <= i)) and sadVrijednost >= vrijednost:
                         # Ako je algoritam morao zavrsiti prije dosega
                         # maksimalne dubine ili stanja bez potomka, to znaci
                         # dvije stvari:

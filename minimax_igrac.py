@@ -251,12 +251,12 @@ class MinimaxIgrac (Tablic.Igrac):
                         # Takoder, kako je svrha ovog minimax algoritma traziti
                         # najbolji prvi potez zbog omogucavanja boljih kasnijih
                         # poteza, ako je trenutna dubina stabla maksimalna ili
-                        # ako se i-ti igrac vise nema poteza za odigrati,
-                        # trazenje, koje se inace izvrsava po potezima uredenim
-                        # sortiranjem koje koristi pohlepni algoritam (prvi
-                        # potezi su najvrijedniji, a kasniji manje), se prekida
-                        # kad heuristicke vrijednosti poteza pocinju opadati
-                        # (jer je max-igrac na potezu).
+                        # ako i-ti igrac nakon ovog ktuga vise nema poteza za
+                        # odigrati, trazenje, koje se inace izvrsava po
+                        # potezima uredenim sortiranjem koje koristi pohlepni
+                        # algoritam (prvi potezi su najvrijedniji, a kasniji
+                        # manje), se prekida kad heuristicke vrijednosti poteza
+                        # pocinju opadati (jer je max-igrac na potezu).
                         break
                     if vrijednost > alpha:
                         alpha = vrijednost
@@ -371,12 +371,12 @@ class MinimaxIgrac (Tablic.Igrac):
                         # Takoder, kako je svrha ovog minimax algoritma traziti
                         # najbolji prvi potez zbog omogucavanja boljih kasnijih
                         # poteza, ako je trenutna dubina stabla maksimalna ili
-                        # ako se i-ti igrac vise nema poteza za odigrati,
-                        # trazenje, koje se inace izvrsava po potezima uredenim
-                        # sortiranjem koje koristi pohlepni algoritam (prvi
-                        # potezi su najvrijedniji, a kasniji manje), se prekida
-                        # kad heuristicke vrijednosti poteza pocinju rasti
-                        # (jer je min-igrac na potezu).
+                        # ako i-ti igrac nakon ovog ktuga vise nema poteza za
+                        # odigrati, trazenje, koje se inace izvrsava po
+                        # potezima uredenim sortiranjem koje koristi pohlepni
+                        # algoritam (prvi potezi su najvrijedniji, a kasniji
+                        # manje), se prekida kad heuristicke vrijednosti poteza
+                        # pocinju rasti (jer je min-igrac na potezu).
                         break
                     if vrijednost < beta:
                         beta = vrijednost

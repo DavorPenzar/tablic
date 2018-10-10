@@ -698,12 +698,15 @@ class Tablic (object):
         Dodaj igraca (objekt klase klasa) u igru.
 
         Argumenti *args, **kwargs prosljeduju se konstruktoru klase klasa pri
-        inicijalizaciji novog dodanog igraca.
+        inicijalizaciji novog dodanog igraca.  Ako postoji kljuc 'i' u rjecniku
+        kwargs, brise se.
 
         """
 
         if self.__pokrenuta:
             raise RuntimeError('Nemoguce je dodati igraca u pokrenutu igru.')
+
+        kwargs.pop('i', None)
 
         self.__igraci.append({'igrac' : klasa(len(self.__igraci), *args, **kwargs),
                               'ruka' : set(),

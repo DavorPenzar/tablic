@@ -79,6 +79,7 @@ elif len(sys.argv) != 1:
 # Ispis igraca redom kojim su na potezu.
 print('Igraci redom po potezima:')
 for i in range(len(igraci)):
+    igraci[i]['kwargs'].pop('i', None)
     print("\t{0:d}.\t{1:s}({2:s})".format(i + 1,
                                           igraci[i]['klasa'].__name__,
                                           '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in [i] + list(igraci[i]['args'])]),

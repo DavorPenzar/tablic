@@ -77,6 +77,7 @@ elif len(sys.argv) != 1:
     raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
 
 # Ispis igraca redom kojim su na potezu.
+igraci = list(igraci)
 print('Igraci redom po potezima:')
 for i in range(len(igraci)):
     igraci[i]['kwargs'].pop('i', None)
@@ -85,6 +86,7 @@ for i in range(len(igraci)):
                                           '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in [i] + list(igraci[i]['args'])]),
                                                                    str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
                                                                    ', ' if igraci[i]['kwargs'] else '')))
+igraci = tuple(igraci)
 
 # Varijabla T "pamti" akumulirani broj sekundi trajanja partija.
 T = 0.0

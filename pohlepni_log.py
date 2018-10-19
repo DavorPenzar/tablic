@@ -78,12 +78,6 @@ class PohlepniLog (Tablic.Log):
 
         Tablic.Log.__init__(self, log)
 
-    def __copy__ (self):
-        return PohlepniLog(self.dohvatiLog())
-
-    def __deepcopy__ (self, memodict = dict()):
-        return PohlepniLog(copy.deepcopy(self.dohvatiLog(), memodict))
-
     def novaPartija (self, n, igraci):
         pass
 

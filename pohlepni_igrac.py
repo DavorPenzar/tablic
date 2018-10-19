@@ -112,12 +112,6 @@ class PohlepniIgrac (Tablic.Igrac):
 
         Tablic.Igrac.__init__(self, i, ime)
 
-    def __copy__ (self):
-        return PohlepniIgrac(self.dohvatiIme(), self.dohvatiIndeks())
-
-    def __deepcopy__ (self, memodict = dict()):
-        return PohlepniIgrac(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict))
-
     def hocuRazlog (self):
         return False
 

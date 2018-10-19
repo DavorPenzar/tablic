@@ -82,7 +82,7 @@ class IOIgrac (Tablic.Igrac):
         self.__imena = None
 
     def __copy__ (self):
-        igrac = IOIgrac(self.dohvatiIndeks(), self.dohvatiIme())
+        igrac = Tablic.Igrac.__copy__(self)
 
         igrac.__k = self.__k # broj karata u spilu
 
@@ -92,7 +92,7 @@ class IOIgrac (Tablic.Igrac):
         return igrac
 
     def __deepcopy__ (self, memodict = dict()):
-        igrac = IOIgrac(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict))
+        igrac = Tablic.Igrac.__deepcopy__(self, memodict)
 
         igrac.__k = copy.deepcopy(self.__k, memodict)
 

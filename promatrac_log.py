@@ -33,7 +33,7 @@ class PromatracLog (Tablic.Log):
         self.__n = None # broj igraca
 
     def __copy__ (self):
-        log = PromatracLog(self.dohvatiLog())
+        log = Tablic.Log.__copy__(self)
 
         log.__k = self.__k
         log.__n = self.__n
@@ -41,7 +41,7 @@ class PromatracLog (Tablic.Log):
         return log
 
     def __deepcopy__ (self, memodict = dict()):
-        log = PromatracLog(copy.deepcopy(self.dohvatiLog(), memodict))
+        log = Tablic.Log.__deepcopy__(self, memodict)
 
         log.__k = copy.deepcopy(self.__k, memodict)
         log.__n = copy.deepcopy(self.__n, memodict)

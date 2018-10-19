@@ -430,7 +430,10 @@ class MinimaxIgrac (Tablic.Igrac):
         self.__vjerojatnoNema = None
 
     def __copy__ (self):
-        igrac = MinimaxIgrac(self.dohvatiIndeks(), self.dohvatiIme(), self.__maxDubina, self.__maxT)
+        igrac = Tablic.Igrac.__copy__(self)
+
+        igrac.__maxDubina = self.__maxDubina
+        igrac.__maxT = self.__maxT
 
         igrac.__k = self.__k
         igrac.__n = self.__n
@@ -446,7 +449,10 @@ class MinimaxIgrac (Tablic.Igrac):
         return igrac
 
     def __deepcopy__ (self, memodict = dict()):
-        igrac = MinimaxIgrac(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict), copy.deepcopy(self.__maxDubina, memodict), copy.deepcopy(self.__maxT, memodict))
+        igrac = Tablic.Igrac.__deepcopy__(self, memodict)
+
+        igrac.__maxDubina = copy.deepcopy(self.__maxDubina, memodict)
+        igrac.__maxT = copy.deepcopy(self.__maxT, memodict)
 
         igrac.__k = copy.deepcopy(self.__k, memodict)
         igrac.__n = copy.deepcopy(self.__n, memodict)

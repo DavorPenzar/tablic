@@ -127,7 +127,7 @@ class Tablic (object):
 
             """
 
-            return Log(self.__log)
+            return self.__class__(self.__log)
 
         def __deepcopy__ (self, memodict = dict()):
             """
@@ -135,7 +135,7 @@ class Tablic (object):
 
             """
 
-            return Log(copy.deepcopy(self.__log, memodict))
+            return self.__class__(copy.deepcopy(self.__log, memodict))
 
         def __len__ (self):
             """
@@ -308,12 +308,6 @@ class Tablic (object):
 
         """
 
-        def __copy__ (self):
-            return PrazniLog(self.dohvatiLog())
-
-        def __deepcopy__ (self, memodict = dict()):
-            return PrazniLog(copy.deepcopy(self.dohvatiLog(), memodict))
-
         def novaPartija (self, n, igraci):
             pass
 
@@ -363,7 +357,7 @@ class Tablic (object):
 
             """
 
-            return Igrac(self.__i, self.__ime)
+            return self.__class__(self.__i, self.__ime)
 
         def __deepcopy__ (self, memodict = dict()):
             """
@@ -371,7 +365,7 @@ class Tablic (object):
 
             """
 
-            return Igrac(copy.deepcopy(self.__i, memodict), copy.deepcopy(self.__ime, memodict))
+            return self.__class__(copy.deepcopy(self.__i, memodict), copy.deepcopy(self.__ime, memodict))
 
         def dohvatiIndeks (self):
             """
@@ -514,12 +508,6 @@ class Tablic (object):
         Klasa za definiranje najjednostavnijeg igraca (igra sl. odabirom).
 
         """
-
-        def __copy__ (self):
-            return RandomIgrac(self.dohvatiIndeks(), self.dohvatiIme())
-
-        def __deepcopy__ (self, memodict = dict()):
-            return RandomIgrac(copy.deepcopy(self.dohvatiIndeks(), memodict), copy.deepcopy(self.dohvatiIme(), memodict))
 
         def hocuRazlog (self):
             return False

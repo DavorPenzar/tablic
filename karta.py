@@ -517,11 +517,14 @@ class Karta (object):
         if isinstance(key, slice):
             for i in range(*key.indices(len(self))):
                 self.__setitem__(i, value)
+            return
 
         if key == 0 or key == 'boja':
             self.boja = value
+            return
         if key == 1 or key == 'znak':
             self.znak = value
+            return
 
         raise KeyError("Kljuc key nije prepoznat.")
 

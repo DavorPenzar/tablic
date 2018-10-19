@@ -168,7 +168,7 @@ class Tablic (object):
             """
 
             if isinstance(key, slice):
-                return Log.__Iterator(self, *key.indices(len(self)))
+                return list(Log.__Iterator(self, *key.indices(len(self))))
 
             return copy.deepcopy(self.__log[key])
 

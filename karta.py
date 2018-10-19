@@ -499,7 +499,7 @@ class Karta (object):
         """
 
         if isinstance(key, slice):
-            return Karta.__Iterator(self, *key.indices(len(self)))
+            return tuple(Karta.__Iterator(self, *key.indices(len(self))))
 
         if key == 0 or key == 'boja':
             return self.boja
@@ -513,6 +513,10 @@ class Karta (object):
         Pokusaj zadati element.
 
         """
+
+        if isinstance(key, slice):
+            for i in range(*key.indices(len(self))):
+                self.__setitem__(i, value)
 
         if key == 0 or key == 'boja':
             self.boja = value

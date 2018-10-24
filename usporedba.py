@@ -97,7 +97,7 @@ def izraziVrijeme (t, tocnost = 3, predznak = False):
     # Ispis sekundi.
     t_str += '{1:.{0:d}f}{2:s}'.format(tocnost, t, sekunda)
 
-    # povrat izrazenog vremena.
+    # Povrat izrazenog vremena.
     return t_str
 
 def deducirajPobjednika (konacni_rezultat):

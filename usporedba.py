@@ -7,6 +7,7 @@ Skripta za testiranje igraca igre tablic.
 
 """
 
+import math
 import random
 import six
 import sys
@@ -39,6 +40,66 @@ ispisNerjesenih = False
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
+def izraziVrijeme (t, tocnost = 3, predznak = False):
+    """
+    Dohvati string vremena t (u sekundama) izrazenog u potrebnim jedinicama.
+
+    Povratna vrijednost je string oblika "[predznak]Dd Hh Mm Ss", gdje su:
+        --  D   --  broj dana (iz intervala [1, +beskonacno)),
+        --  H   --  broj sati (iz intervala [0, 24)),
+        --  M   --  broj minuta (iz intervala [0, 60)),
+        --  S   --  broj sekundi (iz intervala [0, 60)).
+    Vodece nule se ne ispisuju (ako je, na primjer, t = 65.0, tocnost = 2 i
+    predznak = False, povratni string je samo "1m 5.00s").  Ako je
+    predznak = True, predznak se nuzno ispisuje ispred vodece vrijednosti (ako
+    je t < 0.0, predznak se nuzno ispisuje).  Vrijednost tocnost zadaje broj
+    decimalnih mjesta za ispis vrijednosti sekundi.
+
+    """
+
+    # Definiranje stringova za oznake mjernih jedinica vremena.
+    dan = 'd'
+    sat = 'h'
+    minuta = 'm'
+    sekunda = 's'
+
+    # Izrazavanje negativnog vremena.
+    if t < 0.0:
+        return '-{0:s}'.format(izraziVrijeme(-t, tocnost, False))
+
+    # Ako je veca mjerna jedinica vec ispisana (na primjer sat), manja se mora
+    # ispisati iako iznosi 0 (na primjer minuta ako je sat vec ispisan).
+    # Obavezno ispisivanje zadano je varijablom ispisuj.
+    ispisuj = False
+
+    # Inicijalizacija povratnog stringa.
+    t_str = '+' if predznak else ''
+
+    # Ispis dana.
+    if t >= 86400.0:
+        ispisuj = True
+
+        t_str += '{0:d}{1:s} '.format(int(math.floor(t / 86400.0)), dan)
+        t -= 86400.0 * math.floor(t / 86400.0)
+
+    # Ispis sati.
+    if ispisuj or t >= 3600.0:
+        ispisuj = True
+
+        t_str += '{0:d}{1:s} '.format(int(math.floor(t / 3600.0)), sat)
+        t -= 3600.0 * math.floor(t / 3600.0)
+
+    # Ispis minuta.
+    if ispisuj or t >= 60.0:
+        t_str += '{0:d}{1:s} '.format(int(math.floor(t / 60.0)), minuta)
+        t -= 60.0 * math.floor(t / 60.0)
+
+    # Ispis sekundi.
+    t_str += '{1:.{0:d}f}{2:s}'.format(tocnost, t, sekunda)
+
+    # povrat izrazenog vremena.
+    return t_str
+
 def deducirajPobjednika (konacni_rezultat):
     """
     Otkrij tko je skupio strogo najvise bodova.
@@ -50,6 +111,7 @@ def deducirajPobjednika (konacni_rezultat):
 
     """
 
+    # Dedukcija igraca s najvise bodova.
     pobjednik = [0]
     for i in range(1, len(konacni_rezultat)):
         if konacni_rezultat[i] == konacni_rezultat[pobjednik[0]]:
@@ -57,9 +119,11 @@ def deducirajPobjednika (konacni_rezultat):
         elif konacni_rezultat[i] > konacni_rezultat[pobjednik[0]]:
             pobjednik = [i]
 
+    # Obradivanje slucaja da vise igraca ima najvise bodova.
     if len(pobjednik) > 1:
         return tuple(pobjednik)
 
+    # Povrat indeksa igraca sa strogo najvecim brojem bodova.
     return pobjednik[0]
 
 # Ako je pri pokretanju skripte zadan argument "-r", redoslijed igraca u tuple-u igraci se obrce.  Ako je zadan argument "-p", redoslijed igraca permutira
@@ -104,7 +168,7 @@ nerjeseno = list()
 ##  Primjer testiranja 2 igraca.
 ##
 ##  Partija r/N.
-##  	t s (mt s; T1 s + T2)
+##  	t s (mt; T1 + T2 = T)
 ##  	igrac1 vs. igrac2
 ##  	[b1, b2]
 ##  	[B1, B2]
@@ -119,10 +183,12 @@ nerjeseno = list()
 ##      r   --  redni broj partije,
 ##      N   --  ukupni broj partija,
 ##      t   --  broj sekundi trajanja r-te partije,
-##      mt  --  prosjecni broj sekundi trajanja prvih r partija,
-##      T1  --  akumulirani broj sekundi trajanja prvih r partija,
-##      T2  --  pretpostavljeni akumulirani broj preostalih partija izracunat
-##              po fromuli (N - r) * mt,
+##      mt  --  prosjecno vrijeme trajanja prvih r partija,
+##      T1  --  akumulirano vrijeme trajanja prvih r partija,
+##      T2  --  pretpostavljeno akumulirano vrijeme preostalih partija
+##              izracunato po fromuli (N - r) * mt,
+##      T   --  pretpostavljeno akumulirano vrijeme svih partija izracunato po
+##              formuli N * mt,
 ##      igrac1, igrac2  --  imena igraca redom kojim su na potezu,
 ##      b1, b2  --  broj ostvarenih bodova igraca igrac1, igrac2 u r-toj
 ##                  partiji,
@@ -145,10 +211,9 @@ nerjeseno = list()
 ##  n nerjesenih partija.
 ##
 ##  Na samom kraju ispis je slican, ali bez informacija o konkretnoj partiji
-##  (ispis vremena je u obliku "mt s; T s" gdje je T akumulirani broj sekundi
-##  trajanja svih partija, a od bodova su ispisani samo akumulirani bodovi).
-##  Rezultat zadnje partije se ne ispisuje, nego se samo ispisuje konacno
-##  stanje.
+##  (ispis vremena je u obliku "mt; T" gdje je T akumulirano vrijeme trajanja
+##  svih partija, a od bodova su ispisani samo akumulirani bodovi).  Rezultat
+##  zadnje partije se ne ispisuje, nego se samo ispisuje konacno stanje.
 ##
 ##  Moguce da se linije nakon linije "n" ne ce ispisivati cak i ako je n > 0
 ##  (ako su od interesa, varijabla ispisNerjesenih mora biti postavljena na
@@ -190,7 +255,7 @@ for i in range(N):
     # Eventualni ispis rezultata.
     if not (i and (i + 1) % k or i + 1 == N):
         print("\nPartija {0:d}/{1:d}:".format(i + 1, N))
-        print("\t{0:.3f} s ({1:.3f} s; {2:.3f} s + {3:.3f} s)".format(float(t1 - t0), T / (i + 1), T, (N - i - 1) * T / (i + 1)))
+        print("\t{0:s} ({1:s}; {2:s} + {3:s} = {4:s})".format(izraziVrijeme(float(t1 - t0)), izraziVrijeme(T / (i + 1)), izraziVrijeme(T), izraziVrijeme((N - i - 1) * T / (i + 1)), izraziVrijeme(N * T / (i + 1))))
         print("\t{0:s}".format(str.join(' vs. ', [igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca())])))
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
@@ -203,7 +268,7 @@ for i in range(N):
 
 # Konacni ispis rezultata.
 print("\nKonacno ({0:d} partija):".format(N))
-print("\t{0:.3f} s; {1:.3f} s".format(T / N, T))
+print("\t{0:s}; {1:s}".format(izraziVrijeme(T / N), izraziVrijeme(T)))
 print("\t{0:s}".format(repr(akumulirano)))
 print("\t{0:s}".format(repr(pobjede)))
 print("\t{0:d}".format(len(nerjeseno)))

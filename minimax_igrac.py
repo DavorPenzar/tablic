@@ -165,6 +165,9 @@ class MinimaxIgrac (Tablic.Igrac):
         # vrijeme.
         t0 = time.time()
 
+        # Definiranje sortirane liste kartaskih boja.
+        boje = sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True)
+
         def __minimax (sigurnoNema, vjerojatnoNema,
                        ruka, stol,
                        bodovi, skupljeno,
@@ -317,7 +320,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
                     # definirana.
                     if potez['karta'].znak is Karta.Znak.NA:
-                        for boja in sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True):
+                        for boja in boje:
                             if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
                                 continue
                             elif potez['karta'].znak is Karta.Znak.BR10 and boja is Karta.Boja.KARO:

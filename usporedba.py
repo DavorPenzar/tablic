@@ -87,20 +87,20 @@ def izraziVrijeme (t, preciznost = 2, predznak = False):
 
     # Ispis sati.
     if ispisuj or t >= 3600.0:
-        t_str += '{1:{0:s}d}{2:s} '.format('0{0:d}'.format(preciznost + 3) if ispisuj else '', int(math.floor(t / 3600.0)), sat)
+        t_str += '{1:{0:s}d}{2:s} '.format('02' if ispisuj else '', int(math.floor(t / 3600.0)), sat)
         t -= 3600.0 * math.floor(t / 3600.0)
 
         ispisuj = True
 
     # Ispis minuta.
     if ispisuj or t >= 60.0:
-        t_str += '{1:{0:s}d}{2:s} '.format('0{0:d}'.format(preciznost + 3) if ispisuj else '', int(math.floor(t / 60.0)), minuta)
+        t_str += '{1:{0:s}d}{2:s} '.format('02' if ispisuj else '', int(math.floor(t / 60.0)), minuta)
         t -= 60.0 * math.floor(t / 60.0)
 
         ispisuj = True
 
     # Ispis sekundi.
-    t_str += '{2:{1:s}.{0:d}f}{3:s}'.format(preciznost, '0{0:d}'.format(preciznost + 3) if ispisuj else '', t, sekunda)
+    t_str += '{2:{1:s}.{0:d}f}{3:s}'.format(preciznost, ('0{0:d}'.format(preciznost + 3) if preciznost else '02') if ispisuj else '', t, sekunda)
 
     # Povrat izrazenog vremena.
     return t_str

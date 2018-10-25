@@ -40,22 +40,27 @@ ispisNerjesenih = False
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
-def izraziVrijeme (t, tocnost = 3, predznak = False):
+def izraziVrijeme (t, preciznost = 2, predznak = False):
     """
     Dohvati string vremena t (u sekundama) izrazenog u potrebnim jedinicama.
 
-    Povratna vrijednost je string oblika "[predznak]Dd Hh Mm Ss", gdje su:
+    Povratna vrijednost je string oblika "[predznak][[[Dd ]Hh ]Mm ]Ss", gdje su:
         --  D   --  broj dana (iz intervala [1, +beskonacno)),
         --  H   --  broj sati (iz intervala [0, 24)),
         --  M   --  broj minuta (iz intervala [0, 60)),
         --  S   --  broj sekundi (iz intervala [0, 60)).
-    Vodece nule se ne ispisuju (ako je, na primjer, t = 65.0, tocnost = 2 i
-    predznak = False, povratni string je samo "1m 5.00s").  Ako je
-    predznak = True, predznak se nuzno ispisuje ispred vodece vrijednosti (ako
-    je t < 0.0, predznak se nuzno ispisuje).  Vrijednost tocnost zadaje broj
-    decimalnih mjesta za ispis vrijednosti sekundi.
+    Vodece nule se ne ispisuju (ako je, na primjer, t = 65, preciznost = 2 i
+    predznak = False, povratni string je samo "1m 05.00s"), ali sekunde se
+    uvijek ispisuju (cak i ako je t = 0).  Ako je predznak = True, predznak se
+    nuzno ispisuje ispred vodece vrijednosti (ako je t < 0, predznak se nuzno
+    ispisuje).  Vrijednost preciznost zadaje broj decimalnih mjesta za ispis
+    vrijednosti sekundi.
 
     """
+
+    # Definiranje stringova za predznake.
+    minus = '-'
+    plus = '+'
 
     # Definiranje stringova za oznake mjernih jedinica vremena.
     dan = 'd'
@@ -65,7 +70,7 @@ def izraziVrijeme (t, tocnost = 3, predznak = False):
 
     # Izrazavanje negativnog vremena.
     if t < 0.0:
-        return '-{0:s}'.format(izraziVrijeme(-t, tocnost, False))
+        return '{0:s}{1:s}'.format(minus, izraziVrijeme(-t, preciznost, False))
 
     # Ako je veca mjerna jedinica vec ispisana (na primjer sat), manja se mora
     # ispisati iako iznosi 0 (na primjer minuta ako je sat vec ispisan).
@@ -73,29 +78,29 @@ def izraziVrijeme (t, tocnost = 3, predznak = False):
     ispisuj = False
 
     # Inicijalizacija povratnog stringa.
-    t_str = '+' if predznak else ''
+    t_str = plus if predznak and t else ''
 
     # Ispis dana.
     if t >= 86400.0:
-        ispisuj = True
-
         t_str += '{0:d}{1:s} '.format(int(math.floor(t / 86400.0)), dan)
         t -= 86400.0 * math.floor(t / 86400.0)
 
     # Ispis sati.
     if ispisuj or t >= 3600.0:
-        ispisuj = True
-
-        t_str += '{0:d}{1:s} '.format(int(math.floor(t / 3600.0)), sat)
+        t_str += '{1:{0:s}d}{2:s} '.format('0{0:d}'.format(preciznost + 3) if ispisuj else '', int(math.floor(t / 3600.0)), sat)
         t -= 3600.0 * math.floor(t / 3600.0)
+
+        ispisuj = True
 
     # Ispis minuta.
     if ispisuj or t >= 60.0:
-        t_str += '{0:d}{1:s} '.format(int(math.floor(t / 60.0)), minuta)
+        t_str += '{1:{0:s}d}{2:s} '.format('0{0:d}'.format(preciznost + 3) if ispisuj else '', int(math.floor(t / 60.0)), minuta)
         t -= 60.0 * math.floor(t / 60.0)
 
+        ispisuj = True
+
     # Ispis sekundi.
-    t_str += '{1:.{0:d}f}{2:s}'.format(tocnost, t, sekunda)
+    t_str += '{2:{1:s}.{0:d}f}{3:s}'.format(preciznost, '0{0:d}'.format(preciznost + 3) if ispisuj else '', t, sekunda)
 
     # Povrat izrazenog vremena.
     return t_str

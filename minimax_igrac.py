@@ -295,7 +295,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     # potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']),
                                  sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True),
-                                 ((potez['vrijednost'] + int(potez['skupljeno'] == stol) * Tablic.vrijednostTable()) if potez['skupljeno'] else 0, len(potez['skupljeno'])))
+                                 (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable(), len(potez['skupljeno'])))
                     if ovajPotez == zadnjiPotez:
                         continue
 
@@ -536,8 +536,8 @@ class MinimaxIgrac (Tablic.Igrac):
             # Za svaki potez vrijedniji od odigranog, a koji ne zahtijeva igranje odigrane karte, uvecanje vrijednosti da igrac
             # nema kartu kojom se taj potez igra.
             for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
-                if (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable() < vrijednost or
-                    potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable() == vrijednost and len(potez['skupljeno']) <= len(skupljeno)):
+                if (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() < vrijednost or
+                    max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() == vrijednost and len(potez['skupljeno']) <= len(skupljeno)):
                     break
                 if PohlepniLog.prevediKartu(potez['karta']) == karta_indeks:
                     continue

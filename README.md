@@ -79,6 +79,8 @@ Tijekom igre, svaki put kada neki igrač odigranom kartom skupi sve karte sa sto
 
 Kompletna implementacija igre napisana je objektno orijentirano u programskom jeziku Python.
 
+Datoteke u repozitoriju su:
+
 1.  **skupovi.py** &ndash; implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
 2.  **karta.py** &ndash; implementacija klase `Karta` za reprezentaciju karata u igri tablić,
 3.  **engine.py** &ndash; implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
@@ -96,7 +98,8 @@ Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibl
 
 ### Pohlepni algoritam
 
-Igrač koji igra pohlepnim algoritmom (`PohlepniIgrac`) u svakom potezu pokušava maksimalizirati trenutni dobitak (prvenstveno broj bodova, a zatim i broj skupljenih karata; ako može, ostvarit će tablu). Takvo odlučivanje realizirano je na način da se svaki potez promatra kao uređena 7-orka (*t*, *v*, *k*, *kk10*, *kt2*, *kA*, *x*) i među njima se bira leksikografski najveći, gdje je
+Igrač koji igra pohlepnim algoritmom (`PohlepniIgrac`) u svakom potezu pokušava maksimalizirati trenutni dobitak (prvenstveno broj bodova, a zatim i broj skupljenih karata; ako može, ostvarit će tablu). Takvo odlučivanje realizirano je na način da se svaki potez promatra kao uređena 7-orka (*t*, *v*, *k*, *kk10*, *kt2*, *kA*, *x*) i među njima se bira leksikografski najveći, gdje su:
+
 1.  *t* &ndash; `True` (to jest, 1) ako se potezom ostvaruje *tabla*, a `False` (to jest, 0) inače,
 2.  *v* &ndash; bodovna vrijednsot svih skupljenih karata (uključujući odigranu) ako se potezom skupljaju karte sa stola, a inače broj suprotan vrijednosti odigrane karte,
 3.  *k* &ndash; količina karata skupljenih sa stola,

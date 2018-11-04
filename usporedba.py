@@ -52,7 +52,7 @@ def izraziVrijeme (t, preciznost = 2, predznak = False):
     Vodece nule se ne ispisuju (ako je, na primjer, t = 65, preciznost = 2 i
     predznak = False, povratni string je samo "1m 05.00s"), ali sekunde se
     uvijek ispisuju (cak i ako je t = 0).  Ako je predznak = True, predznak se
-    nuzno ispisuje ispred vodece vrijednosti (ako je t < 0, predznak se nuzno
+    nuzno ispisuje ispred vodece vrijednosti (ako je t < 0, predznak se ionako
     ispisuje).  Vrijednost preciznost zadaje broj decimalnih mjesta za ispis
     vrijednosti sekundi.
 

@@ -207,8 +207,8 @@ class MinimaxIgrac (Tablic.Igrac):
 
                 # Iteriranje po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(ruka, stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i
-                    # provjera je li takav potez vec obraden (ako je, obrada se preskce).
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i provjera
+                    # je li takav potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']), sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True))
                     if ovajPotez == zadnjiPotez:
                         continue
@@ -291,8 +291,8 @@ class MinimaxIgrac (Tablic.Igrac):
 
                 # Iteriranje po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i provjera je li takav
-                    # potez vec obraden (ako je, obrada se preskce).
+                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i
+                    # karo 10) i provjera je li takav potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']),
                                  sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True),
                                  (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable(), len(potez['skupljeno'])))

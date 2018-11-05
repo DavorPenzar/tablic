@@ -118,11 +118,11 @@ class Tablic (object):
 
             Svaka klasa derivirana od klase Tablic.Log, ako inicijalizira
             vlastitu metodu __init__, ta bi metoda trebala biti oblika
-                >>> def __init__ (self, log = list(), ...):
+                >>> def __init__ (self, log = list()[, ...]):
                         Tablic.Log.__init__(self, log)
-                        ...
-            pri cemu za argument log ne bi smjeli biti prosljedeni objekti koji
-            nisu klase list.
+                        [...]
+            pri cemu za argument log ne bi smio biti prosljedeni objekt koji
+            nisu tipa list.
 
             """
 
@@ -353,11 +353,13 @@ class Tablic (object):
 
             Svaka klasa derivirana od klase Tablic.Igrac, ako inicijalizira
             vlastitu metodu __init__, ta bi metoda trebala biti oblika
-                >>> def __init__ (self, ime = None, ...):
-                        Tablic.Log.__init__(self, log)
-                        ...
-            pri cemu za argument ime ne bi smjeli biti prosljedeni objekti koji
-            nisu None ili klase str.
+                >>> def __init__ (self, i, ime = None[, ...]):
+                        Tablic.Igrac.__init__(self, i, ime)
+                        [...]
+            pri cemu za argument i ne bi smio biti prosljeden objekt koji nije
+            tipa int (metoda Tablic.dodajIgraca ionako prosljeduje samo takav
+            argument na prvo mjesto), a za argument ime ne bi smio biti
+            prosljeden objekti koji nije None ili tipa str.
 
             """
 

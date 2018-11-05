@@ -1,6 +1,6 @@
 # tablic
 
-Implementacija igre tablić i "robota igrača" za igru tablić
+Implementacija igre tablić i robota igrača za igru tablić
 
 ## Pravila igre *tablić*
 
@@ -85,18 +85,27 @@ Datoteke u repozitoriju su:
 2.  **karta.py** &ndash; implementacija klase `Karta` za reprezentaciju karata u igri tablić,
 3.  **engine.py** &ndash; implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
 4.  **pohlepni_log.py** &ndash; implementacija klase `PohlepniLog` za zapisnike igre tablić za strojno učenje pohlepnog algoritma,
-5.  **minimax_log.py** &ndash; implementacija klase `MinimaxIgrac` za zapisnike igre tablić za strojno učenje minimax algoritma,
+5.  **minimax_log.py** &ndash; implementacija klase `MinimaxLog` za zapisnike igre tablić za strojno učenje *minimax*algoritma,
 6.  **pohlepni_igrac.py** &ndash; implementacija klase `PohlepniIgrac` za igrača igre tablić koji igra pohlepnim algoritmom,
-7.  **minimax_igrac.py** &ndash; implementacija klase `MinimaxIgrac` za igrača igre tablić koji igra minimax algoritmom,
+7.  **minimax_igrac.py** &ndash; implementacija klase `MinimaxIgrac` za igrača igre tablić koji igra *inimax*algoritmom,
 8.  **io_igrac.py** &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
 9.  **promatrac_log.py** &ndash; implementacija klase `PromatracLog` koji ispisuje tijek igre na *stdout*,
 10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić.
 
 Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom (uz paket `six`). Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
 
-## Algoritmi
+## Roboti igrači
 
-### Pohlepni algoritam
+### Slučajni igrač
+
+Igrač koji igra slučajnim odabirom (`Tablic.RandomIgrac`) potez bira pozivima funkcije `random.choice` tako da:
+
+1.  iz ruke bira kartu koju će odigrati,
+2.  od svih mogućih poteza koje tom kartom može odigrati, bira jedan od njih koji će i odigrati.
+
+Zbog toga što se karta koju će odigrati bira prije nego šte se u obzir uzimaju mogući potezi za pojedinu kartu, prednost pri biranju odigrane karte nemaju one karte koje omogućuju veći izbor poteza.
+
+### Pohlepni igrač
 
 Igrač koji igra pohlepnim algoritmom (`PohlepniIgrac`) u svakom potezu pokušava maksimalizirati trenutni dobitak (prvenstveno broj bodova, a zatim i broj skupljenih karata; ako može, ostvarit će tablu). Takvo odlučivanje realizirano je na način da se svaki potez promatra kao uređena 7-orka (*t*, *v*, *k*, *kk10*, *kt2*, *kA*, *x*) i među njima se bira leksikografski najveći, gdje su:
 
@@ -110,7 +119,16 @@ Igrač koji igra pohlepnim algoritmom (`PohlepniIgrac`) u svakom potezu pokušav
 
 Zapravo, pohlepni igrač će u svakom potezu, ako može nešto skupiti, skupiti najvrijedniji mogući skup karata sa stola, a, ako ne može ništa skupiti, na stol odlaže kartu najmanje numeričke vrijednosti osim *A* (i osim *tref 2* i *karo 10*) zato što je vjerojatnije da će se karte većih numeričkih vrijednosti lakše složiti na stolu u daljnjem tijeku igre. Također, kada su dva poteza jednako vrijedna, iz istih razloga bira onaj kojim kupi kartu s manjom numeričkom vrijednosti. Karte znaka *A* i karte *tref 2* i *karo 10* pokušava ne odlagati na stol, ali isto tako one imaju prioritet pri skupljanju sa stola (i kao karte kojom igra i kao karte koje se sa stola uzimaju), pri čemu je karta *karo 10* najvećeg prioriteta, zatim *tref 2* i zatim sve karte znaka *A* (pri odlaganju na stol bez skupljanja karata redoslijed kojim ih *radije* odlaže je obratan).
 
-### Minimax algoritam
+Međutim, izbor poteza na kraju krajeva nije sasvim deterministički. Naime, nakon što se pohlepnim algoritmom pronađe najpovoljniji potez za odigrati, igrač pozivom funkcije `random.choice` od svih karata u ruci ekvivalentnih odabranoj karti za igranje bira onu koju će uistinu odigrati zato da se iščitavanjem implementacije algoritma neke informacije o igračevoj ruci ipak sakriju. Konkretno, osim za karte *tref 2* i *karo 10*, sve karte istog znaka ali različitih boja omogućavaju ekvivalentne poteze, a pohlepni algoritam boju odigrane karte bira priroritetom:
+
+1.  *tref*,
+2.  *karo*,
+3.  *pik*,
+4.  *herc*.
+
+Suparnik koji je svjestan takvog biranja pohlepnog igrača bi iz boje odigrane karte mogao zaključiti koliko još najviše karata tog znaka igrač ima, ali slučajnost odabira boje onemogućuje takvo deduciranje.
+
+### *Minimax* igrač
 
 Iako igra tablić nije zapravo pogodna za *minimax* algoritam jer su informacije skrivene (igrači nemaju uvid u tuđe karte u rukama), igrač `MinimaxIgrac` implementiran je tako da o potezima odlučuje adaptiranim *minimax* algoritmom. Adaptacija *minimax* algoritma takva je da se neke grane stabla poteza odbacuju pod pretpostavkom da nisu vjerojatne ili da ne će doprinjeti odluci, a u svakom se čvoru stabla poteza daljnji potezi razmatraju sortirani odlučivanjem pohlepnog igrača (silazno sortirani potezi promatrani kao uređene 7-orke kao u dijelu *Pohlepni algoritam* gore).
 
@@ -123,6 +141,8 @@ Stablo poteza pretražuje se *DFS-om*, a dubina stabla zadaje najveći broj pote
 Još jedna nekonvencionalna preinaka *minimax* algoritma vremensko je ograničenje. Naime, kako se potezi razmatraju sortirani odlučivanjem pohlepnog igrača, vjerojatnije je da će *max-igraču* i *min-igračima* više odgovarati potezi koji generiraju *lijeve* grane stabla pa se zbog brzine odluke može zadati maksimalno dopušteno vrijeme za pretraživanje stabla pod pretpostavkom da je nakon dovoljno vremena najbolji potez pronađen iako nije pretraženo cijelo stablo. Ipak, to vremensko ograničenje može se postaviti i na pozitivnu beskonačnost (`float('inf')`) što zapravo znači da vremenskog ograničenja nema.
 
 Način na koji se pretpostavlja da neki igrač nema neku kartu je takav da se njegov potez uspoređuje sa svim potezima koje bi mogao učiniti s kartama za koje nije poznato da ih sigurno nema i za koje se ne pretpostavlja da ih vjerojatno nema. Pretpostavlja se da igrač nema sve karte (osim onih koje su ekvivalentne numeričke i bodovne vrijednosti kao odigrana karta) koje omogućuju igranje poteza sa strogo većom bodovnom vrijednosti (suma bodovnih vrijednosti svih skupljenih karata uključujući odigranu ako se sa stola skupljaju karte, odnosno 0 inače) ili s jednakom bodovnom vrijednosti, ali sa skupljanjem strogo većeg broja karata sa stola. Pri svakom dijeljenju sve se prethodne pretpostavke zanemaruju, a nakon zadnjeg dijeljenja takve se pretpostavke više ne izvode ni *globalno* na razini *znanja* *minimax* igrača, ni lokalno u granama stabla poteza generiranog *minimax* algoritmom (ako igraju 2 igrača, u potpunosti je poznato koje karte suparnik ima, a i u partijama s više igrača sigurnije je tako zbog dodanih vrijednosti na kraju igre).
+
+Kao i kod pohlepnog igrača, karta koju je *minimax* algoritam odabrao za odigrati se pozivom funkcije `radnom.choice` možda na kraju zamjenjuje nekom njoj ekvivalentnom kartom, ali drugačije boje, zato da se iz boje odigrane karte ne može zaključivati o sadržaju igračeve ruke.
 
 ## Testiranje igrača
 
@@ -143,3 +163,11 @@ Potezi se zadaju pisanjem na *stdin*. Pri određivanju karte koju se želi igrat
 Naravno, unos nije *case-sensitive* (ekvivalentno je pisati *a* i *A*). Posebno određivanje boje karte moguće je pisanjem *tref 2* umjesto *2*, ali, osim u slučajevima karata *tref 2* i *karo 10*, boja karte nije bitna. Ako igrač ima barem dvije karte znaka *2* u ruci od kojih je jedna *tref 2* i ako napiše *2* kao kartu koju želi igrati, bit će upitan želi li igrati *tref 2* ili ne; ako ima samo kartu *tref 2* od karata znaka *2* ili ako kartu *tref 2* nema, upita o igranju karte *tref 2* ne će biti. S druge strane, ako je na stolu više karata znaka *2* i ako igrač napiše kao kartu koju želi skupiti sa stola *2*, prvo se uzima *tref 2*, a tek nakon nje i ostale (ako se želi skupiti više karata istog znaka, ne nužno *2*, sa stola, potrebno je toliko puta napisati taj znak koliko se tih karata želi skupiti). Sve ovo nalogno vrijedi i u slučaju karata znaka *10* i istaknute karte *karo 10*. Unosi se odvajaju **samo** prelaskom u novi red (bez zareza), a kraj skupljanja karata sa stola označava se praznim unosom.
 
 U svakom trenutku pri biranju karata za skupiti sa stola moguće je napisati *auto* (također nije *case-sensitive*) pri čemu se bira potez kojeg bi pohlepni igrač s odigranom kartom igrao. Međutim, ako su na stolu, na primjer, karte *herc 4*, *herc 6*, *tref 10*, *karo A*, ako igrač igra kartu *pik A* i ako je za skup skupljenih karata pisao redom *6*, *auto*, sa stola će se uzeti *herc 4*, *herc 6*, *karo A* jer se u tom slučaju uzima karta znaka *6* sa stola iako bi pohlepni igrač s kartom *pik A* uzimao *tref 10*, *karo A*. Efekt stvarnog igranja poteza po izboru pohlepnog igrača postiže se tako da se napiše samo *auto*, bez zadavanja konkretnih karata prije (karte koje se eventualno zadaju prije pisanja *auto* nužno se uzimaju, a tek se povrh njih bira *najbogatiji* potez). Mogućnost pisanja *auto* ne bi se smijela *zloupotrebljavati* (previše koristiti) jer se time gubi smisao igranja igre kao čovjek: moguće je da igrač nije primijetio trenutno i beskontekstno najbolji potez, ali je unosom *auto* ipak skupio najbolji mogući skup karata sa stola, što stvarnim igranjem igre tablić papirnatim kartama ne bi mogao osim uz dobronamjernu intervenciju suigrača odnosno suparnika.
+
+**Napomene.**
+
+1.  Ako igrač u ruci ima samo 1 kartu, nema smisla birati koju kartu će odigrati pa se u tom slučaju automatski bira jedina preostala karta iz ruke.
+2.  Ako u nekom trenutku (čak i na samom početku, kada nije odabrana nijedna karta za skupiti sa stola), osim već odabranih karata nema više karata na stolu koje se mogu skupiti, izbor karata za skupiti sa stola automatski se zaustavlja (bez eksplicitnog zadavanjeg praznog unosa).
+3.  Ako boja odigrane karte nije zadana, kao u slučajevima pohlepnog i *minimax* igrača pozivom funkcije `random.choice` od ekvivalentnih karata u ruci bira se ona koja će se odigrati (pri biranju karata za skupiti sa stola takvo biranje nije potrebno jer su karte na stolu ionako poznate svim igračima pa u tom slučaju nema potrebe za skrivanjem informacija o bojama karata).
+
+Napomene 1. i 2. impliciraju da je moguće da u zadnjem potezu prije novog dijeljenja ili u sasvim posljednjem potezu igrač ne će ni imati priliku sam zadavati potez jer u tim potezima igrač u ruci drži samo 1 kartu (koja se onda automatski bira za igranje), i, ako se tom kartom ne može odigrati potez kojim se karte kupe sa stola, nema poteza koji se može birati (pa se automatski bira potez kojim se karta samo odlaže na stol).

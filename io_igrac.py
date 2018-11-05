@@ -276,6 +276,7 @@ class IOIgrac (Tablic.Igrac):
                     except IndexError:
                         pass
 
+        # Trazenje mogucih poteza s odabranom kartom.
         M = Tablic.moguciPotezi(stol)
         potezi = unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()}
 
@@ -283,7 +284,7 @@ class IOIgrac (Tablic.Igrac):
         # vrati zadani potez.
         skupljeno = set()
         print('Za skupiti:')
-        if potezi == {frozenset()}:
+        if len(potezi) == 1:
             print("\t")
         else:
             citaj = True

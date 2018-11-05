@@ -151,7 +151,7 @@ class IOIgrac (Tablic.Igrac):
         print('Na stolu:')
         print("\t{0:s}".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
         print('Potez:')
-        print("\t{0:s} {1:s} {2:s}\n".format(IOIgrac.lijepiString(karta), ('<' if skupljeno else '>'), IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True))))
+        print("\t{0:s} {1:s} {2:s}\n".format(IOIgrac.lijepiString(karta), '<' if skupljeno else '>', IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True))))
 
     def saznajRezultat (self, rezultat):
         """
@@ -223,95 +223,134 @@ class IOIgrac (Tablic.Igrac):
         print('U ruci:')
         print("\t{0:s}".format(IOIgrac.lijepiString(sorted(list(ruka), reverse = True))))
 
-        # Ucitaj kartu za odigrati.
+        # Ucitaj kartu za odigrati ako ima smisla (ako u ruci nije samo 1
+        # karta).
+        karta = Karta()
         print('Karta:')
-        x = six.moves.input("\t")
-        karta = Karta(x)
-        # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka u ruci.
-        if karta.boja is Karta.Boja.NA:
-            if (karta.znak is Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or
-                karta.znak is Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka)):
-                # Ako je zadan znak 2/10 i u ruci postoji tref 2/karo 10 i neka
-                # druga karta znaka 2/10, provjeri zeli li igrac igrati
-                # tref 2/karo 10 ili neku drugu.
-                odgovor = ''
-                if sum(int(x.znak == karta.znak) for x in ruka) > 1:
-                    while True:
-                        odgovor = six.moves.input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak is Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
-                        if not odgovor or odgovor.upper() in {'D', 'N'}:
-                            break
-                if not odgovor or odgovor.upper() == 'D':
-                    # Ako igrac zeli igrati tu specijalnu kartu, odaberi ju.
-                    karta = (Karta(Karta.Boja.TREF, Karta.Znak.BR2) if karta.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10))
+        if len(ruka) == 1:
+            karta = ruka.pop()
+            print("\t{0:s}".format(IOIgrac.lijepiString(karta)))
+        else:
+            while True:
+                x = six.moves.input("\t")
+                try:
+                    karta = Karta(x)
+                except (TypeError, ValueError):
+                    print("Izraz `{0:s}' ne zadaje kartu na valjani nacin.  Pokusaj ponovo!".format(x))
+                else:
+                    break
+            # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka u ruci.
+            if karta.boja is Karta.Boja.NA:
+                if (karta.znak is Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or
+                    karta.znak is Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka)):
+                    # Ako je zadan znak 2/10 i u ruci postoji tref 2/karo 10 i neka
+                    # druga karta znaka 2/10, provjeri zeli li igrac igrati
+                    # tref 2/karo 10 ili neku drugu.
+                    odgovor = ''
+                    if sum(int(x.znak == karta.znak) for x in ruka) > 1:
+                        while True:
+                            odgovor = six.moves.input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak is Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
+                            if not odgovor or odgovor.upper() in {'D', 'N'}:
+                                break
+                    if not odgovor or odgovor.upper() == 'D':
+                        # Ako igrac zeli igrati tu specijalnu kartu, odaberi ju.
+                        karta = (Karta(Karta.Boja.TREF, Karta.Znak.BR2) if karta.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10))
+                    else:
+                        # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
+                        kandidati = list()
+                        for x in ruka:
+                            if x.znak == karta.znak and not x in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)}:
+                                kandidati.append(x)
+                        try:
+                            karta = random.choice(kandidati)
+                        except IndexError:
+                            pass
                 else:
                     # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
                     kandidati = list()
                     for x in ruka:
-                        if x.znak == karta.znak and not x in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)}:
+                        if x.znak == karta.znak:
                             kandidati.append(x)
                     try:
                         karta = random.choice(kandidati)
                     except IndexError:
                         pass
-            else:
-                # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
-                kandidati = list()
-                for x in ruka:
-                    if x.znak == karta.znak:
-                        kandidati.append(x)
-                try:
-                    karta = random.choice(kandidati)
-                except IndexError:
-                    pass
 
-        # Ucitaj karte za skupiti.
-        print('Za skupiti:')
+        M = Tablic.moguciPotezi(stol)
+        potezi = unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()}
+
+        # Ucitaj karte za skupiti ako ima smisla (ako stol nije prazan), a inace
+        # vrati zadani potez.
         skupljeno = set()
-        while True:
-            x = six.moves.input("\t")
+        print('Za skupiti:')
+        if potezi == {frozenset()}:
+            print("\t")
+        else:
+            citaj = True
+            while citaj:
+                while True:
+                    x = six.moves.input("\t")
 
-            # Ako je zadan prazni string, ucitavanje se prekida.
-            if not x:
-                break
-
-            # Ako je zadano 'AUTO', trazi se najpovoljniji potez.
-            if x.upper() == 'AUTO':
-                potezi = PohlepniIgrac.izborPoteza({karta}, stol)
-                for potez in potezi:
-                    if skupljeno.issubset(potez['skupljeno']):
-                        skupljeno = potez['skupljeno']
+                    # Ako je zadan prazni string, ucitavanje se prekida.
+                    if not x:
+                        citaj = False
 
                         break
 
-                print('')
+                    # Ako je zadano 'AUTO', trazi se najpovoljniji potez.
+                    if x.upper() == 'AUTO':
+                        potezi = PohlepniIgrac.izborPoteza({karta}, stol)
+                        for potez in potezi:
+                            if skupljeno <= potez['skupljeno']:
+                                skupljeno = potez['skupljeno']
 
-                break
+                                break
 
-            # Inace se unos prevodi u kartu.
-            x = Karta(x)
-            if x.boja is Karta.Boja.NA:
-                # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka
-                # medu preostalim kartama na stolu.  Tref 2 i karo 10 imaju
-                # prednost pred ostalim kartama (ako je medu preostalim kartama
-                # npr. 2 karte znaka 10 od kojih je jedna karo 10, implicitno
-                # zadavanje '10' prevodi se u karo 10).
-                pronadeno = False
-                if (x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and
-                    any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak for y in stol - skupljeno)):
-                    skupljeno |= ({Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)})
-                    pronadeno = True
+                        citaj = False
+
+                        print("\t")
+
+                        break
+
+                    # Inace se unos prevodi u kartu.
+                    try:
+                        x = Karta(x)
+                    except (TypeError, ValueError):
+                        print("Izraz `{0:s}' ne zadaje kartu na valjani nacin.  Pokusaj ponovo!".format(x))
+                    else:
+                        break
+
+                if not citaj:
+                    break
+
+                if x.boja is Karta.Boja.NA:
+                    # Ako karti nije zadana boja, pronadi kartu odgovarajuceg
+                    # znaka medu preostalim kartama na stolu.  Tref 2 i karo 10
+                    # imaju prednost pred ostalim kartama (ako je medu
+                    # preostalim kartama npr. 2 karte znaka 10 od kojih je jedna
+                    # karo 10, implicitno zadavanje '10' prevodi se u karo 10).
+                    pronadeno = False
+                    if (x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and
+                        any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak for y in stol - skupljeno)):
+                        skupljeno |= {Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)}
+                        pronadeno = True
+                    else:
+                        for y in sorted(list(stol - skupljeno), reverse = True):
+                            if y.znak == x.znak:
+                                skupljeno |= {y}
+                                pronadeno = True
+
+                                break
+                    if not pronadeno:
+                        skupljeno |= {x}
                 else:
-                    for y in sorted(list(stol - skupljeno), reverse = True):
-                        if y.znak == x.znak:
-                            skupljeno |= {y}
-                            pronadeno = True
-
-                            break
-                if not pronadeno:
+                    # Inace se uzima eksplicitno zadana karta.
                     skupljeno |= {x}
-            else:
-                # Inace se uzima eksplicitno zadana karta.
-                skupljeno |= {x}
+
+                citaj = any(skupljeno < potez for potez in potezi)
+
+                if not citaj:
+                    print("\t")
 
         # Vrati zadani potez.
         return (karta, skupljeno)

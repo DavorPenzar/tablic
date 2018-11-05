@@ -82,11 +82,10 @@ class Tablic (object):
 
                 """
 
-                if self.__inkr > 0 and self.__i < self.__stop or self.__inkr < 0 and self.__i > self.__stop:
-                    x = self.__log[self.__i]
-                else:
+                if self.__inkr >= 0 and self.__i >= self.__stop or self.__inkr <= 0 and self.__i <= self.__stop:
                     raise StopIteration()
 
+                x = self.__log[self.__i]
                 self.__i += self.__inkr
 
                 return x
@@ -247,8 +246,10 @@ class Tablic (object):
 
             potez = self.prevediPotez(i, igraci, ruka, stol, karta, skupljeno)
 
-            if not potez is None:
-                self.__log.append(potez)
+            if potez is None:
+                return
+
+            self.__log.append(potez)
 
         @abc.abstractmethod
         def novaPartija (self, n, igraci):
@@ -857,10 +858,10 @@ class Tablic (object):
             self.__igraci[0]['max'] = (False, len(self.__igraci[0]['skupljeno']))
             for j in range(1, len(self.__igraci)):
                 self.__igraci[j]['max'] = (False, len(self.__igraci[j]['skupljeno']))
-                if len(self.__igraci[j]['skupljeno']) == len(self.__igraci[I[0]]['skupljeno']):
-                    I.append(j)
-                elif len(self.__igraci[j]['skupljeno']) > len(self.__igraci[I[0]]['skupljeno']):
+                if len(self.__igraci[j]['skupljeno']) > len(self.__igraci[I[0]]['skupljeno']):
                     I = [j]
+                elif len(self.__igraci[j]['skupljeno']) == len(self.__igraci[I[0]]['skupljeno']):
+                    I.append(j)
 
             if len(I) == 1:
                 self.__igraci[I[0]]['max'] = (True, len(self.__igraci[I[0]]['skupljeno']))
@@ -917,7 +918,7 @@ class Tablic (object):
                 greske.append(karta)
 
             # Provjeri je li skupljeno na stolu.
-            if not skupljeno.issubset(self.__stol):
+            if not skupljeno <= self.__stol:
                 greske.append(skupljeno)
 
             # Ako se skuplja sa stola, provjeri sume.

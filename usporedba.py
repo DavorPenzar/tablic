@@ -38,7 +38,7 @@ ispisNerjesenih = False
 # kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
-          {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
+          {'klasa' : IOIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def izraziVrijeme (t, preciznost = 2, predznak = False):
     """
@@ -119,10 +119,10 @@ def deducirajPobjednika (konacni_rezultat):
     # Dedukcija igraca s najvise bodova.
     pobjednik = [0]
     for i in range(1, len(konacni_rezultat)):
-        if konacni_rezultat[i] == konacni_rezultat[pobjednik[0]]:
-            pobjednik.append(i)
-        elif konacni_rezultat[i] > konacni_rezultat[pobjednik[0]]:
+        if konacni_rezultat[i] > konacni_rezultat[pobjednik[0]]:
             pobjednik = [i]
+        elif konacni_rezultat[i] == konacni_rezultat[pobjednik[0]]:
+            pobjednik.append(i)
 
     # Obradivanje slucaja da vise igraca ima najvise bodova.
     if len(pobjednik) > 1:

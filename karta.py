@@ -132,11 +132,10 @@ class Karta (object):
 
             """
 
-            if self.__inkr > 0 and self.__i < self.__stop or self.__inkr < 0 and self.__i > self.__stop:
-                x = self.__karta[self.__i]
-            else:
+            if self.__inkr >= 0 and self.__i >= self.__stop or self.__inkr <= 0 and self.__i <= self.__stop:
                 raise StopIteration()
 
+            x = self.__karta[self.__i]
             self.__i += self.__inkr
 
             return x
@@ -174,8 +173,8 @@ class Karta (object):
 
         """
 
-        return {Karta(boja, znak) for boja in {Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF}
-                                  for znak in {Karta.Znak.A, Karta.Znak.BR2, Karta.Znak.BR3, Karta.Znak.BR4, Karta.Znak.BR5, Karta.Znak.BR6, Karta.Znak.BR7, Karta.Znak.BR8, Karta.Znak.BR9, Karta.Znak.BR10, Karta.Znak.J, Karta.Znak.Q, Karta.Znak.K}}
+        return {Karta(boja, znak) for boja in [Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF]
+                                  for znak in [Karta.Znak.A, Karta.Znak.BR2, Karta.Znak.BR3, Karta.Znak.BR4, Karta.Znak.BR5, Karta.Znak.BR6, Karta.Znak.BR7, Karta.Znak.BR8, Karta.Znak.BR9, Karta.Znak.BR10, Karta.Znak.J, Karta.Znak.Q, Karta.Znak.K]}
 
     def __new__ (cls, *args, **kwargs):
         """
@@ -201,7 +200,10 @@ class Karta (object):
                     <Karta: (<Boja.KARO: 3>, <Znak.NA: 0>)>
                     >>> Karta(Karta.Znak.BR10)
                     <Karta: (<Boja.NA: 0>, <Znak.BR10: 10>)>
-            4.  s 1 argumentom objektom klase str ili unicode
+            4.  s 1 argumentom None
+                    >>> Karta(None)
+                    <Karta: (<Boja.NA: 0>, <Znak.NA: 0>)>
+            5.  s 1 argumentom objektom klase str ili unicode
                     >>> Karta('herc')
                     <Karta: (<Boja.HERC: 1>, <Znak.NA: 0>)>
                     >>> Karta('10')
@@ -210,29 +212,29 @@ class Karta (object):
                     <Karta: (<Boja.HERC: 1>, <Znak.BR10: 10>)>
                     >>> Karta('herc10')
                     <Karta: (<Boja.HERC: 1>, <Znak.BR10: 10>)>
-            5.  s 1 argumentom objektom klase int, long, float ili complex
+            6.  s 1 argumentom objektom klase int, long, float ili complex
                     >>> Karta(10)
                     <Karta: (<Boja.NA: 0>, <Znak.BR10: 10>)>
-            6.  s 1 argumentom rjecnikom ciji su kljucevi u skupu
+            7.  s 1 argumentom rjecnikom ciji su kljucevi u skupu
                 {'boja', 'znak'}, a vrijednosti objekti klase int, long, float,
                 complex, str, unicode ili odgovarajuce enumeracije (Karta.Boja
                 odnosno Karta.Znak)
                     >>> Karta({'boja' : 'karo', 'znak' : 10})
                     <Karta: (<Boja.KARO: 3>, <Znak.BR10: 10>)>
-            7.  s 1 argumentom iterabilnim objektom od dva elementa objekta
+            8.  s 1 argumentom iterabilnim objektom od dva elementa objekta
                 klase int, long, float, complex, str, unicode ili odgovarajuce
                 enumeracije (Karta.Boja odnosno Karta.Znak)
                     >>> Karta(('karo', 10))
                     <Karta: (<Boja.KARO: 3>, <Znak.NA: 0>)>
-            8.  s 2 argumenta objekta klase int, long, float, complex, str,
-                unicode ili odgovarajuce enumeracije (Karta.Boja odnosno
+            9.  s 2 argumenta objekta None ili klase int, long, float, complex,
+                str, unicode ili odgovarajuce enumeracije (Karta.Boja odnosno
                 Karta.Znak)
                     >>> Karta('karo', 10)
                     <Karta: (<Boja.KARO: 3>, <Znak.BR10: 10>)>
-            9.  s argumentima zadanim kljucnim rijecima iz skupa
-                {'boja', 'znak'} objektima klase int, long, float, complex,
-                str, unicode ili odgovarajuce enumeracije (Karta.Boja odnosno
-                Karta.Znak)
+            10. s argumentima zadanim kljucnim rijecima iz skupa
+                {'boja', 'znak'} objektima None ili klase int, long, float,
+                complex, str, unicode ili odgovarajuce enumeracije (Karta.Boja
+                odnosno Karta.Znak)
                     >>> Karta(boja = 'karo', znak = 10)
                     <Karta: (<Boja.KARO: 3>, <Znak.BR10: 10>)>
         Ako je neka zadana vrijednost objekt klase complex, njezin imaginarni
@@ -256,14 +258,12 @@ class Karta (object):
                 rijecima), kao na primjer Karta(10, boja = 'karo'),
             2.  je zadan argument rjecnik s kljucevima koji nisu u skupu
                 {'boja', 'znak'},
-            3.  je zadan 1 argument koji nije objekt klase int, float, complex,
-                str, unicode ili dict i nije iterabilan,
-            4.  je neka vrijednost zadana objektom klase complex ciji
-                imaginarni dio nije jednak 0,
-            5.  je zadan 1 iterabilni argument ciji je broj elemenata razlicit
-                2,
-            6.  je zadano strogo vise od 2 argumenta,
-            7.  su zadani argumenti kljucnim rijecima koje nisu u skupu
+            3.  je zadan 1 argument koji nije None ni objekt klase int, float,
+                complex, str, unicode ili dict i nije iterabilan,
+            4.  je zadan 1 iterabilni argument ciji je broj elemenata razlicit
+                od 2,
+            5.  je zadano strogo vise od 2 argumenta,
+            6.  su zadani argumenti kljucnim rijecima koje nisu u skupu
                 {'boja', 'znak'}.
         Takoder, iznimke za konverziju objekata u enumeracije Karta.Boja i
         Karta.Znak ne saniraju se, stoga i one mogu biti izbacene.
@@ -307,6 +307,7 @@ class Karta (object):
                             for j in range(len(karta[0])):
                                 if karta[0][j].isdigit() or karta[0][j:].upper() in Karta.Znak.__members__:
                                     break
+
                             if j:
                                 # Prvi dio stringa zadaje boju.
                                 self.boja = karta[0][:j]
@@ -318,11 +319,11 @@ class Karta (object):
                             self.boja = karta[0]
                             self.znak = karta[1]
                         elif karta:
-                            # Rastav stringa na strogo vise od 2 podstringa se ne prepoznaje.
+                            # Rastav stringa na st(self.__inkr <= 0 or self.__i >= self.__stop) and (self.__inkr >= 0 or self.__i <= self.__stop):rogo vise od 2 podstringa se ne prepoznaje.
                             raise TypeError("String `{0:s}' nije valjani argument za inicijalizaciju objekta klase Karta.".format(args[0]))
                 elif isinstance(args[0], dict):
                     # Zadavanje karte rjecnikom.
-                    if not set(args[0].keys()).issubset({'boja', 'znak'}):
+                    if not set(args[0].keys()) <= {'boja', 'znak'}:
                         raise TypeError("Za inicijalizaciju objekta klase `Karta' dan je argument rjcnik s nepoznatim kljucevima.")
                     if 'boja' in args[0]:
                         self.boja = args[0]['boja']
@@ -353,7 +354,7 @@ class Karta (object):
             if args:
                 # Nije dopusteno implicitno i eksplicitno zadavanje argumenata.
                 raise TypeError("Argumenti za inicijalizaciju objekta klase `Karta' moraju biti zadani implicitno ili eksplicitno (kljucnim rijecima), a ne na oba nacina.")
-            if not set(kwargs.keys()).issubset({'boja', 'znak'}):
+            if not set(kwargs.keys()) <= {'boja', 'znak'}:
                 raise TypeError("Za inicijalizaciju objekta klase `Karta' zadane su nepoznate kljucne rijeci.")
             if 'boja' in kwargs:
                 self.boja = kwargs['boja']
@@ -371,6 +372,43 @@ class Karta (object):
     def __setattr__ (self, name, value):
         """
         Pokusaj zadati vrijednost atributa.
+
+        Ako atribut name ne postoji, izbacuje se iznimka tipa AttributeError.
+
+        U daljnjem tekstu enumeracija je Karta.Boja ako je name = 'boja' odnosno
+        Karta.Znak ako je name = 'znak'.  Ako je value objekt klase enumeracija,
+        vrijednost atributa name postavlja se na value.
+
+        Ako je value None, atribut name postavlja se na enumeracija.NA.  Ako je
+        value objekt klase complex i ako je value.imag != 0, izbacuje se iznimka
+        tipa ValueError; inace se uzima value = float(value.real).
+        Ako je value objekt klase int, long ili float i vrijedi
+            >>> enumeracija.postoji(value)
+            False
+        izbacuje se iznimka tipa ValueError osim ako je enueracija Karta.Znak i
+        value = 11 (u tom se slucaju uzima value = 1); inace se atribut name
+        postavlja na
+            >>> enumeracija(value)
+        Ako je value objekt klase str ili unicode, pokusava se (ako neki korak
+        uspije, sljedeci se ne izvrsavaju ni ne pokusavaju) redom
+            1.  value = int(value),
+            2.  value = long(value),
+            3.  value = float(value),
+            4.  value = complex(value),
+            5.  vrijednost atributa name postavlja se na enueracija.NA ako je
+                value = '',
+            6.  ako je enumeracija Karta.BOJA, vrijednost atributa name
+                postavlja se na vrijednost Karta.BOJA cije ime pocinje s
+                value.upper(),
+            7.  vrijednost atributa name postavlja se na
+                enueracija[value.upper()].
+        Ako uspije konverzija iz koraka 1. -- 4., daljnji je postupak jednak kao
+        da je vrijednost value odmah bila zadana kao numericka vrijednost
+        odgovarajuceg tipa.  Ako nijedan korak ne uspije, izbacuje se iznimka
+        tipa ValueError.
+
+        Ako value nije None ni objekt klase enumeracija, int, long, float,
+        complex, str ni unicode, izbacuje se iznimka tipa TypeError.
 
         """
 
@@ -391,8 +429,8 @@ class Karta (object):
                     vrijednost = 1
                 if enumeracija.postoji(vrijednost):
                     return enumeracija(vrijednost)
-                else:
-                    return enumeracija.NA
+
+                raise ValueError('Vrijednost {0} nije valjani argument zadavanja atributa enumeracije {1:s}.'.format(vrijednost, enumeracija.__name__))
             elif isinstance(vrijednost, complex):
                 if vrijednost.imag:
                     raise ValueError('Imaginarni dio vrijednosti {0} nije jednak 0.'.format(vrijednost))
@@ -425,8 +463,8 @@ class Karta (object):
                             return x
                 elif vrijednost.upper() in enumeracija.__members__:
                     return enumeracija[vrijednost.upper()]
-                else:
-                    return enumeracija.NA
+
+                raise ValueError("Vrijednost `{0:s}' nije valjani argument zadavanja atributa enumeracije {1:s}.".format(vrijednost, enumeracija.__name__))
 
             raise TypeError("Vrijednost `{0:s}' nije valjana vrijednost za zadavanje enumeracije `{0:s}'.".format(repr(vrijednost), enumeracija.__name__))
 
@@ -441,7 +479,7 @@ class Karta (object):
             else:
                 self.__dict__.update({'znak' : __prevedi(Karta.Znak, value)})
         else:
-            raise AttributeError("Atribut `{0:s}' ne postoji.".format(name))
+            raise AttributeError("Atribut `{0:s}' ne postoji.".format(repr(name)))
 
     def __delattr__ (self, name):
         """
@@ -589,28 +627,16 @@ class Karta (object):
                 raise ValueError('Imaginarni dio vrijednosti {0} nije jednak  0.'.format(value))
             value = float(value.real)
 
-        if isinstance(value, (int, long, float, str, unicode, Karta, Karta.Znak)):
-            # Pretvorba objekta value u objekt klase int.
-            try:
-                value = int(value)
-            except (TypeError, ValueError):
-                try:
-                    value = int(long(value))
-                except (TypeError, ValueError):
-                    try:
-                        value = int(float(value))
-                    except (TypeError, ValueError):
-                        if isinstance(value, (str, unicode)):
-                            if value.upper() in Karta.Znak.__members__:
-                                value = Karta.Znak[value.upper()].value
-                            else:
-                                return set()
-                        else:
-                            return set()
+        if isinstance(value, int):
+            if not Karta.Znak.postoji(value) and value != 11:
+                raise ValueError('')
         else:
-            # Ako objekt value nije valjane vrijednosti, zbroj nije moguc pa
-            # je povratna vrijednost prazni skup.
-            return set()
+            try:
+                value = int(Karta(value))
+            except TypeError:
+                raise TypeError("value mora biti objekt klase `int'.".format(repr(value)))
+            except ValueError:
+                raise ValueError("Vrijednost `{0:s}' nije valjani sumand za zbrajanje objekata klase `Karta'.".format(repr(value)))
 
         if self.znak is Karta.Znak.A and value == 1:
             # Tretiranje specijalnog slucaja zbrajanje 2 A.
@@ -779,8 +805,13 @@ class Karta (object):
         return unicode('{0:s}({1:s}, {2:s})'.format(self.__class__.__name__, unicode(self.boja), unicode(self.znak)))
 
     def __coerce__ (self, other):
-        if isinstance(other, (bool, int, long, float, complex, str, unicode)):
-            return (type(other)(self), other)
+        try:
+            return (self, Karta(other))
+        except (TypeError, ValueError):
+            try:
+                return (type(other)(self), other)
+            except (TypeError, AttributeError, ValueError):
+                pass
 
         return None
 

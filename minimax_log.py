@@ -85,8 +85,9 @@ class MinimaxLog (Tablic.Log):
 
         # Zapis karata koje igraci vjerojatno nemaju u potez.
         for j in range(len(igraci)):
-            if j != i:
-                potez += igraci[i].dohvatiVjerojatnoNema(j)
+            if j == i:
+                continue
+            potez += igraci[i].dohvatiVjerojatnoNema(j)
 
         # Zapis ruke u potez.
         aux = [0 for j in range(PohlepniLog.dohvatiBrojIndeksa())]

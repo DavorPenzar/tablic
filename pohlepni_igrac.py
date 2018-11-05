@@ -82,7 +82,7 @@ class PohlepniIgrac (Tablic.Igrac):
         for karta in ruka:
             # Racunanje i evaluiranje svih mogucih poteza s igranjem karte
             # karta.
-            zaSkupiti = (unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()})
+            zaSkupiti = unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()}
             for skupljeno in zaSkupiti:
                 skupljeno = set(skupljeno)
                 potez = {'karta' : karta, 'skupljeno' : copy.deepcopy(skupljeno)}

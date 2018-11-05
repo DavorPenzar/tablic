@@ -52,6 +52,12 @@ class PohlepniLog (Tablic.Log):
 
         """
 
+        if not isinstance(karta, Karta):
+            try:
+                karta = Karta(karta)
+            except (TypeError, ValueError):
+                raise TypeError("Vrijednost `{0:s}' nije valjana reprezentacija karte.".format(repr(karta)))
+
         if karta.boja is Karta.Boja.TREF and karta.znak is Karta.Znak.BR2:
             return 13
         elif karta.boja is Karta.Boja.KARO and karta.znak is Karta.Znak.BR10:
@@ -61,6 +67,18 @@ class PohlepniLog (Tablic.Log):
 
     @classmethod
     def prevediIndeks (cls, indeks):
+        """
+        Prevedi indeks za zapisnik u odgovarajuci znak ili kartu koje definira.
+
+        Metoda je svojevrsni inverz metode PohlepniLog.prevediKartu tako da
+            --  sve postojece indekse koji ne ovise o boji karte prevodi u
+                objekt klase Karta.Znak,
+            --  sve postojece indekse koji ovise o boji karte prevodi u objekt
+                klase Karta,
+            --  sve nepostojece indekse prevodi u None.
+
+        """
+
         if indeks >= 0 and indeks <= 12:
             return Karta.Znak(indeks + (1 if indeks < 10 else 2))
         elif indeks == 13:
@@ -68,7 +86,7 @@ class PohlepniLog (Tablic.Log):
         elif indeks == 14:
             return Karta(Karta.Boja.KARO, Karta.Znak.BR10)
 
-        return Karta.Znak.NA
+        return None
 
     def __init__ (self, log = list()):
         """

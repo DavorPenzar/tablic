@@ -99,7 +99,7 @@ class PromatracLog (Tablic.Log):
         potez += "\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(ruka), reverse = True)))
 
         potez += "Potez:\n"
-        potez += "\t{0:s} {1:s} {2:s}".format(IOIgrac.lijepiString(karta), ('<' if skupljeno else '>'), IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True)))
+        potez += "\t{0:s} {1:s} {2:s}".format(IOIgrac.lijepiString(karta), '<' if skupljeno else '>', IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True)))
 
         # Ispis poteza.
         print("{0:s}\n".format(potez))

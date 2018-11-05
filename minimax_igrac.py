@@ -50,8 +50,9 @@ class MinimaxIgrac (Tablic.Igrac):
         # Trazenje jedinstvenih predstavnika vjerojatnih karata.
         for x in Karta.noviSpil() - sigurnoNema:
             i = PohlepniLog.prevediKartu(x)
-            if not vjerojatnoNema[i]:
-                ruka |= {Karta(PohlepniLog.prevediIndeks(i))}
+            if vjerojatnoNema[i]:
+                continue
+            ruka |= {Karta(PohlepniLog.prevediIndeks(i))}
 
         # Vracanje skupa vjerojatnih karata.
         return ruka
@@ -110,9 +111,10 @@ class MinimaxIgrac (Tablic.Igrac):
         heurBodovi = float(bodovi[i])
         heurSkupljeno = float(skupljeno[i])
         for j in range(n):
-            if j != i:
-                heurBodovi -= float(bodovi[j]) / (n - 1)
-                heurSkupljeno -= float(skupljeno[j]) / (n - 1)
+            if j == i:
+                continue
+            heurBodovi -= float(bodovi[j]) / (n - 1)
+            heurSkupljeno -= float(skupljeno[j]) / (n - 1)
 
         # Vracanje izracunate heuristicke vrijednosti stanja igre.
         return (heurBodovi, heurSkupljeno)
@@ -337,7 +339,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     if not zadnje:
                         novoVjerojatnoNema = copy.deepcopy(vjerojatnoNema)
                         for x in bolji - {ovajPotez[0]}:
-                            novoVjerojatnoNema[j][x] = 1
+                            novoVjerojatnoNema[j][x] = True
                     noviBodovi = copy.deepcopy(bodovi)
                     novoSkupljeno = copy.deepcopy(skupljeno)
                     noviBodovi[j] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
@@ -501,10 +503,10 @@ class MinimaxIgrac (Tablic.Igrac):
         # Azuriranje broja preostalih karata u spilu.
         self.__k -= self.__n * len(ruka)
 
-        # Azuriranje podataka o kartama koje igraci sigurno nemaju i
-        # resetiranje podataka o kartama koje igraci vjerojatno nemaju.
+        # Azuriranje podataka o kartama koje igraci sigurno nemaju i resetiranje podataka o kartama koje igraci
+        # vjerojatno nemaju.
         self.__sigurnoNema |= ruka | stol
-        self.__vjerojatnoNema = [[0 for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
+        self.__vjerojatnoNema = [[False for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
 
     def vidiPotez (self, i, ruka, stol, karta, skupljeno):
         """
@@ -527,10 +529,10 @@ class MinimaxIgrac (Tablic.Igrac):
 
             # Nakon sto je odigrao ovu kartu, nije poznato ima li i-ti igrac
             # jos takvih karata pa se ne pretpostavlja da ih nema.
-            self.__vjerojatnoNema[i][karta_indeks] = 0
+            self.__vjerojatnoNema[i][karta_indeks] = False
 
             # Racunanje vrijednosti odigranog poteza i karata koje i-ti igrac vjerojatno ima.
-            vrijednost = ((Tablic.vrijednostKarata(skupljeno | {karta}) + int(skupljeno == stol) * Tablic.vrijednostTable()) if skupljeno else 0)
+            vrijednost = (Tablic.vrijednostKarata(skupljeno | {karta}) + int(skupljeno == stol) * Tablic.vrijednostTable()) if skupljeno else 0
             tudaRuka = MinimaxIgrac.vjerojatnaRuka(self.__sigurnoNema, self.__vjerojatnoNema[i])
 
             # Za svaki potez vrijedniji od odigranog, a koji ne zahtijeva igranje odigrane karte, uvecanje vrijednosti da igrac
@@ -541,7 +543,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     break
                 if PohlepniLog.prevediKartu(potez['karta']) == karta_indeks:
                     continue
-                self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(potez['karta'])] = 1
+                self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(potez['karta'])] = True
 
         # Azuriranje podataka o kartama koje igraci sigurno nemaju.
         self.__sigurnoNema |= {karta}
@@ -557,9 +559,10 @@ class MinimaxIgrac (Tablic.Igrac):
                 R.append(PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10)))
 
             for j in range(self.__n):
-                if j != self.dohvatiIndeks():
-                    for r in R:
-                        self.__vjerojatnoNema[j][r] = 0
+                if j == self.dohvatiIndeks():
+                    continue
+                for r in R:
+                    self.__vjerojatnoNema[j][r] = False
 
     def saznajRezultat (self, rezultat):
         pass
@@ -620,10 +623,10 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        if not i is None:
-            return self.__bodovi[i]
+        if i is None:
+            return copy.deepcopy(self.__bodovi)
 
-        return copy.deepcopy(self.__bodovi)
+        return self.__bodovi[i]
 
     def dohvatiSkupljeno (self, i = None):
         """
@@ -635,10 +638,10 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        if not i is None:
-            return self.__skupljeno[i]
+        if i is None:
+            return copy.deepcopy(self.__skupljeno)
 
-        return copy.deepcopy(self.__skupljeno)
+        return self.__skupljeno[i]
 
     def dohvatiZadnjeg (self):
         """

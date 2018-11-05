@@ -14,6 +14,16 @@ class PohlepniLog (Tablic.Log):
     """
     Klasa za zapisnik za strojno ucenje pohlepnog algoritma.
 
+    U biti, zapisnik klase PohlepniLog moze zapisati svaciji potez (neovisno o
+    tipu igraca ciji se potez zapisuje) i zapisuje poteze svih igraca u partiji,
+    ali format u kojem je potez zapisan napravljen je tako da se iz njega moze
+    iscitati zasto bi pohlepni igrac odigrao taj potez ako je to uistinu potez
+    pohlepnog igraca.  To jest, za igrace koji ne igraju strogim pohlepnim
+    algoritmom (cije odluke o potezima ovise i o nekim drugim parametrima, kao
+    slucajnost pri odabiru ili pamcenje koje su karte vec bile odigrane), zapis
+    poteza najvjerojatnije ne daje dovoljno informacija o potezu odnosno zasto
+    je bas on odabran.
+
     """
 
     @classmethod

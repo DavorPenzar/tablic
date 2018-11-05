@@ -112,9 +112,17 @@ class Tablic (object):
 
             return [r['skupljeno'] + r['table'] * Tablic.vrijednostTable() + int(r['max'][0]) * Tablic.vrijednostMax() for r in rezultat]
 
-        def __init__ (self, log = list(), *args, **kwargs):
+        def __init__ (self, log = list()):
             """
             Inicijaliziraj objekt klase Log.
+
+            Svaka klasa derivirana od klase Tablic.Log, ako inicijalizira
+            vlastitu metodu __init__, ta bi metoda trebala biti oblika
+                >>> def __init__ (self, log = list(), ...):
+                        Tablic.Log.__init__(self, log)
+                        ...
+            pri cemu za argument log ne bi smjeli biti prosljedeni objekti koji
+            nisu klase list.
 
             """
 
@@ -342,6 +350,14 @@ class Tablic (object):
             None u kojem slucaju se ime igraca postavlja na
             "[klasa igraca] [i + 1]" (na primjer "RandomIgrac 3" za objekt
             klase RandomIgrac i i = 2).
+
+            Svaka klasa derivirana od klase Tablic.Igrac, ako inicijalizira
+            vlastitu metodu __init__, ta bi metoda trebala biti oblika
+                >>> def __init__ (self, ime = None, ...):
+                        Tablic.Log.__init__(self, log)
+                        ...
+            pri cemu za argument ime ne bi smjeli biti prosljedeni objekti koji
+            nisu None ili klase str.
 
             """
 

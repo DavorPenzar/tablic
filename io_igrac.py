@@ -353,5 +353,7 @@ class IOIgrac (Tablic.Igrac):
                 if not citaj:
                     print("\t")
 
+        print('')
+
         # Vrati zadani potez.
         return (karta, skupljeno)

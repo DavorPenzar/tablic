@@ -122,7 +122,8 @@ class Tablic (object):
                         Tablic.Log.__init__(self, log)
                         [...]
             pri cemu za argument log ne bi smio biti prosljedeni objekt koji
-            nisu tipa list.
+            nisu tipa list, a eventualni ostali argumenti bi trebali imati
+            zadane vrijednosti.
 
             """
 
@@ -358,8 +359,9 @@ class Tablic (object):
                         [...]
             pri cemu za argument i ne bi smio biti prosljeden objekt koji nije
             tipa int (metoda Tablic.dodajIgraca ionako prosljeduje samo takav
-            argument na prvo mjesto), a za argument ime ne bi smio biti
-            prosljeden objekti koji nije None ili tipa str.
+            argument na prvo mjesto), za argument ime ne bi smio biti
+            prosljeden objekti koji nije None ili tipa str, a ostali argumenti
+            bi trebali imati zadane vrijednosti.
 
             """
 

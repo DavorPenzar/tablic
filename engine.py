@@ -443,9 +443,12 @@ class Tablic (object):
             return None
 
         @abc.abstractmethod
-        def vidiPotez (self, i, stol, karta, skupljeno):
+        def vidiPotez (self, i, ruka, stol, karta, skupljeno):
             """
             Neka igrac vidi da je igrac s indeksom i odigrao potez.
+
+            Skup ruka skup je karata koje (ovaj) igrac ima u ruci, a ne koje
+            karte u ruci ima igrac koji je odigrao potez.
 
             """
 
@@ -539,7 +542,7 @@ class Tablic (object):
         def saznajNovoDijeljenje (self, ruka, stol):
             pass
 
-        def vidiPotez (self, i, stol, karta, skupljeno):
+        def vidiPotez (self, i, ruka, stol, karta, skupljeno):
             pass
 
         def saznajRezultat (self, rezultat):

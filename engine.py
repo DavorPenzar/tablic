@@ -539,7 +539,7 @@ class Tablic (object):
         def saznajNovoDijeljenje (self, ruka, stol):
             pass
 
-        def vidiPotez (self, i, ruka, stol, karta, skupljeno):
+        def vidiPotez (self, i, stol, karta, skupljeno):
             pass
 
         def saznajRezultat (self, rezultat):

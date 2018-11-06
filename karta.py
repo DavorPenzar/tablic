@@ -42,7 +42,7 @@ class Karta (object):
             float).
 
             """
-            return any(boja == x.value for x in cls)
+            return any(boja == x for x in cls)
 
     @enum.unique
     class Znak (enum.IntEnum):
@@ -79,7 +79,7 @@ class Karta (object):
 
             """
 
-            return any(znak == x.value for x in cls)
+            return any(znak == x for x in cls)
 
     class __Iterator (object):
         """

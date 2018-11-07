@@ -7,6 +7,7 @@ Implementacija klase Karta za reprezentaciju karata u igri tablic.
 
 import copy
 import enum
+import math
 import six
 
 if six.PY3:
@@ -385,7 +386,8 @@ class Karta (object):
         Ako je value objekt klase int, long ili float i vrijedi
             >>> enumeracija.postoji(value)
             False
-        izbacuje se iznimka tipa ValueError osim ako je enueracija Karta.Znak i
+        izbacuje se iznimka tipa ValueError osim ako je vrijednost nan (u tom se
+        slucaju uzima enumeracija.NA) ili ako je enueracija Karta.Znak i
         value = 11 (u tom se slucaju uzima value = 1); inace se atribut name
         postavlja na
             >>> enumeracija(value)
@@ -425,6 +427,8 @@ class Karta (object):
                 return vrijednost
             elif isinstance(vrijednost, (int, long, float)):
                 # Prevodenje numericke vrijednosti.
+                if math.isnan(vrijednost):
+                    return enumeracija.NA
                 if enumeracija is Karta.Znak and vrijednost == 11:
                     vrijednost = 1
                 if enumeracija.postoji(vrijednost):

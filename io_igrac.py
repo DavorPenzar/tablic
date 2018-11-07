@@ -229,6 +229,7 @@ class IOIgrac (Tablic.Igrac):
         print('Karta:')
         if len(ruka) == 1:
             karta = ruka.pop()
+            ruka = {karta}
             print("\t{0:s}".format(IOIgrac.lijepiString(karta)))
         else:
             while True:

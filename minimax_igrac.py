@@ -31,8 +31,8 @@ class MinimaxIgrac (Tablic.Igrac):
         Objekt sigurnoNema mora biti objekt klase set ciji su elementi objekti
         klase Karta, a predstavljaju tocno one karte koje igrac sigurno nema
         (zadavajuci i boju i znak).  Objekt vjerojatno nema mora biti lista
-        numerickih vrijednosti koja na indeksu i sadrzi ne-nul vrijednost ako i
-        samo ako igrac vjerojatno nema kartu/-e koja/-e se pozivom funkcije
+        booleanskih vrijednosti koja na indeksu i sadrzi True ako i samo ako
+        igrac vjerojatno nema kartu/-e koja/-e se pozivom funkcije
         PohlepniLog.prevediKartu prevodi/-e u indeks i.
 
         Povratna vrijednost funkcije objekt je klase set ciji su elementi
@@ -144,7 +144,8 @@ class MinimaxIgrac (Tablic.Igrac):
         kao u funkciji MinimaxIgrac.vjerojatnaRuka, samo sto je u ovom slucaju
         vjerojatnoNema ugnjezdena lista duljine n koja na indeksu k zadaje
         listu karata koje k-ti igrac vjerojatno nema (kao u funkciji
-        MinimaxIgrac.vjerojatnaRuka).
+        MinimaxIgrac.vjerojatnaRuka), pri cemu se ti argumenti zanemaruju za
+        i-tog igraca (max-igraca) jer su njegove karte zadane skupom ruka.
 
         Gornja granica dubine stabla stanja igre zadana je vrijednosti dubina,
         ali tako da se jednom razinom dubine smatra niz poteza svih igraca
@@ -163,12 +164,15 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Inicijalizacija pocetnog trenutka mjerenja vremena na trenutno
-        # vrijeme.
-        t0 = time.time()
+        # Sanacija argumenta sigurnoNema.
+        sigurnoNema = sigurnoNema | ruka | stol
 
         # Definiranje sortirane liste kartaskih boja.
         boje = sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True)
+
+        # Inicijalizacija pocetnog trenutka mjerenja vremena na trenutno
+        # vrijeme.
+        t0 = time.time()
 
         def __minimax (sigurnoNema, vjerojatnoNema,
                        ruka, stol,
@@ -550,7 +554,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
         # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za svih 4 karata ovog
         # znaka poznato da ih igraci sigurno nemaju, postavljanje odgovarajucih vrijednosti
-        # u vjerojatnoNema na 0.
+        # u vjerojatnoNema na False.
         if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
             R = [PohlepniLog.prevediKartu(Karta(karta.znak))]
             if karta.znak is Karta.Znak.BR2:

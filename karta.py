@@ -305,9 +305,14 @@ class Karta (object):
                         if len(karta) == 1:
                             # Ako je string i nakon rastavljanja jedinstven,
                             # rastavlja se rucno.
+                            stop = False
                             for j in range(len(karta[0])):
                                 if karta[0][j].isdigit() or karta[0][j:].upper() in Karta.Znak.__members__:
+                                    stop = True
+
                                     break
+                            if not stop:
+                                j = len(karta[0])
 
                             if j:
                                 # Prvi dio stringa zadaje boju.
@@ -393,16 +398,18 @@ class Karta (object):
             >>> enumeracija(value)
         Ako je value objekt klase str ili unicode, pokusava se (ako neki korak
         uspije, sljedeci se ne izvrsavaju ni ne pokusavaju) redom
-            1.  value = int(value),
-            2.  value = long(value),
-            3.  value = float(value),
-            4.  value = complex(value),
-            5.  vrijednost atributa name postavlja se na enueracija.NA ako je
+            1.  ako je value = 'None', vrijednost atributa name postavlja se na
+                enueracija.NA,
+            2.  value = int(value),
+            3.  value = long(value),
+            4.  value = float(value),
+            5.  value = complex(value),
+            6.  vrijednost atributa name postavlja se na enueracija.NA ako je
                 value = '',
-            6.  ako je enumeracija Karta.BOJA, vrijednost atributa name
+            7.  ako je enumeracija Karta.BOJA, vrijednost atributa name
                 postavlja se na vrijednost Karta.BOJA cije ime pocinje s
                 value.upper(),
-            7.  vrijednost atributa name postavlja se na
+            8.  vrijednost atributa name postavlja se na
                 enueracija[value.upper()].
         Ako uspije konverzija iz koraka 1. -- 4., daljnji je postupak jednak kao
         da je vrijednost value odmah bila zadana kao numericka vrijednost
@@ -427,6 +434,8 @@ class Karta (object):
                 return vrijednost
             elif isinstance(vrijednost, (int, long, float)):
                 # Prevodenje numericke vrijednosti.
+                if math.isinf(vrijednost):
+                    raise ValueError('Vrijednost {0} nije konacna.'.format(vrijednost))
                 if math.isnan(vrijednost):
                     return enumeracija.NA
                 if enumeracija is Karta.Znak and vrijednost == 11:
@@ -444,6 +453,8 @@ class Karta (object):
                 # Prevodenje stringa svodi se na pokusaj prevodenja stringa u
                 # numericku vrijednost pa u objekt klase enumeracija, a, tek
                 # ako to ne uspije, vrijednost se prevodi direktno.
+                if vrijednost == 'None':
+                    return enumeracija.NA
                 try:
                     return __prevedi(enumeracija, int(vrijednost))
                 except (TypeError, ValueError):
@@ -483,7 +494,7 @@ class Karta (object):
             else:
                 self.__dict__.update({'znak' : __prevedi(Karta.Znak, value)})
         else:
-            raise AttributeError("Atribut `{0:s}' ne postoji.".format(repr(name)))
+            raise AttributeError("Atribut `{0:s}' ne postoji.".format(name))
 
     def __delattr__ (self, name):
         """
@@ -494,13 +505,15 @@ class Karta (object):
         if name in {'boja', 'znak'}:
             raise TypeError("Atributi objekta klase `Karta' se ne mogu brisati.")
 
+        raise AttributeError("Atribut `{0:s}' ne postoji".format(name))
+
     def __copy__ (self):
         """
         Dohvati copy.copy(self).
 
         """
 
-        return Karta(self)
+        return Karta(self.boja, self.znak)
 
     def __deepcopy__ (self, memodict = dict()):
         """
@@ -541,6 +554,7 @@ class Karta (object):
         """
 
         if isinstance(key, slice):
+            # Tretiranje specijalnog slucaja kada se dohvaca slice.
             return tuple(Karta.__Iterator(self, *key.indices(len(self))))
 
         if key == 0 or key == 'boja':
@@ -557,6 +571,7 @@ class Karta (object):
         """
 
         if isinstance(key, slice):
+            # Tretiranje specijalnog slucaja kada se zadaje na slice-u.
             for i in range(*key.indices(len(self))):
                 self.__setitem__(i, value)
             return
@@ -576,7 +591,7 @@ class Karta (object):
 
         """
 
-        if key in {0, 'boja', 1, 'znak'}:
+        if key in {0, 'boja', 1, 'znak'} or isinstance(key, slice):
             raise TypeError("Elementi objekta klase `Karta' ne mogu se brisati.")
 
         raise KeyError("Kljuc key nije prepoznat.")
@@ -618,11 +633,7 @@ class Karta (object):
             # nije string ili objekt klase Karta.
             S = set()
             for y in value:
-                for s in self.__add__(y):
-                    if isinstance(s, set):
-                        S |= {frozenset(s)}
-                    else:
-                        S |= {s}
+                S |= self.__add__(y)
 
             return S
 
@@ -633,7 +644,7 @@ class Karta (object):
 
         if isinstance(value, int):
             if not Karta.Znak.postoji(value) and value != 11:
-                raise ValueError('')
+                raise ValueError('value mora biti 0, 11 ili numericka vrijednost neke karte.')
         else:
             try:
                 value = int(Karta(value))
@@ -684,9 +695,12 @@ class Karta (object):
         """
         Pomnozi trenutnu kartu i cijeli broj.
 
-        Ako je value <= 0, onda je povratna vrijednost set().  Inace se
-        uzastopnim zbarajnjem karte i rezultata value puta dobije rezultat koji
-        je na kraju povratna vrijednost.
+        Mnozenje se vrsi uzastopnim zbrajanjem, stoga je mnozenje strogo
+        negativnim brojem nedefinirano (izbacuje se iznimka tipa ValueError).
+        Inace je za value == 0 povratna vrijednost 0, za 1 {self.znak.value}
+        ako je self.znak != Karta.Znak.NA odnosno {} za
+        self.znak == Karta.Znak.NA i self + self + ... + self (value istih
+        sumanada) za value > 1.
 
         """
 
@@ -695,6 +709,9 @@ class Karta (object):
                 raise ValueError('Imaginarni dio vrijednosti {0} nije jednak 0.'.format(value))
             value = float(value.real)
 
+        if isinstance(value, float):
+            if math.isinf(value) or math.isnan(value):
+                raise ValueError('value mora biti konacna vrijednost.')
         if not isinstance(value, int):
             try:
                 value = int(value)
@@ -705,9 +722,16 @@ class Karta (object):
                     try:
                         value = int(float(value))
                     except (TypeError, ValueError):
-                        raise TypeError("value mora biti objekt klase `int'.")
+                        try:
+                            return self.__mul__(complex(value))
+                        except (TypeError, ValueError):
+                            raise TypeError("value mora biti objekt klase `int'.")
 
-        if value <= 0:
+
+        if value < 0:
+            raise ValueError('value mora biti nenegativna vrijednost.')
+
+        if not value:
             return set()
 
         rezultat = None
@@ -809,9 +833,19 @@ class Karta (object):
         return unicode('{0:s}({1:s}, {2:s})'.format(self.__class__.__name__, unicode(self.boja), unicode(self.znak)))
 
     def __coerce__ (self, other):
+        """
+        Svedi self i other na objekte istog tipa.
+
+        Prvo se pokusava other konvertirati u objekt klase Karta, a, ako ta
+        konverzija ne uspije, self se pokusava konvertirati u objekt klase koje
+        je other.  Ako i ta konverzija ne uspije (rezultira iznimkom tipa
+        TypeError, AttributeError ili ValueError), vraca se None.
+
+        """
+
         try:
             return (self, Karta(other))
-        except (TypeError, ValueError):
+        except (TypeError, AttributeError, ValueError):
             try:
                 return (type(other)(self), other)
             except (TypeError, AttributeError, ValueError):
@@ -820,6 +854,11 @@ class Karta (object):
         return None
 
     def __hash__ (self):
+        """
+        Dohvati hash(self).
+
+        """
+
         return (self.znak.__hash__() % len(list(Karta.Znak)) + self.boja.__hash__() * len(list(Karta.Znak)))
 
     def __eq__ (self, value):

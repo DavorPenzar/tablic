@@ -304,6 +304,8 @@ class IOIgrac (Tablic.Igrac):
                         potezi = PohlepniIgrac.izborPoteza({karta}, stol)
                         for potez in potezi:
                             if skupljeno <= potez['skupljeno']:
+                                for y in sorted(list(potez['skupljeno'] - skupljeno), reverse = True):
+                                    print(IOIgrac.lijepiString(y))
                                 skupljeno = potez['skupljeno']
 
                                 break

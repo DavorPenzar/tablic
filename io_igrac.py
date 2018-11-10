@@ -310,9 +310,8 @@ class IOIgrac (Tablic.Igrac):
 
                                 break
 
-                        citaj = False
-
                         print("\t")
+                        citaj = False
 
                         break
 
@@ -351,10 +350,9 @@ class IOIgrac (Tablic.Igrac):
                     # Inace se uzima eksplicitno zadana karta.
                     skupljeno |= {x}
 
-                citaj = any(skupljeno < potez for potez in potezi)
-
-                if not citaj:
+                if not any(skupljeno < potez for potez in potezi):
                     print("\t")
+                    citaj = False
 
         print('')
 

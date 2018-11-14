@@ -301,7 +301,7 @@ class Tablic (object):
         @abc.abstractmethod
         def kraj (self, rezultat):
             """
-            Saznaj za kraj igre i rezultat igre.
+            Saznaj za kraj i rezultat partije.
 
             Objekt rezultat sukladan je povratnoj vrijednosti funkcije
             Tablic.dohvatiRezultat, a objekt klase Tablic ga nad zapisnikom
@@ -346,7 +346,7 @@ class Tablic (object):
             """
             Inicijaliziraj objekt klase Igrac.
 
-            Argument i zadaje redni broj igraca u igri (pocevsi od 0).
+            Argument i zadaje redni broj igraca u partiji (pocevsi od 0).
             Argument ime moze biti objekt klase str koji zadaje ime igraca, ili
             None u kojem slucaju se ime igraca postavlja na
             "[klasa igraca] [i + 1]" (na primjer "RandomIgrac 3" za objekt
@@ -390,7 +390,7 @@ class Tablic (object):
 
         def dohvatiIndeks (self):
             """
-            Dohvati indeks (redni broj u igri) igraca.
+            Dohvati indeks (redni broj u partiji) igraca.
 
             """
 
@@ -424,7 +424,7 @@ class Tablic (object):
             Neka igrac sazna da igra u partiji s n igraca.
 
             Objekt imena lista je duljine n i sadrzi redom imena svih n igraca
-            u igri (igrac je jedan od tih n igraca).
+            u partiji (igrac je jedan od tih n igraca).
 
             """
 
@@ -457,7 +457,7 @@ class Tablic (object):
         @abc.abstractmethod
         def saznajRezultat (self, rezultat):
             """
-            Neka igrac vidi konacni rezultat na kraju igre.
+            Neka igrac vidi konacni rezultat na kraju partije.
 
             Objekt rezultat sukladan je povratnoj vrijednosti funkcije
             Tablic.dohvatiRezultat, a objekt klase Tablic ga nad zapisnikom
@@ -529,7 +529,7 @@ class Tablic (object):
 
     class RandomIgrac (Igrac):
         """
-        Klasa za definiranje najjednostavnijeg igraca (igra sl. odabirom).
+        Klasa za definiranje najjednostavnijeg igraca (igra slucajnim odabirom).
 
         """
 
@@ -568,7 +568,7 @@ class Tablic (object):
     @classmethod
     def inicijalniBrojKarata_stol (cls):
         """
-        Dohvati broj karata na stolu na pocetku igre.
+        Dohvati broj karata na stolu na pocetku partije.
 
         """
 
@@ -637,7 +637,7 @@ class Tablic (object):
     @classmethod
     def vrijednostMax (cls):
         """
-        Dohvati bodovnu vrijednost strogo najveceg broja karata na kraju igre.
+        Dohvati bodovnu vrijednost strogo najvise skupljenih karata u partiji.
 
         """
 
@@ -685,20 +685,30 @@ class Tablic (object):
 
         return super(Tablic, cls).__new__(cls)
 
-    def __init__ (self):
+    def __init__ (self, spil = None):
         """
         Inicijaliziraj objekt klase Tablic.
 
+        Ako je argument spil None, za spil koji se koristi u partiji generira se
+        novi promijesani spil 52 od povratne vrijednosti poziva funkcije
+            >>> Karta.noviSpil()
+        Inace taj argument mora biti lista (u bilo kojem redoslijedu) svih
+        objekata bez duplikata iz skupa povratne vrijednosti poziva funkcije
+            >>> Karta.noviSpil()
+
         """
 
-        spil = list(Karta.noviSpil())
-        random.shuffle(spil)
+        # Generiranje novog promijesanog spila karata.
+        if spil is None:
+            spil = list(Karta.noviSpil())
+            random.shuffle(spil)
+
+        # Inicijalizacija partije.
 
         self.__pokrenuta = False
         self.__zavrsena = False
 
         self.__spil = queue.Queue()
-
         for karta in spil:
             self.__spil.put(karta)
 
@@ -707,7 +717,7 @@ class Tablic (object):
 
     def dodajIgraca (self, klasa = RandomIgrac, *args, **kwargs):
         """
-        Dodaj igraca (objekt klase klasa) u igru.
+        Dodaj igraca (objekt klase klasa) u partiju.
 
         Argumenti *args, **kwargs prosljeduju se konstruktoru klase klasa pri
         inicijalizaciji novog dodanog igraca.  Ako postoji kljuc 'i' u rjecniku
@@ -715,11 +725,12 @@ class Tablic (object):
 
         """
 
+        # Provjera stanja partije.
         if self.__pokrenuta:
-            raise RuntimeError('Nemoguce je dodati igraca u pokrenutu igru.')
+            raise RuntimeError('Nemoguce je dodati igraca u pokrenutu partiju.')
 
+        # Dodavanje novog igraca u partiju.
         kwargs.pop('i', None)
-
         self.__igraci.append({'igrac' : klasa(len(self.__igraci), *args, **kwargs),
                               'ruka' : set(),
                               'skupljeno' : set(),
@@ -728,7 +739,7 @@ class Tablic (object):
 
     def jePokrenuta (self):
         """
-        Provjeri je li igra vec pokrenuta.
+        Provjeri je li partija vec pokrenuta.
 
         """
 
@@ -736,7 +747,7 @@ class Tablic (object):
 
     def jeZavrsena (self):
         """
-        Provjeri je li igra vec zavrsena.
+        Provjeri je li partija vec zavrsena.
 
         """
 
@@ -744,7 +755,7 @@ class Tablic (object):
 
     def dohvatiBrojIgraca (self):
         """
-        Dohvati trenutni broj igraca u igri.
+        Dohvati trenutni broj igraca u partiji.
 
         """
 
@@ -752,7 +763,7 @@ class Tablic (object):
 
     def dohvatiStol (self):
         """
-        Dohvati trenutno stanje (sadrzaj) stola u igri.
+        Dohvati trenutno stanje (sadrzaj) stola u partiji.
 
         """
 
@@ -763,7 +774,7 @@ class Tablic (object):
         Dohvati igraca s indeksom i.
 
         Povratna vrijednost je objekt klase i-tog igraca ekvivalentan i-tom
-        igracu u igri.
+        igracu u partiji.
 
         """
 
@@ -805,9 +816,9 @@ class Tablic (object):
         """
         Saznaj je li igrac s indeksom i skupio strogo najvise karata.
 
-        Ako igra jos nije zavrsila, povratna vrijednost bit ce False.  Ako je
-        igra zavrsila, povratna vrijednost bit ce tuple kojemu je na indeksu 0
-        bool vrijednost koja je True ako i samo ako je igrac s indeksom i
+        Ako partija jos nije zavrsila, povratna vrijednost bit ce False.  Ako je
+        partija zavrsila, povratna vrijednost bit ce tuple kojemu je na indeksu
+        0 bool vrijednost koja je True ako i samo ako je igrac s indeksom i
         skupio strogo najvise karata, a na indeksu 1 broj skupljenih karata.
 
         """
@@ -875,7 +886,7 @@ class Tablic (object):
                     karta = self.__stol.pop()
                     self.__igraci[zadnji]['skupljeno'] |= {karta}
 
-            # Pronadi igraca sa strogo najvise karata.
+            # Pronadi igraca sa strogo najvise skupljenih karata.
 
             I = [0]
             self.__igraci[0]['max'] = (False, len(self.__igraci[0]['skupljeno']))
@@ -1041,7 +1052,7 @@ class Tablic (object):
 
         logovi = list(logovi)
 
-        # Provjera stanja igre.
+        # Provjera stanja partije.
 
         if self.__pokrenuta:
             raise RuntimeError('Trenutna partija vec je pokrenuta.')

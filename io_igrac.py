@@ -45,14 +45,14 @@ class IOIgrac (Tablic.Igrac):
 
         if isinstance(x, Karta.Boja):
             return '??' if x is Karta.Boja.NA else x.name.lower()
-        elif isinstance(x, Karta.Znak):
+        if isinstance(x, Karta.Znak):
             if x is Karta.Znak.NA:
                 return '??'
             elif x.value >= 2 and x.value <= 10:
                 return str(x.value)
-            else:
-                return x.name.upper()
-        elif isinstance(x, Karta):
+
+            return x.name
+        if isinstance(x, Karta):
             return '{0:s} {1:s}'.format(IOIgrac.lijepiString(x.boja),
                                         IOIgrac.lijepiString(x.znak))
 

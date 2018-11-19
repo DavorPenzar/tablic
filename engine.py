@@ -692,9 +692,11 @@ class Tablic (object):
         Ako je argument spil None, za spil koji se koristi u partiji generira se
         novi promijesani spil 52 od povratne vrijednosti poziva funkcije
             >>> Karta.noviSpil()
-        Inace taj argument mora biti lista (u bilo kojem redoslijedu) svih
+        Inace taj argument mora biti iterabilni objekt (u bilo kojem svih
         objekata bez duplikata iz skupa povratne vrijednosti poziva funkcije
             >>> Karta.noviSpil()
+        u bilo kojem poretku (u tom je poretku, dakle tako je promijesan, onda
+        spil kojim ce se partija igrati).
 
         """
 

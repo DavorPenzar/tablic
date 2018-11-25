@@ -305,7 +305,7 @@ class IOIgrac (Tablic.Igrac):
                         for potez in potezi:
                             if skupljeno <= potez['skupljeno']:
                                 for y in sorted(list(potez['skupljeno'] - skupljeno), reverse = True):
-                                    print(IOIgrac.lijepiString(y))
+                                    print("\t{0:s}".format(IOIgrac.lijepiString(y)))
                                 skupljeno = potez['skupljeno']
 
                                 break

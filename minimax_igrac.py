@@ -325,7 +325,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
                     # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
                     # definirana.
-                    if potez['karta'].znak is Karta.Znak.NA:
+                    if potez['karta'].boja is Karta.Boja.NA:
                         for boja in boje:
                             if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
                                 continue

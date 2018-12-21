@@ -859,7 +859,7 @@ class Karta (object):
 
         """
 
-        return (self.znak.__hash__() % len(list(Karta.Znak)) + self.boja.__hash__() * len(list(Karta.Znak)))
+        return (self.boja.value + self.znak.value * len(list(Karta.Boja)))
 
     def __eq__ (self, value):
         """

@@ -37,7 +37,7 @@ ispisNerjesenih = False
 # biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
 # kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
-igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 2, 'maxT' : 15.0}},
+igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
 
 def izraziVrijeme (t, preciznost = 2, predznak = False):

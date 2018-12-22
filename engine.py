@@ -212,9 +212,11 @@ class Tablic (object):
 
             """
 
-            n = len(str(len(self.__log)))
+            # Izracunaj najveci broj znamenki potreban za ispis rednog broja
+            # poteza u zapisniku.
+            n = len(str(len(self.__log) - 1))
 
-            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
+            return '<{0:s}: [{1:s}]>'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
 
         def __str__ (self):
             """
@@ -222,7 +224,9 @@ class Tablic (object):
 
             """
 
-            n = len(str(len(self.__log)))
+            # Izracunaj najveci broj znamenki potreban za ispis rednog broja
+            # poteza u zapisniku.
+            n = len(str(len(self.__log) - 1))
 
             return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
 
@@ -232,9 +236,11 @@ class Tablic (object):
 
             """
 
-            n = len(str(len(self.__log)))
+            # Izracunaj najveci broj znamenki potreban za ispis rednog broja
+            # poteza u zapisniku.
+            n = len(str(len(self.__log) - 1))
 
-            return unicode('{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log))])) if self.__log else ''))
+            return unicode('{0:s}([{1:s}])').format(self.__class__.__name__, "\n{0:s}\n".format(unicode.join(unicode("\n"), ["\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
 
         def dohvatiLog (self):
             """
@@ -253,11 +259,14 @@ class Tablic (object):
 
             """
 
+            # Prevedi potez.
             potez = self.prevediPotez(i, igraci, ruka, stol, karta, skupljeno)
 
             if potez is None:
+                # Ako je prijevod rezultirao vrijednosti None, ne zapisi ga.
                 return
 
+            # Zapisi potez u zapisnik.
             self.__log.append(potez)
 
         @abc.abstractmethod
@@ -387,6 +396,30 @@ class Tablic (object):
             """
 
             return self.__class__(copy.deepcopy(self.__i, memodict), copy.deepcopy(self.__ime, memodict))
+
+        def __repr__ (self):
+            """
+            Dohvati repr(self).
+
+            """
+
+            return "<{0:s}: '{1:s}' ({2:d})>".format(self.__class__.__name__, self.__ime, self.__i)
+
+        def __str__ (self):
+            """
+            Dohvati str(self).
+
+            """
+
+            return "{0:s}('{1:s}')".format(self.__class__.__name__, self.__ime)
+
+        def __unicode__ (self):
+            """
+            Dohvati unicode(self).
+
+            """
+
+            return unicode(str(self))
 
         def dohvatiIndeks (self):
             """
@@ -554,15 +587,15 @@ class Tablic (object):
 
             """
 
-            # Dohvacanje mogucih poteza.
+            # Dohvati moguce poteze.
             M = Tablic.moguciPotezi(stol)
 
-            # Biranje poteza slucajnim odabirom.
+            # Odaberi potez slucajnim odabirom.
             karta = random.choice(list(ruka))
             izbori = list(unijeDisjunktnih(M[karta.znak])) if karta.znak in M else [frozenset()]
             skupljeno = set(random.choice(izbori))
 
-            # Vracanje odabranog poteza.
+            # Vrati odabrani potez.
             return (karta, skupljeno)
 
     @classmethod
@@ -603,6 +636,7 @@ class Tablic (object):
 
         """
 
+        # Vrati bodovnu vrijednost karte x ako je x karta.
         if isinstance(x, Karta):
             if x.boja is Karta.Boja.TREF and x.znak is Karta.Znak.BR2:
                 return 1
@@ -613,17 +647,17 @@ class Tablic (object):
 
             return 1
 
+        # Konvertiraj x u kartu i vracati njezinu bodovnu vrijednost odnosno vrati sumu bodovnih
+        # vrijednosti karata u kolekciji x ako x nije nonvertibilno u kartu.
         try:
             return Tablic.vrijednostKarata(Karta(x))
         except (TypeError, ValueError):
             if hasattr(x, '__iter__'):
-                vrijednost = 0
-                for y in x:
-                    vrijednost += Tablic.vrijednostKarata(y)
-
-                return vrijednost
+                return sum(Tablic.vrijednostKarata(y) for y in x)
             else:
                 raise TypeError("Objekt x mora biti objekt ili kolekcija objekata klase `Karta'.")
+
+        return 0
 
     @classmethod
     def vrijednostTable (cls):
@@ -659,13 +693,13 @@ class Tablic (object):
 
         """
 
-        # Inicijalizacija rjecnika poteza na prazni rjecnik.
+        # Inicijaliziraj rjecnik poteza na prazni rjecnik.
         M = dict()
 
-        # Racunanje svih nepraznih podskupova skupa S.
+        # Izracunaj sve neprazne podskupove skupa S.
         P = partitivniSkup(S) - {frozenset()}
 
-        # Racunanje rjecnika poteza.
+        # Izracunaj rjecnik poteza.
         for A in P:
             for x in sum(A):
                 x = Karta.Znak(x if x != 11 else 1)
@@ -674,7 +708,7 @@ class Tablic (object):
                 else:
                     M.update({x : {A}})
 
-        # Vracanje izracunatog rjecnika poteza.
+        # Vrati izracunati rjecnik poteza.
         return M
 
     def __new__ (cls, *args, **kwargs):
@@ -700,12 +734,10 @@ class Tablic (object):
 
         """
 
-        # Generiranje novog promijesanog spila karata.
         if spil is None:
+            # Generiraj novi promijesani spil karata.
             spil = list(Karta.noviSpil())
             random.shuffle(spil)
-
-        # Inicijalizacija partije.
 
         self.__pokrenuta = False
         self.__zavrsena = False
@@ -717,21 +749,45 @@ class Tablic (object):
         self.__igraci = list()
         self.__stol = set()
 
+    def __repr__ (self):
+        """
+        Dohvati repr(self).
+
+        """
+
+        return '<{0:s}: {{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}}>'.format(self.__class__.__name__, repr(self.__pokrenuta), repr(self.__zavrsena), str.join(', ', [repr(igrac['igrac']) for igrac in self.__igraci]))
+
+    def __str__ (self):
+        """
+        Dohvati str(self).
+
+        """
+
+        return '{0:s}({{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}})'.format(self.__class__.__name__, str(self.__pokrenuta), str(self.__zavrsena), str.join(', ', [str(igrac['igrac']) for igrac in self.__igraci]))
+
+    def __unicode__ (self):
+        """
+        Dohvati unicode(self).
+
+        """
+
+        return unicode('{0:s}({{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}})').format(self.__class__.__name__, unicode(self.__pokrenuta), unicode(self.__zavrsena), unicode.join(unicode(', '), [unicode(igrac['igrac']) for igrac in self.__igraci]))
+
     def dodajIgraca (self, klasa = RandomIgrac, *args, **kwargs):
         """
         Dodaj igraca (objekt klase klasa) u partiju.
 
         Argumenti *args, **kwargs prosljeduju se konstruktoru klase klasa pri
         inicijalizaciji novog dodanog igraca.  Ako postoji kljuc 'i' u rjecniku
-        kwargs, brise se.
+        kwargs, ignorira se.
 
         """
 
-        # Provjera stanja partije.
+        # Provjeri stanje partije.
         if self.__pokrenuta:
             raise RuntimeError('Nemoguce je dodati igraca u pokrenutu partiju.')
 
-        # Dodavanje novog igraca u partiju.
+        # Dodaj novog igraca u partiju.
         kwargs.pop('i', None)
         self.__igraci.append({'igrac' : klasa(len(self.__igraci), *args, **kwargs),
                               'ruka' : set(),
@@ -882,14 +938,13 @@ class Tablic (object):
 
             self.__zavrsena = True
 
-            # Pocisti stol
             if not zadnji is None:
+                # "Pocisti" stol.
                 while self.__stol:
                     karta = self.__stol.pop()
                     self.__igraci[zadnji]['skupljeno'] |= {karta}
 
-            # Pronadi igraca sa strogo najvise skupljenih karata.
-
+            # Pronadi igraca sa strogo najvise skupljenih karata ako postoji.
             I = [0]
             self.__igraci[0]['max'] = (False, len(self.__igraci[0]['skupljeno']))
             for j in range(1, len(self.__igraci)):
@@ -900,11 +955,14 @@ class Tablic (object):
                     I.append(j)
 
             if len(I) == 1:
+                # Evaluiraj strogo najveci broja skupljenih karata.
                 self.__igraci[I[0]]['max'] = (True, len(self.__igraci[I[0]]['skupljeno']))
 
         def __podijeli ():
             """
             Podijeli svim igracima jednak broj karata (sto vise, a najvise 6).
+
+            Povratna vrijednost je broj karata podijeljenih svakom igracu.
 
             """
 
@@ -971,14 +1029,21 @@ class Tablic (object):
                 return (False, tuple(greske))
 
             # Vrati legalnost poteza.
-            return not bool(greske)
+            return not greske
 
         def __dohvatiPotez (i):
             """
             Zovi Igrac.odigraj s na igracu i do prvog legalnog poteza.
 
+            Povratna vrijednost je tuple (karta, skupljeno) tako da je i-ti
+            igrac odigrao legalni potez igranja karte karta iz ruke i
+            skupljanjem karata u skupu skupljeno sa stola (odnosno samo
+            odlaganjem karte karta na stol ako i samo ako je skupljeno prazni
+            skup).
+
             """
 
+            # Inicijaliziraj ponovi i razlog na False, None respektivno.
             ponovi = False
             razlog = None
 
@@ -998,6 +1063,7 @@ class Tablic (object):
                 else:
                     ponovi = (True, razlog)
 
+            # Vrati dohvaceni potez.
             return (karta, skupljeno)
 
         def __objaviPotez (i, karta, skupljeno):
@@ -1054,7 +1120,7 @@ class Tablic (object):
 
         logovi = list(logovi)
 
-        # Provjera stanja partije.
+        # Provjeri stanje partije.
 
         if self.__pokrenuta:
             raise RuntimeError('Trenutna partija vec je pokrenuta.')
@@ -1077,7 +1143,7 @@ class Tablic (object):
 
         zadnji = None
         while not self.__spil.empty():
-            # Podijeli, logiraj i objavi novo dijeljenje.
+            # Podijeli karte i logiraj i objavi novo dijeljenje.
             k = __podijeli()
             for i in range(len(logovi)):
                 logovi[i].novoDijeljenje(k, copy.deepcopy(self.__stol))
@@ -1108,7 +1174,7 @@ class Tablic (object):
         for i in range(len(logovi)):
             logovi[i].kraj(copy.deepcopy(rezultat))
 
-        # Vracanje odgovarajuce povratne vrijednosti.
+        # Vrati odgovarajucu povratnu vrijednost.
 
         if not logovi:
             return None
@@ -1132,8 +1198,10 @@ class Tablic (object):
 
         """
 
+        # Inicijaliziraj rezultat na praznu listu.
         rezultati = list()
 
+        # Izracuinaj rezultat.
         for i in range(len(self.__igraci)):
             r = {'ime' : self.__igraci[i]['igrac'].dohvatiIme(),
                  'skupljeno' : 0,
@@ -1143,4 +1211,5 @@ class Tablic (object):
                 r['skupljeno'] += Tablic.vrijednostKarata(karta)
             rezultati.append(r)
 
+        # Vrati izracunati rezultat.
         return rezultati

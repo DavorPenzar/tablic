@@ -6,7 +6,6 @@ Implementacija klase igraca igre tablic koji igra minimax algoritmom.
 """
 
 import copy
-import random
 import time
 
 from karta import Karta
@@ -44,18 +43,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Inicijalizacija ruke na prazni skup.
-        ruka = set()
-
-        # Trazenje jedinstvenih predstavnika vjerojatnih karata.
-        for x in Karta.noviSpil() - sigurnoNema:
-            i = PohlepniLog.prevediKartu(x)
-            if vjerojatnoNema[i]:
-                continue
-            ruka |= {Karta(PohlepniLog.prevediIndeks(i))}
-
-        # Vracanje skupa vjerojatnih karata.
-        return ruka
+        return {Karta(PohlepniLog.prevediIndeks(PohlepniLog.prevediKartu(x))) for x in Karta.noviSpil() - sigurnoNema if not vjerojatnoNema[PohlepniLog.prevediKartu(x)]}
 
     @classmethod
     def heuristika (cls,
@@ -91,12 +79,15 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Azuriranje varijabli u slucaju kraja igre.
         if kraj:
+            # Azuriraj varijable u slucaju kraja igre.
+
             if not zadnji is None:
+                # "Pocisti" stol.
                 bodovi[zadnji] += Tablic.vrijednostKarata(stol)
                 skupljeno[zadnji] += len(stol)
 
+            # Pronadi osobu sa strogo najvise skupljenih karata ako postoji.
             M = [0]
             for j in range(1, n):
                 if skupljeno[j] > M[0]:
@@ -105,9 +96,10 @@ class MinimaxIgrac (Tablic.Igrac):
                     M.append(j)
 
             if len(M) == 1:
+                # Evaluiraj strogo najvise skupljenih karata.
                 bodovi[M[0]] += Tablic.vrijednostMax()
 
-        # Racunanje heuristicke vrijednosti stanja igre.
+        # Izracunaj heuristicku vrijednost stanja igre.
         heurBodovi = float(bodovi[i])
         heurSkupljeno = float(skupljeno[i])
         for j in range(n):
@@ -116,7 +108,7 @@ class MinimaxIgrac (Tablic.Igrac):
             heurBodovi -= float(bodovi[j]) / (n - 1)
             heurSkupljeno -= float(skupljeno[j]) / (n - 1)
 
-        # Vracanje izracunate heuristicke vrijednosti stanja igre.
+        # Vrati izracunatu heuristicku vrijednost stanja igre.
         return (heurBodovi, heurSkupljeno)
 
     @classmethod
@@ -164,14 +156,13 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Sanacija argumenta sigurnoNema.
+        # Saniraj argument sigurnoNema.
         sigurnoNema = sigurnoNema | ruka | stol
 
-        # Definiranje sortirane liste kartaskih boja.
+        # Definiraj sortiranu listu kartaskih boja.
         boje = sorted([Karta.Boja.HERC, Karta.Boja.PIK, Karta.Boja.KARO, Karta.Boja.TREF], reverse = True)
 
-        # Inicijalizacija pocetnog trenutka mjerenja vremena na trenutno
-        # vrijeme.
+        # Inicijaliziraj pocetni trenutak mjerenja vremena na trenutno vrijeme.
         t0 = time.time()
 
         def __minimax (sigurnoNema, vjerojatnoNema,
@@ -191,7 +182,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
             """
 
-            # Prekidanje pretrazivanja stabla u dubinu u slucaju nekog od
+            # Prekini pretrazivanje stabla u dubinu u slucaju nekog od
             # terminalnih uvjeta (stanje bez potomaka, maksimalna duljina ili
             # vremensko prekoracenje).
             if not (j or ruka) or not dubina or time.time() - t0 > T:
@@ -200,37 +191,37 @@ class MinimaxIgrac (Tablic.Igrac):
                                                         zadnje and j == 0 and not ruka,
                                                         zadnji, stol))
 
-            # Grananje u ovisnosti o tome koji je igrac na redu.
+            # Granaj u ovisnosti o tome koji je igrac na redu.
             if j == i:
                 # Max-igrac je na redu.
 
-                # Inicijalizacija najvjerojatnijeg slijeda poteza (grana),
-                # njegove heuristicke vrijednosti (vrijednost) i zadnjeg
-                # promatranog poteza (zadnjiPotez).
+                # Inicijaliziraj najvjerojatniji slijed poteza (grana), njegovu
+                # heuristicku vrijednost (vrijednost) i zadnji promatrani potez
+                # (zadnjiPotez).
                 grana = list()
                 vrijednost = (-float('inf'), -float('inf'))
                 zadnjiPotez = (PohlepniLog.dohvatiBrojIndeksa(), list())
 
-                # Iteriranje po mogucim potezima.
+                # Iteriraj po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(ruka, stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i provjera
+                    # Izracunaj "protorip poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i karo 10) i provjeri
                     # je li takav potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']), sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True))
                     if ovajPotez == zadnjiPotez:
                         continue
                     else:
-                        # Ako ovakav potez jos nije obraden, spremanje njegovog
-                        # prototipa u varijablu zadnjiPotez.
+                        # Ako ovakav potez jos nije obraden, spremi njegov
+                        # prototip u varijablu zadnjiPotez.
                         zadnjiPotez = ovajPotez
 
-                    # Kreiranje novih lista bodova i brojeva skupljenih karata.
+                    # Kreiraj nove liste bodova i brojeva skupljenih karata.
                     noviBodovi = copy.deepcopy(bodovi)
                     novoSkupljeno = copy.deepcopy(skupljeno)
                     noviBodovi[i] += (potez['vrijednost'] + int(potez['tabla']) * Tablic.vrijednostTable())
                     if potez['skupljeno']:
                         novoSkupljeno[i] += 1 + len(potez['skupljeno'])
 
-                    # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
+                    # Rekurzivno trazi najvjerojatnijeg potomka trenutnog poteza.
                     sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema,
                                                         ruka - {potez['karta']}, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
                                                         noviBodovi, novoSkupljeno,
@@ -239,9 +230,9 @@ class MinimaxIgrac (Tablic.Igrac):
                                                         dubina if (i + 1) % n else (dubina - 1),
                                                         alpha, beta)
 
-                    # Usporedba pronadenog najvjerojatnijeg slijeda nakon ovog
+                    # Usporedi pronadenog najvjerojatnijeg slijeda nakon ovog
                     # poteza s dosad pronadenim najvjerojatnijim slijedom i
-                    # adekvatno azuriranje varijabli.
+                    # adekvatno azuriraj varijable.
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost > vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
@@ -274,7 +265,7 @@ class MinimaxIgrac (Tablic.Igrac):
             else:
                 # Jedan od min-igraca je na redu.
 
-                # Racunanje vjerojatne ruke trenutnog igraca.  Ako je vjerojatna ruka
+                # Izracunaj vjerojatnu ruku trenutnog igraca.  Ako je vjerojatna ruka
                 # prazna, nema poteza koji bi se mogli promatrati, pa se takvo stanje
                 # smatra terminalnim (ali ono sigurno nije zavrsno stanje igre jer se
                 # ta mogucnost razmatra na pocetku funkcije).
@@ -284,21 +275,21 @@ class MinimaxIgrac (Tablic.Igrac):
                                                             n, i,
                                                             False))
 
-                # Inicijalizacija najvjerojatnijeg slijeda poteza (grana), njegove heuristicke
-                # vrijednosti (vrijednost) i zadnjeg promatranog poteza (zadnjiPotez).
+                # Inicijaliziraj najvjerojatniji slijed poteza (grana), njegovu heuristicku
+                # vrijednost (vrijednost) i zadnji promatrani potez (zadnjiPotez).
                 grana = list()
                 vrijednost = (float('inf'), float('inf'))
                 zadnjiPotez = (PohlepniLog.dohvatiBrojIndeksa(), list(), (float('inf'), float('inf')))
 
-                # Inicijalizacija skupova indeksa karata koje omogucuju bolje
+                # Inicijaliziraj skupove indeksa karata koje omogucuju bolje
                 # odnosno jednakovrijedne poteze na prazne skupove.
                 bolji = set()
                 isti = set()
 
-                # Iteriranje po mogucim potezima.
+                # Iteriraj po mogucim potezima.
                 for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
-                    # Racunanje "protoripa poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i
-                    # karo 10) i provjera je li takav potez vec obraden (ako je, obrada se preskce).
+                    # Izracunaj "protorip poteza" (izgled poteza neovisno o bojama karata osim u slucaju specijalnih karata --- tref 2 i
+                    # karo 10) i provjeri je li takav potez vec obraden (ako je, obrada se preskce).
                     ovajPotez = (PohlepniLog.prevediKartu(potez['karta']),
                                  sorted([PohlepniLog.prevediKartu(x) for x in potez['skupljeno']], reverse = True),
                                  (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable(), len(potez['skupljeno'])))
@@ -320,12 +311,12 @@ class MinimaxIgrac (Tablic.Igrac):
                     else:
                         isti |= {ovajPotez[0]}
 
-                    # Spremanje prototipa ovog poteza u varijablu zadnjiPotez.
+                    # Spremi prototip ovog poteza u varijablu zadnjiPotez.
                     zadnjiPotez = ovajPotez
 
-                    # Zadavanje boje odigranoj karti (zbog njezine znacajnosti nakon dodavanja u skup sigurnoNema) ako nije
-                    # definirana.
                     if potez['karta'].boja is Karta.Boja.NA:
+                        # Zadaj boju odigranoj karti (zbog njezine znacajnosti nakon dodavanja u
+                        # skup sigurnoNema) ako nije definirana.
                         for boja in boje:
                             if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
                                 continue
@@ -336,8 +327,8 @@ class MinimaxIgrac (Tablic.Igrac):
 
                                 break
 
-                    # Kreiranje novih lista karata koje igraci vjerojatno nemaju, bodova i brojeva
-                    # skupljenih karata. Smatra se da j-ti igrac vjerojatno nema sve karte koje bi mu
+                    # Kreiraj nove liste karata koje igraci vjerojatno nemaju, bodova i brojeva
+                    # skupljenih karata.  Smatra se da j-ti igrac vjerojatno nema sve karte koje bi mu
                     # omogucile bolji potez od ovog (osim ove karte ako se ona mozda vec pojavila s
                     # mogucnosti boljeg poteza).
                     if not zadnje:
@@ -350,7 +341,7 @@ class MinimaxIgrac (Tablic.Igrac):
                     if potez['skupljeno']:
                         novoSkupljeno[j] += 1 + len(potez['skupljeno'])
 
-                    # Rekurzivno trazenje najvjerojatnijeg potomka trenutnog poteza.
+                    # Rekurzivno trazi najvjerojatnijeg potomka trenutnog poteza.
                     sadGrana, sadVrijednost = __minimax(sigurnoNema | {potez['karta']}, vjerojatnoNema if zadnje else novoVjerojatnoNema,
                                                         ruka, stol - potez['skupljeno'] if potez['skupljeno'] else stol | {potez['karta']},
                                                         noviBodovi, novoSkupljeno,
@@ -359,9 +350,9 @@ class MinimaxIgrac (Tablic.Igrac):
                                                         dubina if (j + 1) % n else (dubina - 1),
                                                         alpha, beta)
 
-                    # Usporedba pronadenog najvjerojatnijeg slijeda nakon ovog
+                    # Usporedi pronadenog najvjerojatnijeg slijeda nakon ovog
                     # poteza s dosad pronadenim najvjerojatnijim slijedom i
-                    # adekvatno azuriranje varijabli.
+                    # adekvatno azuriraj varijable.
                     if len(sadGrana) + 1 > len(grana) or len(sadGrana) + 1 == len(grana) and sadVrijednost < vrijednost:
                         grana = [{'karta' : potez['karta'], 'skupljeno' : potez['skupljeno']}] + sadGrana
                         vrijednost = sadVrijednost
@@ -392,12 +383,12 @@ class MinimaxIgrac (Tablic.Igrac):
                     if alpha >= beta:
                         break
 
-            # Vracanje najvjerojatnijeg slijeda poteza i njegove
-            # heuristicke vrijednosti.
+            # Vrati najvjerojatniji slijed poteza i njegovu heuristicku
+            # vrijednost.
             return (grana, vrijednost)
 
-        # Racunanje najvjerojatnijeg slijeda poteza i njegove heuristicke
-        # vrijednosti minimax algoritmom.
+        # Izracunaj najvjerojatniji slijed poteza i njegovu heuristicku
+        # vrijednost minimax algoritmom.
         grana, vrijednost = __minimax(sigurnoNema, vjerojatnoNema,
                                       ruka, stol,
                                       bodovi, skupljeno,
@@ -406,7 +397,7 @@ class MinimaxIgrac (Tablic.Igrac):
                                       dubina,
                                       (-float('inf'), -float('inf')), (float('inf'), float('inf')))
 
-        # Vracanje izracunatog najvjerojatnijeg slijeda poteza.
+        # Vrati izracunati najvjerojatniji slijed poteza.
         return grana
 
     def __init__ (self, i, ime = None, maxDubina = Tablic.inicijalniBrojKarata_ruka(), maxT = float('inf')):
@@ -425,7 +416,7 @@ class MinimaxIgrac (Tablic.Igrac):
         self.__maxDubina = maxDubina
         self.__maxT = maxT
 
-        # Inicijalizacija relevantnih varijabli.
+        # Inicijaliziraj relevantne varijable.
 
         self.__k = None # broj karata u spilu
         self.__n = None # broj igraca
@@ -485,7 +476,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Postavljanje pocetnih vrijednosti relevantnih varijabli.
+        # Postavi pocetne vrijednosti relevantnih varijabli.
 
         self.__k = 52 - Tablic.inicijalniBrojKarata_stol()
         self.__n = n
@@ -504,10 +495,10 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Azuriranje broja preostalih karata u spilu.
+        # Azuriraj broj preostalih karata u spilu.
         self.__k -= self.__n * len(ruka)
 
-        # Azuriranje podataka o kartama koje igraci sigurno nemaju i resetiranje podataka o kartama koje igraci
+        # Azuriraj podatke o kartama koje igraci sigurno nemaju i resetiraj podatke o kartama koje igraci
         # vjerojatno nemaju.
         self.__sigurnoNema |= ruka | stol
         self.__vjerojatnoNema = [[False for i in range(PohlepniLog.dohvatiBrojIndeksa())] for j in range(self.__n)]
@@ -518,16 +509,16 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        # Azuriranje varijabli ako je igrac kupio karte.
+        # Azuriraj varijable ako je igrac kupio karte.
         if skupljeno:
             self.__bodovi[i] += Tablic.vrijednostKarata({karta} | skupljeno) + int(skupljeno == stol) * Tablic.vrijednostTable()
             self.__skupljeno[i] += 1 + len(skupljeno)
 
             self.__zadnji = i
 
-        # Azuriranje podataka o kartama koje i-ti igrac vjerojatno nema ako
-        # zadnje dijeljenje nije bilo posljednje u igri i ako i-ti igrac nije
-        # ovaj igrac.
+        # Azuriraj podatke o kartama koje i-ti igrac vjerojatno nema ako zadnje
+        # dijeljenje nije bilo posljednje u igri i ako i-ti igrac nije ovaj
+        # igrac.
         if self.__k and i != self.dohvatiIndeks():
             karta_indeks = PohlepniLog.prevediKartu(karta)
 
@@ -535,12 +526,12 @@ class MinimaxIgrac (Tablic.Igrac):
             # jos takvih karata pa se ne pretpostavlja da ih nema.
             self.__vjerojatnoNema[i][karta_indeks] = False
 
-            # Racunanje vrijednosti odigranog poteza i karata koje i-ti igrac vjerojatno ima.
+            # Izracunaj vrijednost odigranog poteza i karte koje i-ti igrac vjerojatno ima.
             vrijednost = (Tablic.vrijednostKarata(skupljeno | {karta}) + int(skupljeno == stol) * Tablic.vrijednostTable()) if skupljeno else 0
             tudaRuka = MinimaxIgrac.vjerojatnaRuka(self.__sigurnoNema, self.__vjerojatnoNema[i])
 
-            # Za svaki potez vrijedniji od odigranog, a koji ne zahtijeva igranje odigrane karte, uvecanje vrijednosti da igrac
-            # nema kartu kojom se taj potez igra.
+            # Za svaki potez vrijedniji od odigranog, a koji ne zahtijeva igranje odigrane karte, uvecaj vrijednost da igrac nema kartu kojom se taj potez
+            # igra.
             for potez in PohlepniIgrac.izborPoteza(tudaRuka, stol):
                 if (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() < vrijednost or
                     max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() == vrijednost and len(potez['skupljeno']) <= len(skupljeno)):
@@ -549,12 +540,12 @@ class MinimaxIgrac (Tablic.Igrac):
                     continue
                 self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(potez['karta'])] = True
 
-        # Azuriranje podataka o kartama koje igraci sigurno nemaju.
+        # Azuriraj podatke o kartama koje igraci sigurno nemaju.
         self.__sigurnoNema |= {karta}
 
         # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za svih 4 karata ovog
-        # znaka poznato da ih igraci sigurno nemaju, postavljanje odgovarajucih vrijednosti
-        # u vjerojatnoNema na False.
+        # znaka poznato da ih igraci sigurno nemaju, postavi odgovarajuce vrijednosti u
+        # self.__vjerojatnoNema na False.
         if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
             R = [PohlepniLog.prevediKartu(Karta(karta.znak))]
             if karta.znak is Karta.Znak.BR2:
@@ -589,17 +580,8 @@ class MinimaxIgrac (Tablic.Igrac):
         if not grana:
             raise RuntimeError('Minimax algoritam nije pronasao nijedan moguci potez.')
 
-        # Slucajnim odabirom odaberi kartu u ruci ekvivalentnu odabranoj
-        # minimax algoritmom.
-        i = PohlepniLog.prevediKartu(grana[0]['karta'])
-        kandidati = list()
-        for x in ruka:
-            if PohlepniLog.prevediKartu(x) == i:
-                kandidati.append(x)
-        grana[0]['karta'] = random.choice(kandidati)
-
         # Odigraj najpovoljniji potez.
-        return (grana[0]['karta'], grana[0]['skupljeno'])
+        return (PohlepniIgrac.slucajniEkvivalentni(ruka, grana[0]['karta']), grana[0]['skupljeno'])
 
     def dohvatiMaxDubinu (self):
         """

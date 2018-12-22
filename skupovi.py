@@ -24,17 +24,17 @@ def partitivniSkup (S):
 
     """
 
-    # Inicijalizacija partitivnog skupa na {{}}.
+    # Inicijaliziraj partitivni skup na {{}}.
     P = {frozenset()}
 
-    # Konstrukcija partitivnog skupa skupa S.
+    # Konstruiraj partitivni skup skupa S.
     for x in S:
         Q = set()
         for A in P:
             Q |= {frozenset(A | {x})}
         P |= Q
 
-    # Vracanje izracunatog partitivnog skupa.
+    # Vrati izracunati partitivni skup.
     return P
 
 def unijeDisjunktnih (F):
@@ -67,11 +67,11 @@ def unijeDisjunktnih (F):
 
     """
 
-    # Inicijalizacija familije unija u parovima disjunktnih elemenata familije
+    # Inicijaliziraj familiju unija u parovima disjunktnih elemenata familije
     # F na {{}}.
     U = {frozenset()}
 
-    # Konstrukcija familije unija u parovima disjunktnih elemenata familije F.
+    # Konstruiraj familiju unija u parovima disjunktnih elemenata familije F.
     for S in F:
         S = frozenset(S)
 
@@ -81,5 +81,5 @@ def unijeDisjunktnih (F):
                 V |= {frozenset(A | S)}
         U |= V
 
-    # Vracanje familije unija u parovima disjunktnih elemenata familije F.
+    # Vrati familiju unija u parovima disjunktnih elemenata familije F.
     return U

@@ -71,47 +71,47 @@ class MinimaxLog (Tablic.Log):
 
         """
 
-        # Pokusaj inicijalizacije varijable potez na prvih len(igraci) + 3 mjesta, a, ako igraci[i] ne "prepoznaje" trazene
-        # funkcije (ako nije minimax igrac), odustajanje i vracanje None.
+        # Pokusaj inicijalizirati varijablu potez na prvih len(igraci) + 3 mjesta, a, ako igraci[i] ne "prepoznaje" trazene
+        # metode (ako nije minimax igrac), odustajani i vrati None.
         try:
             potez = [len(igraci), i] + igraci[i].dohvatiBodove() + igraci[i].dohvatiSkupljeno() + [igraci[i].dohvatiZadnjeg()]
         except AttributeError:
             return None
 
-        # Zapis karata koje igraci sigurno nemaju u potez.
+        # Zapis kartu koje igraci sigurno nemaju u potez.
         aux = [0 for j in range(PohlepniLog.dohvatiBrojIndeksa())]
         for x in igraci[i].dohvatiSigurnoNema():
             aux[PohlepniLog.prevediKartu(x)] += 1
         potez += aux
 
-        # Zapis karata koje igraci vjerojatno nemaju u potez.
+        # Zapisi karte koje igraci vjerojatno nemaju u potez.
         for j in range(len(igraci)):
             if j == i:
                 continue
             potez += igraci[i].dohvatiVjerojatnoNema(j)
 
-        # Zapis ruke u potez.
+        # Zapisi ruku u potez.
         aux = [0 for j in range(PohlepniLog.dohvatiBrojIndeksa())]
         for x in ruka:
             aux[PohlepniLog.prevediKartu(x)] += 1
         potez += aux
 
-        # Zapis stola u potez.
+        # Zapisi stol u potez.
         aux = [0 for j in range(PohlepniLog.dohvatiBrojIndeksa())]
         for x in stol:
             aux[PohlepniLog.prevediKartu(x)] += 1
         potez += aux
 
-        # Zapis odigrane karte u potez.
+        # Zapisi odigranu kartu u potez.
         potez += [PohlepniLog.prevediKartu(karta)]
 
-        # Zapis skupa skupljenih karata u potez.
+        # Zapisi skup skupljenih karata u potez.
         aux = [0 for j in range(PohlepniLog.dohvatiBrojIndeksa())]
         for x in skupljeno:
             aux[PohlepniLog.prevediKartu(x)] += 1
         potez += aux
 
-        # Povrat zapisa poteza.
+        # Vrati zapisa poteza.
         return tuple(potez)
 
     def kraj (self, rezultat):

@@ -39,11 +39,35 @@ class Karta (object):
         @classmethod
         def postoji (cls, boja):
             """
-            Provjeri postoji li boja enumeracijske vrijednosti `znak' (int ili
+            Provjeri postoji li boja enumeracijske vrijednosti `boja' (int ili
             float).
 
             """
             return any(boja == x for x in cls)
+
+        def __repr__ (self):
+            """
+            Dohvati repr(self).
+
+            """
+
+            return '<{0:s}: {1:s} (1:d)>'.format(self.__class__.__name__, self.name, self.value)
+
+        def __str__ (self):
+            """
+            Dohvati str(self).
+
+            """
+
+            return '{0:s}({1:s})'.format(self.__class__.__name__, self.name)
+
+        def __unicode__ (self):
+            """
+            Dohvati unicode(self).
+
+            """
+
+            return unicode(str(self))
 
     @enum.unique
     class Znak (enum.IntEnum):
@@ -81,6 +105,30 @@ class Karta (object):
             """
 
             return any(znak == x for x in cls)
+
+        def __repr__ (self):
+            """
+            Dohvati repr(self).
+
+            """
+
+            return '<{0:s}: {1:s} (1:d)>'.format(self.__class__.__name__, self.name, self.value)
+
+        def __str__ (self):
+            """
+            Dohvati str(self).
+
+            """
+
+            return '{0:s}({1:s})'.format(self.__class__.__name__, self.name)
+
+        def __unicode__ (self):
+            """
+            Dohvati unicode(self).
+
+            """
+
+            return unicode(str(self))
 
     class __Iterator (object):
         """
@@ -156,16 +204,20 @@ class Karta (object):
 
         """
 
-        if hasattr(x, '__iter__'):
-            try:
-                return Karta(x)
-            except (TypeError, ValueError):
-                R = list()
-                for y in x:
-                    R.append(Karta.uKarte(y))
-                return tuple(R)
+        if isinstance(x, Karta):
+            # Vrati kartu x.
+            return x
 
-        return Karta(x)
+        # Konvertiraj x u kartu i vrati dobivenu kartu odnosno vrati tuple karata u kolekciji x ako konverzija nije uspijela.
+        try:
+            return Karta(x)
+        except (TypeError, ValueError):
+            if hasattr(x, '__iter__'):
+                return tuple(Karta.uKarte(y) for y in x)
+            else:
+                raise TypeError("Objekt x mora biti objekt (konvertibilan u objekt) klase `Karta' ili kolekcija objekata (konvertibilnih u objekte) klase `Karta'.")
+
+        return Karta()
 
     @classmethod
     def noviSpil (cls):
@@ -271,40 +323,40 @@ class Karta (object):
 
         """
 
-        # Inicijalizacija karte na nedefiniranu kartu.
+        # Inicijaliziraj kartu na nedefiniranu kartu.
         self.boja = Karta.Boja.NA
         self.znak = Karta.Znak.NA
 
-        # Citanje argumenata.
+        # Citaj argumente.
         if args:
-            # Citanje implicitno zadanih argumenata.
+            # Citaj implicitno zadane argumente.
             if kwargs:
                 # Nije dopusteno implicitno i eksplicitno zadavanje argumenata.
                 raise TypeError("Argumenti za inicijalizaciju objekta klase `Karta' moraju biti zadani implicitno ili eksplicitno (kljucnim rijecima), a ne na oba nacina.")
             if len(args) == 1:
-                # Citanje samo 1 argumenta.
+                # Citaj samo 1 argument.
                 if args[0] is None:
                     pass
                 elif isinstance(args[0], Karta):
-                    # Kreiranje kopije karte.
+                    # Kreiraj kopiju karte.
                     self.boja = args[0].boja
                     self.znak = args[0].znak
                 elif isinstance(args[0], Karta.Boja):
-                    # Zadavanje samo boje karte.
+                    # Zadavaj samo boju karte.
                     self.boja = args[0]
                 elif isinstance(args[0], (int, long, float, complex, Karta.Znak)):
-                    # Zadavanje samo znaka karte.
+                    # Zadaj samo znak karte.
                     self.znak = args[0]
                 elif isinstance(args[0], (str, unicode)):
-                    # Zadavanje karte stringom.
+                    # Zadaj kartu stringom.
                     if args[0].upper() in Karta.Boja.__members__:
                         self.boja = args[0]
                     else:
-                        # Rastavljanje stringa.
+                        # Rastavi string.
                         karta = args[0].split()
                         if len(karta) == 1:
                             # Ako je string i nakon rastavljanja jedinstven,
-                            # rastavlja se rucno.
+                            # rastavi se rucno.
                             stop = False
                             for j in range(len(karta[0])):
                                 if karta[0][j].isdigit() or karta[0][j:].upper() in Karta.Znak.__members__:
@@ -315,20 +367,20 @@ class Karta (object):
                                 j = len(karta[0])
 
                             if j:
-                                # Prvi dio stringa zadaje boju.
+                                # Prvim dijelom stringa zadaj boju.
                                 self.boja = karta[0][:j]
                             if j < len(karta[0]):
-                                # Drugi dio stringa zadaje znak.
+                                # Drugim dijelom stringa zadaj znak.
                                 self.znak = karta[0][j:]
                         elif len(karta) == 2:
-                            # Prvi dio stringa zadaje boju, a drugi znak.
+                            # Prvim dijelom stringa zadaj boju, a drugim znak.
                             self.boja = karta[0]
                             self.znak = karta[1]
                         elif karta:
-                            # Rastav stringa na st(self.__inkr <= 0 or self.__i >= self.__stop) and (self.__inkr >= 0 or self.__i <= self.__stop):rogo vise od 2 podstringa se ne prepoznaje.
+                            # Rastav stringa na strogo vise od 2 podstringa se ne prepoznaje.
                             raise TypeError("String `{0:s}' nije valjani argument za inicijalizaciju objekta klase Karta.".format(args[0]))
                 elif isinstance(args[0], dict):
-                    # Zadavanje karte rjecnikom.
+                    # Zadavaj kartu rjecnikom.
                     if not set(args[0].keys()) <= {'boja', 'znak'}:
                         raise TypeError("Za inicijalizaciju objekta klase `Karta' dan je argument rjcnik s nepoznatim kljucevima.")
                     if 'boja' in args[0]:
@@ -336,7 +388,7 @@ class Karta (object):
                     if 'znak' in args[0]:
                         self.znak = args[0]['znak']
                 else:
-                    # Zadavanje karte iterabilnim objektom.
+                    # Zadavaj kartu iterabilnim objektom.
                     try:
                         karta = tuple(args[0])
                     except (TypeError, ValueError):
@@ -349,14 +401,14 @@ class Karta (object):
                             # Iterabilni objekt koji nema tocno 2 elementa se ne prepoznaje.
                             raise TypeError("Tuple {0} nije valjani argument za inicijalizaciju objekta klase `Karta'.".format(args[0]))
             elif len(args) == 2:
-                # Citanje dvaju argumenata.
+                # Citaj dva argumenta.
                 self.boja = args[0]
                 self.znak = args[1]
             else:
                 # Zadavanje karte sa strogo vise od 2 argumenta se ne prepoznaje.
                 raise TypeError("Zadano je previse argumenata za inicijalizaciju objekta klase `Karta'.")
         if kwargs:
-            # Citanje eksplicitno zadanih argumenata.
+            # Citaj eksplicitno zadane argumente.
             if args:
                 # Nije dopusteno implicitno i eksplicitno zadavanje argumenata.
                 raise TypeError("Argumenti za inicijalizaciju objekta klase `Karta' moraju biti zadani implicitno ili eksplicitno (kljucnim rijecima), a ne na oba nacina.")
@@ -433,7 +485,7 @@ class Karta (object):
                 # Ako prevodenje nije potrebno, vrati vrijednost.
                 return vrijednost
             elif isinstance(vrijednost, (int, long, float)):
-                # Prevodenje numericke vrijednosti.
+                # Prevedi numericku vrijednost.
                 if math.isinf(vrijednost):
                     raise ValueError('Vrijednost {0} nije konacna.'.format(vrijednost))
                 if math.isnan(vrijednost):
@@ -622,20 +674,16 @@ class Karta (object):
         """
 
         if value is None:
-            # Tretiranje specijalnog slucaja kada je value None.
+            # Tretiraj specijalni slucaj kada je value None.
             if self.znak is Karta.Znak.NA:
                 return set()
             else:
                 return {self.znak.value}
 
         if hasattr(value, '__iter__') and not isinstance(value, (str, unicode, Karta)):
-            # Tretiranje specijalnog slucaja kada je value iterabilni objekt i
-            # nije string ili objekt klase Karta.
-            S = set()
-            for y in value:
-                S |= self.__add__(y)
-
-            return S
+            # Tretiraj specijalni slucaj kada je value iterabilni objekt i nije
+            # string ili objekt klase Karta.
+            return set().union(*tuple(self.__add__(y) for y in value))
 
         if isinstance(value, complex):
             if value.imag:
@@ -654,17 +702,17 @@ class Karta (object):
                 raise ValueError("Vrijednost `{0:s}' nije valjani sumand za zbrajanje objekata klase `Karta'.".format(repr(value)))
 
         if self.znak is Karta.Znak.A and value == 1:
-            # Tretiranje specijalnog slucaja zbrajanje 2 A.
+            # Tretiraj specijalni slucaj zbrajanja 2 A.
             return {Karta.Znak.BR2.value, Karta.Znak.J.value}
         if self.znak is Karta.Znak.A:
-            # Tretiranje specijalnog slucaja kada je karta znaka A.
+            # Tretiraj specijalni slucaj kada je karta znaka A.
             if 1 + value > 14:
                 return set()
             if 11 + value > 14:
                 return {1 + value}
             return {1 + value, 11 + value}
         if value == 1:
-            # Tretiranje specijalnog slucaja kada je value A.
+            # Tretiraj specijalni slucaj kada je value A.
             if self.znak + 1 > 14:
                 return set()
             if self.znak + 11 > 14:
@@ -673,11 +721,10 @@ class Karta (object):
                 return {self.znak + 1, self.znak + 11}
 
         if self.znak + value > 14:
-            # Ako je zbroj preveliki, zbroj nije moguc pa je povratna
-            # vrijednost prazni skup.
+            # Ako je zbroj preveliki, zbroj nije moguc pa vrati prazni skup.
             return set()
 
-        # Vracanje skupa koji sadrzi jedinstvenu mogucu vrijednost zbroja.
+        # Vrati skupa koji sadrzi jedinstvenu mogucu vrijednost zbroja.
         return {self.znak + value}
 
     def __radd__ (self, value):
@@ -727,18 +774,19 @@ class Karta (object):
                         except (TypeError, ValueError):
                             raise TypeError("value mora biti objekt klase `int'.")
 
-
         if value < 0:
             raise ValueError('value mora biti nenegativna vrijednost.')
 
         if not value:
             return set()
 
+        # Izracunaj self + self + ... + self (value puta).
         rezultat = None
         while value:
             rezultat = self.__add__(rezultat)
             value -= 1
 
+        # Vrati izracunatu sumu (produkt).
         return rezultat
 
     def __rmul__ (self, value):
@@ -748,6 +796,7 @@ class Karta (object):
         Za value * self se vraca self.__mul__(value).
 
         """
+
         return self.__mul__(value)
 
     def __nonzero__ (self):
@@ -814,7 +863,7 @@ class Karta (object):
 
         """
 
-        return str('<{0:s}: ({1:s}, {2:s})>'.format(self.__class__.__name__, repr(self.boja), repr(self.znak)))
+        return '<{0:s}: ({1:s}, {2:s})>'.format(self.__class__.__name__, repr(self.boja), repr(self.znak))
 
     def __str__ (self):
         """
@@ -822,7 +871,7 @@ class Karta (object):
 
         """
 
-        return str('{0:s}({1:s}, {2:s})'.format(self.__class__.__name__, str(self.boja), str(self.znak)))
+        return '{0:s}({1:s}, {2:s})'.format(self.__class__.__name__, str(self.boja), str(self.znak))
 
     def __unicode__ (self):
         """
@@ -830,7 +879,7 @@ class Karta (object):
 
         """
 
-        return unicode('{0:s}({1:s}, {2:s})'.format(self.__class__.__name__, unicode(self.boja), unicode(self.znak)))
+        return unicode('{0:s}({1:s}, {2:s})').format(self.__class__.__name__, unicode(self.boja), unicode(self.znak))
 
     def __coerce__ (self, other):
         """

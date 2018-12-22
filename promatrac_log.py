@@ -29,6 +29,8 @@ class PromatracLog (Tablic.Log):
 
         Tablic.Log.__init__(self, log)
 
+        # Inicijaliziraj relevantne varijable.
+
         self.__k = None # broj karata u spilu
         self.__n = None # broj igraca
 
@@ -57,9 +59,11 @@ class PromatracLog (Tablic.Log):
 
         """
 
+        # Postavi pocetne vrijednosti relevantnih varijabli.
         self.__k = 52 - Tablic.inicijalniBrojKarata_stol()
         self.__n = n
 
+        # Ispisi pocetak partije.
         print("Partija za {0:d} igraca:".format(self.__n))
         for i in range(self.__n):
             print("\t{0:d}.\t{1:s}".format(i + 1, igraci[i].dohvatiIme()))
@@ -71,10 +75,13 @@ class PromatracLog (Tablic.Log):
 
         """
 
+        # Izracunaj ukupni broj dijeljenja u partiji.
         ukupno = int(math.ceil(float(52 - Tablic.inicijalniBrojKarata_stol()) / (self.__n * Tablic.inicijalniBrojKarata_ruka())))
 
+        # Azuriraj broj karata u spilu.
         self.__k -= self.__n * k
 
+        # Ispisi novo dijeljenje.
         print('Dijeljenje {0:d}/{1:d}.'.format(ukupno - int(math.ceil(float(self.__k) / (self.__n * Tablic.inicijalniBrojKarata_ruka()))), ukupno))
         print('Na stolu:')
         print("\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
@@ -89,7 +96,7 @@ class PromatracLog (Tablic.Log):
 
         """
 
-        # Prijevod (opis) poteza.
+        # Prevedi (opisi) potez.
 
         potez = "{0:s} igra.\n".format(igraci[i].dohvatiIme())
 
@@ -101,10 +108,10 @@ class PromatracLog (Tablic.Log):
         potez += "Potez:\n"
         potez += "\t{0:s} {1:s} {2:s}".format(IOIgrac.lijepiString(karta), '<' if skupljeno else '>', IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True)))
 
-        # Ispis poteza.
+        # Ispisi potez.
         print("{0:s}\n".format(potez))
 
-        # Vracanje prijevoda (opisa) poteza.
+        # Vrati prijevod (opis) poteza.
         return potez
 
     def kraj (self, rezultat):
@@ -113,10 +120,10 @@ class PromatracLog (Tablic.Log):
 
         """
 
-        # Dohvacanje konacnog rezultata.
+        # Dohvati konacni rezultat.
         konacni_rezultat = Tablic.Log.konacniRezultat(rezultat)
 
-        # Ispis rezultata.
+        # Ispisi rezultata.
         print('Rezultat:')
         for r, kr in zip(rezultat, konacni_rezultat):
             print("\t{0:s}:".format(r['ime']))
@@ -125,7 +132,7 @@ class PromatracLog (Tablic.Log):
             print("\t\tBroj karata: {0:d}{1:s}".format(r['max'][1], ' [+]' if r['max'][0] else ''))
             print("\t\tUkupno: {0:d}".format(kr))
 
-        # Trazenje igraca s najvecim brojem bodova.
+        # Pronadi igraca sa strogo najvecim brojem bodova ako postoji.
         pobjednik = [0]
         for i in range(1, self.__n):
             if konacni_rezultat[i] > konacni_rezultat[pobjednik[0]]:
@@ -133,12 +140,12 @@ class PromatracLog (Tablic.Log):
             elif konacni_rezultat[i] == konacni_rezultat[pobjednik[0]]:
                 pobjednik.append(i)
 
-        # Ispis pobjednika ako postoji igrac sa strogo najvecim brojem bodova
-        # ili ispis svih igraca s najvecim brojem bodova inace.
+        # Ispisi pobjednika ako postoji igrac sa strogo najvecim brojem bodova odnosno ispisi sve igrace
+        # s najvecim brojem bodova inace.
         print('{0:s}:'.format('Pobjednik' if len(pobjednik) == 1 else 'Nerjeseno izmedu'))
         for p in pobjednik:
             print("\t{0:s}".format(rezultat[p]['ime']))
 
-        # Resetiranje varijabli specificnih za partiju.
+        # Resetiraj relevantne varijable specificne za partiju.
         self.__k = None
         self.__n = None

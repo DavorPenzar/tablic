@@ -68,11 +68,14 @@ class PohlepniLog (Tablic.Log):
             except (TypeError, ValueError):
                 raise TypeError("Vrijednost `{0:s}' nije valjana reprezentacija karte.".format(repr(karta)))
 
+        # Tretiraj specijalne slucajeve da je karta neka od karata tref 2 i karo
+        # 10.
         if karta.boja is Karta.Boja.TREF and karta.znak is Karta.Znak.BR2:
             return 13
         elif karta.boja is Karta.Boja.KARO and karta.znak is Karta.Znak.BR10:
             return 14
 
+        # Vrati indeks karte.
         return karta.znak.value - (1 if karta.znak < 11 else 2)
 
     @classmethod
@@ -89,6 +92,8 @@ class PohlepniLog (Tablic.Log):
 
         """
 
+        # Izracunaj i vrati samo znak ako je indeks postojeci i strogo manji od
+        # 12, a, ako je postojeci i jednak 13 ili 14, vrati odgovarajucu kartu.
         if indeks >= 0 and indeks <= 12:
             return Karta.Znak(indeks + (1 if indeks < 10 else 2))
         elif indeks == 13:
@@ -96,6 +101,7 @@ class PohlepniLog (Tablic.Log):
         elif indeks == 14:
             return Karta(Karta.Boja.KARO, Karta.Znak.BR10)
 
+        # Vrati None (ako je indeks nepostojeci).
         return None
 
     def __init__ (self, log = list()):
@@ -133,21 +139,21 @@ class PohlepniLog (Tablic.Log):
 
         """
 
-        # Inicijalizacija poteza na sve vrijednosti 0.
+        # Inicijalizaciraj potez na sve vrijednosti 0.
         potez = [0 for j in range(2 * PohlepniLog.dohvatiBrojIndeksa() + 1)]
 
-        # Zapis ruke u potez
+        # Zapisi ruku u potez.
         for x in ruka:
             potez[PohlepniLog.prevediKartu(x)] = 1
 
-        # Zapis stola u potez.
+        # Zapisi stol u potez.
         for x in stol:
             potez[PohlepniLog.dohvatiBrojIndeksa() + PohlepniLog.prevediKartu(x)] += 1
 
-        # Zapis odigrane karte u potez.
+        # Zapisi odigranu kartu u potez.
         potez[2 * PohlepniLog.dohvatiBrojIndeksa()] = (PohlepniLog.prevediKartu(karta))
 
-        # Povrat zapisa poteza.
+        # Vrati zapis poteza.
         return tuple(potez)
 
     def kraj (self, rezultat):

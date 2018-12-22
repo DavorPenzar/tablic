@@ -20,6 +20,19 @@ class PohlepniIgrac (Tablic.Igrac):
     """
 
     @classmethod
+    def slucajniEkvivalentni (cls, ruka, karta):
+        """
+        Slucajnim odabirom odaberi kartu u ruci ekvivalentnu zadanoj karti.
+
+        """
+
+        # Pronadi ekvivalentne karte karti karta u ruci.
+        kandidati = [x for x in ruka if PohlepniLog.prevediKartu(x) == PohlepniLog.prevediKartu(karta)]
+
+        # Vrati neku slucajno odabranu kartu ekvivalentnu zadanoj karti.
+        return random.choice(kandidati) if kandidati else karta
+
+    @classmethod
     def izborPoteza (cls, ruka, stol):
         """
         Izracunaj sve moguce poteze i sortiraj ih po korisnosti.
@@ -58,30 +71,29 @@ class PohlepniIgrac (Tablic.Igrac):
 
         """
 
-        def __uredaj (x):
+        def __uredaj (potez):
             """
             Reprezentiraj potez x kao usporedivi tuple za kljuc sortiranja.
 
             """
 
-            return (x['tabla'],
-                    x['vrijednost'],
-                    len(x['skupljeno']),
-                    x[Karta(Karta.Boja.KARO, Karta.Znak.BR10)],
-                    x[Karta(Karta.Boja.TREF, Karta.Znak.BR2)],
-                    x[Karta.Znak.A],
-                    14 - int(x['karta']),
-                    karta,
-                    tuple(sorted(list(x['skupljeno']), reverse = True)))
+            return (potez['tabla'],
+                    potez['vrijednost'],
+                    len(potez['skupljeno']),
+                    potez[Karta(Karta.Boja.KARO, Karta.Znak.BR10)],
+                    potez[Karta(Karta.Boja.TREF, Karta.Znak.BR2)],
+                    potez[Karta.Znak.A],
+                    14 - int(potez['karta']),
+                    potez['karta'],
+                    tuple(sorted(list(potez['skupljeno']), reverse = True)))
 
-        # Dohvacanje svih mogucih suma karata sa stola.
+        # Dohvati sve moguce sume karata sa stola.
         M = Tablic.moguciPotezi(stol)
 
-        # Evaluiranje svih poteza.
+        # Evaluiraj sve poteze.
         potezi = list()
         for karta in ruka:
-            # Racunanje i evaluiranje svih mogucih poteza s igranjem karte
-            # karta.
+            # Izracunaj i evaluiraje sve moguce poteza s igranjem karte karta.
             zaSkupiti = unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()}
             for skupljeno in zaSkupiti:
                 skupljeno = set(skupljeno)
@@ -101,7 +113,7 @@ class PohlepniIgrac (Tablic.Igrac):
                                   Karta.Znak.A : -1 if karta.znak is Karta.Znak.A else 0})
                 potezi.append(potez)
 
-        # Vracanje poteza sortiranih po korisnosti.
+        # Vrati poteze sortirane po "korisnosti".
         return sorted(potezi, key = __uredaj, reverse = True)
 
     def __init__ (self, i, ime = None):
@@ -145,14 +157,5 @@ class PohlepniIgrac (Tablic.Igrac):
         if not potezi:
             raise RuntimeError('Pohlepni algoritam nije pronasao nijedan moguci potez.')
 
-        # Slucajnim odabirom odaberi kartu u ruci ekvivalentnu odabranoj
-        # pohlepnim algoritmom.
-        i = PohlepniLog.prevediKartu(potezi[0]['karta'])
-        kandidati = list()
-        for x in ruka:
-            if PohlepniLog.prevediKartu(x) == i:
-                kandidati.append(x)
-        potezi[0]['karta'] = random.choice(kandidati)
-
         # Odigraj trenutno najpovoljniji potez.
-        return (potezi[0]['karta'], potezi[0]['skupljeno'])
+        return (PohlepniIgrac.slucajniEkvivalentni(ruka, potezi[0]['karta']), potezi[0]['skupljeno'])

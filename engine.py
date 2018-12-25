@@ -763,7 +763,7 @@ class Tablic (object):
 
         """
 
-        return '{0:s}({{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}})'.format(self.__class__.__name__, str(self.__pokrenuta), str(self.__zavrsena), str.join(', ', [str(igrac['igrac']) for igrac in self.__igraci]))
+        return '{0:s}({1:s})'.format(self.__class__.__name__, str.join(', ', [str(igrac['igrac']) for igrac in self.__igraci]))
 
     def __unicode__ (self):
         """
@@ -771,7 +771,7 @@ class Tablic (object):
 
         """
 
-        return unicode('{0:s}({{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}})').format(self.__class__.__name__, unicode(self.__pokrenuta), unicode(self.__zavrsena), unicode.join(unicode(', '), [unicode(igrac['igrac']) for igrac in self.__igraci]))
+        return unicode('{0:s}({1:s})').format(self.__class__.__name__, unicode.join(unicode(', '), [unicode(igrac['igrac']) for igrac in self.__igraci]))
 
     def dodajIgraca (self, klasa = RandomIgrac, *args, **kwargs):
         """

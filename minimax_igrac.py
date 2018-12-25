@@ -522,7 +522,7 @@ class MinimaxIgrac (Tablic.Igrac):
         if self.__k and i != self.dohvatiIndeks():
             # Nakon sto je odigrao ovu kartu, nije poznato ima li i-ti igrac
             # jos takvih karata pa se ne pretpostavlja da ih nema.
-            self.__vjerojatnoNema[i][karta_indeks] = False
+            self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(karta)] = False
 
             # Izracunaj vrijednost odigranog poteza i karte koje i-ti igrac vjerojatno ima.
             vrijednost = (Tablic.vrijednostKarata(skupljeno | {karta}) + int(skupljeno == stol) * Tablic.vrijednostTable()) if skupljeno else 0

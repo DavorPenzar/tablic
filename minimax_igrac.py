@@ -520,8 +520,6 @@ class MinimaxIgrac (Tablic.Igrac):
         # dijeljenje nije bilo posljednje u igri i ako i-ti igrac nije ovaj
         # igrac.
         if self.__k and i != self.dohvatiIndeks():
-            karta_indeks = PohlepniLog.prevediKartu(karta)
-
             # Nakon sto je odigrao ovu kartu, nije poznato ima li i-ti igrac
             # jos takvih karata pa se ne pretpostavlja da ih nema.
             self.__vjerojatnoNema[i][karta_indeks] = False
@@ -536,7 +534,7 @@ class MinimaxIgrac (Tablic.Igrac):
                 if (max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() < vrijednost or
                     max(potez['vrijednost'], 0) + int(potez['tabla']) * Tablic.vrijednostTable() == vrijednost and len(potez['skupljeno']) <= len(skupljeno)):
                     break
-                if PohlepniLog.prevediKartu(potez['karta']) == karta_indeks:
+                if PohlepniLog.prevediKartu(potez['karta']) == PohlepniLog.prevediKartu(karta):
                     continue
                 self.__vjerojatnoNema[i][PohlepniLog.prevediKartu(potez['karta'])] = True
 

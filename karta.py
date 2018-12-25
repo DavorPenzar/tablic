@@ -51,7 +51,7 @@ class Karta (object):
 
             """
 
-            return '<{0:s}: {1:s} (1:d)>'.format(self.__class__.__name__, self.name, self.value)
+            return '<{0:s}: {1:s} ({2:d})>'.format(self.__class__.__name__, self.name, self.value)
 
         def __str__ (self):
             """
@@ -68,6 +68,9 @@ class Karta (object):
             """
 
             return unicode(str(self))
+
+        def __hash__ (self):
+            return self.value
 
     @enum.unique
     class Znak (enum.IntEnum):
@@ -112,7 +115,7 @@ class Karta (object):
 
             """
 
-            return '<{0:s}: {1:s} (1:d)>'.format(self.__class__.__name__, self.name, self.value)
+            return '<{0:s}: {1:s} ({2:d})>'.format(self.__class__.__name__, self.name, self.value)
 
         def __str__ (self):
             """
@@ -129,6 +132,9 @@ class Karta (object):
             """
 
             return unicode(str(self))
+
+        def __hash__ (self):
+            return self.value * len(list(Karta.Boja))
 
     class __Iterator (object):
         """

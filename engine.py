@@ -403,7 +403,7 @@ class Tablic (object):
 
             """
 
-            return "<{0:s}: '{1:s}' ({2:d})>".format(self.__class__.__name__, self.__ime, self.__i)
+            return '<{0:s}: ({1:s}, {2:d})>'.format(self.__class__.__name__, self.__i, repr(self.__ime))
 
         def __str__ (self):
             """
@@ -411,7 +411,7 @@ class Tablic (object):
 
             """
 
-            return "{0:s}('{1:s}')".format(self.__class__.__name__, self.__ime)
+            return '{0:s}({1:s})'.format(self.__class__.__name__, repr(self.__ime))
 
         def __unicode__ (self):
             """

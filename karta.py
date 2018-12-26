@@ -70,6 +70,11 @@ class Karta (object):
             return unicode(str(self))
 
         def __hash__ (self):
+            """
+            Dohvati hash(self).
+
+            """
+
             return self.value
 
     @enum.unique
@@ -134,6 +139,11 @@ class Karta (object):
             return unicode(str(self))
 
         def __hash__ (self):
+            """
+            Dohvati hash(self).
+
+            """
+
             return self.value * len(list(Karta.Boja))
 
     class __Iterator (object):

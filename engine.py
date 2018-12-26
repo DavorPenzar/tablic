@@ -403,7 +403,7 @@ class Tablic (object):
 
             """
 
-            return '<{0:s}: ({1:s}, {2:d})>'.format(self.__class__.__name__, self.__i, repr(self.__ime))
+            return '<{0:s}: ({1:d}, {2:s})>'.format(self.__class__.__name__, self.__i, repr(self.__ime))
 
         def __str__ (self):
             """

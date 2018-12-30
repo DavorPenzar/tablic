@@ -449,18 +449,18 @@ class Karta (object):
 
         Ako atribut name ne postoji, izbacuje se iznimka tipa AttributeError.
 
-        U daljnjem tekstu enumeracija je Karta.Boja ako je name = 'boja' odnosno
-        Karta.Znak ako je name = 'znak'.  Ako je value objekt klase enumeracija,
-        vrijednost atributa name postavlja se na value.
+        U daljnjem tekstu enumeracija je Karta.Boja ako je name = 'boja'
+        odnosno Karta.Znak ako je name = 'znak'.  Ako je value objekt klase
+        enumeracija, vrijednost atributa name postavlja se na value.
 
         Ako je value None, atribut name postavlja se na enumeracija.NA.  Ako je
-        value objekt klase complex i ako je value.imag != 0, izbacuje se iznimka
-        tipa ValueError; inace se uzima value = float(value.real).
-        Ako je value objekt klase int, long ili float i vrijedi
+        value objekt klase complex i ako je value.imag != 0, izbacuje se
+        iznimka tipa ValueError; inace se uzima value = float(value.real).  Ako
+        je value objekt klase int, long ili float i vrijedi
             >>> enumeracija.postoji(value)
             False
-        izbacuje se iznimka tipa ValueError osim ako je vrijednost nan (u tom se
-        slucaju uzima enumeracija.NA) ili ako je enueracija Karta.Znak i
+        izbacuje se iznimka tipa ValueError osim ako je vrijednost nan (u tom
+        se slucaju uzima enumeracija.NA) ili ako je enueracija Karta.Znak i
         value = 11 (u tom se slucaju uzima value = 1); inace se atribut name
         postavlja na
             >>> enumeracija(value)
@@ -479,8 +479,8 @@ class Karta (object):
                 value.upper(),
             8.  vrijednost atributa name postavlja se na
                 enueracija[value.upper()].
-        Ako uspije konverzija iz koraka 1. -- 4., daljnji je postupak jednak kao
-        da je vrijednost value odmah bila zadana kao numericka vrijednost
+        Ako uspije konverzija iz koraka 1. -- 4., daljnji je postupak jednak
+        kao da je vrijednost value odmah bila zadana kao numericka vrijednost
         odgovarajuceg tipa.  Ako nijedan korak ne uspije, izbacuje se iznimka
         tipa ValueError.
 

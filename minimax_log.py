@@ -65,9 +65,9 @@ class MinimaxLog (Tablic.Log):
         reprezentirani su kao skupovi stol u povratnoj vrijednosti
         funkcije PohlepniLog.prevediPotez, a skup karata koje igraci vjerojatno
         nemaju predstavljen je kao skup ruka u povratnoj vrijednosti funkcije
-        PohlepniLog.prevediPotez (True u skupu karata koje igrac vjerojatno nema
-        znaci da igrac vjerojatno nema tu kartu, a False da mozda ili sigurno
-        ima).
+        PohlepniLog.prevediPotez (True u skupu karata koje igrac vjerojatno
+        nema znaci da igrac vjerojatno nema tu kartu, a False da mozda ili
+        sigurno ima).
 
         """
 

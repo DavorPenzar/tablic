@@ -44,7 +44,8 @@ def izraziVrijeme (t, preciznost = 2, predznak = False):
     """
     Dohvati string vremena t (u sekundama) izrazenog u potrebnim jedinicama.
 
-    Povratna vrijednost je string oblika "[predznak][[[Dd ]Hh ]Mm ]Ss", gdje su:
+    Povratna vrijednost je string oblika "[predznak][[[Dd ]Hh ]Mm ]Ss", gdje
+    su:
         --  D   --  broj dana (iz intervala [1, +beskonacno)),
         --  H   --  broj sati (iz intervala [0, 24)),
         --  M   --  broj minuta (iz intervala [0, 60)),
@@ -220,7 +221,7 @@ nerjeseno = list()
 ##  svih partija, a od bodova su ispisani samo akumulirani bodovi).  Rezultat
 ##  zadnje partije se ne ispisuje, nego se samo ispisuje konacno stanje.
 ##
-##  Moguce da se linije nakon linije "n" ne ce ispisivati cak i ako je n > 0
+##  Moguce je da se linije nakon linije "n" ne ce ispisivati cak i ako je n > 0
 ##  (ako su od interesa, varijabla ispisNerjesenih mora biti postavljena na
 ##  True).
 ##

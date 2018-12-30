@@ -562,7 +562,7 @@ class Tablic (object):
 
     class RandomIgrac (Igrac):
         """
-        Klasa za definiranje najjednostavnijeg igraca (igra slucajnim odabirom).
+        Klasa za definiranje najjednostavnijeg igraca (igra sl. odabirom).
 
         """
 
@@ -723,8 +723,9 @@ class Tablic (object):
         """
         Inicijaliziraj objekt klase Tablic.
 
-        Ako je argument spil None, za spil koji se koristi u partiji generira se
-        novi promijesani spil (52 karte) od povratne vrijednosti poziva funkcije
+        Ako je argument spil None, za spil koji se koristi u partiji generira
+        se novi promijesani spil (52 karte) od povratne vrijednosti poziva
+        funkcije
             >>> Karta.noviSpil()
         Inace taj argument mora biti iterabilni objekt svih objekata bez
         duplikata iz skupa povratne vrijednosti poziva funkcije
@@ -874,10 +875,11 @@ class Tablic (object):
         """
         Saznaj je li igrac s indeksom i skupio strogo najvise karata.
 
-        Ako partija jos nije zavrsila, povratna vrijednost bit ce False.  Ako je
-        partija zavrsila, povratna vrijednost bit ce tuple kojemu je na indeksu
-        0 bool vrijednost koja je True ako i samo ako je igrac s indeksom i
-        skupio strogo najvise karata, a na indeksu 1 broj skupljenih karata.
+        Ako partija jos nije zavrsila, povratna vrijednost bit ce False.  Ako
+        je partija zavrsila, povratna vrijednost bit ce tuple kojemu je na
+        indeksu 0 bool vrijednost koja je True ako i samo ako je igrac s
+        indeksom i skupio strogo najvise karata, a na indeksu 1 broj skupljenih
+        karata.
 
         """
 

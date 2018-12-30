@@ -42,8 +42,8 @@ class IOIgrac (Tablic.Igrac):
 
         """
 
-        # Tretiraj specijalne slucajeve da je x kartaska boja, kartaski znak ili
-        # karta.
+        # Tretiraj specijalne slucajeve da je x kartaska boja, kartaski znak
+        # ili karta.
         if isinstance(x, Karta.Boja):
             return '??' if x is Karta.Boja.NA else x.name.lower()
         if isinstance(x, Karta.Znak):
@@ -271,8 +271,8 @@ class IOIgrac (Tablic.Igrac):
         M = Tablic.moguciPotezi(stol)
         potezi = unijeDisjunktnih(M[karta.znak]) if karta.znak in M else {frozenset()}
 
-        # Ucitaj karte za skupiti ako ima smisla (ako stol nije prazan), a inace
-        # vrati zadani potez.
+        # Ucitaj karte za skupiti ako ima smisla (ako stol nije prazan), a
+        # inace vrati zadani potez.
         skupljeno = set()
         print('Za skupiti:')
         if len(potezi) == 1:

@@ -625,9 +625,9 @@ class Karta (object):
             # Tretiranje specijalnog slucaja kada se dohvaca slice.
             return tuple(Karta.__Iterator(self, *key.indices(len(self))))
 
-        if key == 0 or key == 'boja':
+        if key in {0, -2} or key == 'boja':
             return self.boja
-        if key == 1 or key == 'znak':
+        if key in {1, -1} or key == 'znak':
             return self.znak
 
         raise KeyError("Kljuc key nije prepoznat.")
@@ -644,10 +644,10 @@ class Karta (object):
                 self.__setitem__(i, value)
             return
 
-        if key == 0 or key == 'boja':
+        if key in {0, -2} or key == 'boja':
             self.boja = value
             return
-        if key == 1 or key == 'znak':
+        if key in {1, -1} or key == 'znak':
             self.znak = value
             return
 
@@ -659,7 +659,7 @@ class Karta (object):
 
         """
 
-        if key in {0, 'boja', 1, 'znak'} or isinstance(key, slice):
+        if key in {0, -2, 'boja', 1, -1, 'znak'} or isinstance(key, slice):
             raise TypeError("Elementi objekta klase `Karta' ne mogu se brisati.")
 
         raise KeyError("Kljuc key nije prepoznat.")
@@ -670,7 +670,7 @@ class Karta (object):
 
         """
 
-        return key in {0, 'boja', 1, 'znak'}
+        return key in {0, -2, 'boja', 1, -1, 'znak'}
 
     def __add__ (self, value):
         """

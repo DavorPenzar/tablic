@@ -2,6 +2,24 @@
 
 Implementacija igre tablić i robota igrača za igru tablić
 
+## Sadržaj
+
+1.  [Pravila igre *tablić*](#pravila-igre-tabli%C4%87)
+    1.  [Tip igre](#tip-igre)
+    2.  [Broj igrača](#broj-igra%C4%8Da)
+    3.  [Tijek igre](#tijek-igre)
+    4.  [Pravila zbrajanja karata](#pravila-zbrajanja-karata)
+    5.  [Bodovanje](#bodovanje)
+        1.  [Ostvarivanje *table*](#ostvarivanje-table)
+2.  [Datoteke](#datoteke)
+3.  [Roboti igrači](#roboti-igra%C4%8Di)
+    1.  [Slučajni igrač](#slu%C4%8Dajni-igra%C4%8D)
+    2.  [Pohlepni igrač](#pohlepni-igra%C4%8D)
+    3.  [*Minimax* igrač](#minimax-igra%C4%8D)
+4.  [Testiranje igrača](#testiranje-igra%C4%8Da)
+    1.  [Igranje protiv automatskih igrača](#igranje-protiv-automatskih-igra%C4%8Da)
+        1.  [Zadavanje poteza](#zadavanje-poteza)
+
 ## Pravila igre *tablić*
 
 **Napomena.** U ovoj implementaciji igre tablić koristi se poopćenje pravila te igre.

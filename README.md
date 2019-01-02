@@ -110,7 +110,7 @@ Datoteke u repozitoriju su:
 9.  **promatrac_log.py** &ndash; implementacija klase `PromatracLog` za *zapisnik* koji ispisuje tijek igre na *stdout*,
 10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić.
 
-Svi bi kodovi trebali biti kompatibilni za Python2 i Python3 sa standardnom bibliotekom (uz paket `six`). Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
+Svi bi kodovi trebali biti kompatibilni s Python2 i Python3 standardima sa standardnom bibliotekom (uz paket `six`). Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
 
 ## Roboti igrači
 

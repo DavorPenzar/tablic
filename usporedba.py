@@ -34,8 +34,10 @@ k = 5
 ispisNerjesenih = False
 
 # Igraci koji ce se testirati.  Redoslijed igraca zadaje redoslijed kojim ce
-# biti na potezu u partijama.  Svaki igrac reprezentiran je rjecnikom s
-# kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru pozivom
+# biti na potezu u partijama (osim ako se skripta ne pozove s argumentom koji
+# mijenja redoslijed igraca, ali ne i skup igraca).  Svaki igrac reprezentiran
+# je rjecnikom s kljucevima 'klasa', 'args', 'kwargs', a dodaju se u igru
+# pozivom
 #     >>> igra.dodajIgraca(igrac['klasa'], *igrac['args'], **igrac['kwargs'])
 igraci = ({'klasa' : MinimaxIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Marconi', 'maxDubina' : 3, 'maxT' : 15.0}},
           {'klasa' : PohlepniIgrac, 'args' : tuple(), 'kwargs' : {'ime' : 'Popeye'}})
@@ -147,16 +149,13 @@ elif len(sys.argv) != 1:
     raise RuntimeError("Skripta se pokrece s jednim argumentom `-r' (obrnuti redoslijed igraca) ili `-p' (slucajni redoslijed igraca), ili bez argumenata.")
 
 # Ispis igraca redom kojim su na potezu.
-igraci = list(igraci)
 print('Igraci redom po potezima:')
 for i in range(len(igraci)):
-    igraci[i]['kwargs'].pop('i', None)
     print("\t{0:d}.\t{1:s}({2:s})".format(i + 1,
                                           igraci[i]['klasa'].__name__,
                                           '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in [i] + list(igraci[i]['args'])]),
                                                                    str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
                                                                    ', ' if igraci[i]['kwargs'] else '')))
-igraci = tuple(igraci)
 
 # Varijabla T "pamti" akumulirani broj sekundi trajanja partija.
 T = 0.0

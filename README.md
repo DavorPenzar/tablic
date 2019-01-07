@@ -108,7 +108,8 @@ Datoteke u repozitoriju su:
 7.  **minimax_igrac.py** &ndash; implementacija klase `MinimaxIgrac` za igrača igre tablić koji igra *minimax* algoritmom,
 8.  **io_igrac.py** &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
 9.  **promatrac_log.py** &ndash; implementacija klase `PromatracLog` za *zapisnik* koji ispisuje tijek igre na *stdout*,
-10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić.
+10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić,
+11. **igranje.py** &ndash; skripta za igranje protiv robotskih igrača igre tablić.
 
 Svi bi kodovi trebali biti kompatibilni s Python2 i Python3 standardima sa standardnom bibliotekom (uz paket `six`). Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
 

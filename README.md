@@ -172,7 +172,7 @@ Igrači se mogu testirati pokretanjem skripte *usporedba.py*. Skripta je napisan
 
 ### Igranje protiv automatskih igrača
 
-Igranje protiv *robota* igrača moguće je pokretanjem skripte *igranje.py* u kojoj je zadavanje igrača jednako kao u skripti `usporedba.py` &mdash; zadavanje je jednako kako u kodu (*tuple* `igraci` čiji su elementi rječnici određenog oblika), tako i pri pokretanju (oznaka `-r` za obrnuti redoslijed i oznaka `-p` za slučajni redoslijed). S obzirom na to da se ispis kod `IOIgrac`-a vrši na *stdout*, a, između ostalog, igraču se ispisuju karte koje on ima u ruci, s trenutnom implementacijom nije izvediva poštena partija između 2 *ljudska* igrača.
+Igranje protiv *robota* igrača moguće je pokretanjem skripte *igranje.py* u kojoj je zadavanje igrača jednako kao u skripti *usporedba.py* &mdash; zadavanje je jednako kako u kodu (*tuple* `igraci` čiji su elementi rječnici određenog oblika), tako i pri pokretanju (oznaka `-r` za obrnuti redoslijed i oznaka `-p` za slučajni redoslijed). S obzirom na to da se ispis kod `IOIgrac`-a vrši na *stdout*, a, između ostalog, igraču se ispisuju karte koje on ima u ruci, s trenutnom implementacijom nije izvediva poštena partija između 2 *ljudska* igrača.
 
 #### Zadavanje poteza
 

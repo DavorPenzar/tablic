@@ -99,17 +99,17 @@ Kompletna implementacija igre napisana je objektno orijentirano u programskom je
 
 Datoteke u repozitoriju su:
 
-1.  **skupovi.py** &ndash; implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
-2.  **karta.py** &ndash; implementacija klase `Karta` za reprezentaciju karata u igri tablić,
-3.  **engine.py** &ndash; implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
-4.  **pohlepni_log.py** &ndash; implementacija klase `PohlepniLog` za zapisnike igre tablić za strojno učenje pohlepnog algoritma,
-5.  **minimax_log.py** &ndash; implementacija klase `MinimaxLog` za zapisnike igre tablić za strojno učenje *minimax* algoritma,
-6.  **pohlepni_igrac.py** &ndash; implementacija klase `PohlepniIgrac` za igrača igre tablić koji igra pohlepnim algoritmom,
-7.  **minimax_igrac.py** &ndash; implementacija klase `MinimaxIgrac` za igrača igre tablić koji igra *minimax* algoritmom,
-8.  **io_igrac.py** &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
-9.  **promatrac_log.py** &ndash; implementacija klase `PromatracLog` za *zapisnik* koji ispisuje tijek igre na *stdout*,
-10. **usporedba.py** &ndash; skripta za testiranje igrača igre tablić,
-11. **igranje.py** &ndash; skripta za igranje protiv robotskih igrača igre tablić.
+1.  [**skupovi.py**](skupovi.py) &ndash; implementacija nekih skupovnih operacija korisnih za implementaciju igre tablić,
+2.  [**karta.py**](karta.py) &ndash; implementacija klase `Karta` za reprezentaciju karata u igri tablić,
+3.  [**engine.py**](engine.py) &ndash; implementacija klase `Tablic` za simulaciju igranja igre tablić, apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` kao prototipa klasa zapisnika partija i igrača igre respektivno, i klasa `Tablic.PrazniLog` i `Tablic.RandomIgrac` kao najjednostavnijih neapstraktnih proširenja apstraktnih klasa `Tablic.Log` i `Tablic.Igrac` (zapisnik koji ne zapisuje ništa i igrač koji igra slučajnim odabirom),
+4.  [**pohlepni_log.py**](pohlepni_log.py) &ndash; implementacija klase `PohlepniLog` za zapisnike igre tablić za strojno učenje pohlepnog algoritma,
+5.  [**minimax_log.py**](minimax_log.py) &ndash; implementacija klase `MinimaxLog` za zapisnike igre tablić za strojno učenje *minimax* algoritma,
+6.  [**pohlepni_igrac.py**](pohlepni_igrac.py) &ndash; implementacija klase `PohlepniIgrac` za igrača igre tablić koji igra pohlepnim algoritmom,
+7.  [**minimax_igrac.py**](minimax_igrac.py) &ndash; implementacija klase `MinimaxIgrac` za igrača igre tablić koji igra *minimax* algoritmom,
+8.  [**io_igrac.py**](io_igrac.py) &ndash; implementacija klase `IOIgrac` za *stdin*/*stdout* igrača igre tablić,
+9.  [**promatrac_log.py**](promatrac_log.py) &ndash; implementacija klase `PromatracLog` za *zapisnik* koji ispisuje tijek igre na *stdout*,
+10. [**usporedba.py**](usporedba.py) &ndash; skripta za testiranje igrača igre tablić,
+11. [**igranje.py**](igranje.py) &ndash; skripta za igranje protiv robotskih igrača igre tablić.
 
 Svi bi kodovi trebali biti kompatibilni s Python2 i Python3 standardima sa standardnom bibliotekom (uz paket `six`). Detaljnije informacije o implementiranim klasama i funkcijama dane su u *inline* dokumentaciji i komentarima. Argumenti funkcija gotovo nigdje nisu provjeravani i sanirani radi preglednosti koda i neznatnog ubrzanja, a ispravno služenje kodom ne će izazivati probleme.
 

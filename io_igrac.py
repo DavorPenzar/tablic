@@ -153,6 +153,11 @@ class IOIgrac (Tablic.Igrac):
 
         """
 
+        # Ako je trenutni igrac na potezu, ne ispisi potez (izadi iz funkcije).
+        if i == self.dohvatiIndeks():
+            return
+
+        # Ispisi potez na stdout.
         print('{0:s} igra.'.format(self.__imena[i]))
         print('Na stolu:')
         print("\t{0:s}".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))

@@ -68,8 +68,8 @@ class PromatracLog (Tablic.Log):
         self.__k = 52 - Tablic.inicijalniBrojKarata_stol()
         self.__n = n
 
+        # Ako treba, ispisi pocetak partije.
         if self.__ispisi:
-            # Ispisi pocetak partije.
             print("Partija za {0:d} igraca:".format(self.__n))
             for i in range(self.__n):
                 print("\t{0:d}.\t{1:s}".format(i + 1, igraci[i].dohvatiIme()))
@@ -87,8 +87,8 @@ class PromatracLog (Tablic.Log):
         # Azuriraj broj karata u spilu.
         self.__k -= self.__n * k
 
+        # Ako treba, ispisi novo dijeljenje.
         if self.__ispisi:
-            # Ispisi novo dijeljenje.
             print('Dijeljenje {0:d}/{1:d}.'.format(ukupno - int(math.ceil(float(self.__k) / (self.__n * Tablic.inicijalniBrojKarata_ruka()))), ukupno))
             print('Na stolu:')
             print("\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
@@ -115,8 +115,8 @@ class PromatracLog (Tablic.Log):
         potez += "Potez:\n"
         potez += "\t{0:s} {1:s} {2:s}".format(IOIgrac.lijepiString(karta), '<' if skupljeno else '>', IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True)))
 
+        # Ako treba, ispisi potez.
         if self.__ispisi:
-            # Ispisi potez.
             print("{0:s}\n".format(potez))
 
         # Vrati prijevod (opis) poteza.
@@ -128,6 +128,8 @@ class PromatracLog (Tablic.Log):
 
         """
 
+        # Ako ne treba ispisivati, resetiraj relevantne varijable specificne za
+        # partiju i zavrsi.
         if not self.__ispisi:
             self.__k = None
             self.__n = None

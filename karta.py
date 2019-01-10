@@ -51,7 +51,7 @@ class Karta (object):
 
             """
 
-            return '<{0:s}: {1:s} ({2:d})>'.format(self.__class__.__name__, self.name, self.value)
+            return '<{0:s}: ({1:s}, {2:d})>'.format(self.__class__.__name__, repr(self.name), self.value)
 
         def __str__ (self):
             """
@@ -120,7 +120,7 @@ class Karta (object):
 
             """
 
-            return '<{0:s}: {1:s} ({2:d})>'.format(self.__class__.__name__, self.name, self.value)
+            return '<{0:s}: ({1:s}, {2:d})>'.format(self.__class__.__name__, repr(self.name), self.value)
 
         def __str__ (self):
             """
@@ -152,7 +152,7 @@ class Karta (object):
 
         """
 
-        def __init__ (self, karta, i, stop, inkr):
+        def __init__ (self, karta, start = 0, stop = None, step = 1):
             """
             Inicijaliziraj iterator za iteriranje po objektu karta.
 
@@ -160,9 +160,9 @@ class Karta (object):
 
             self.__karta = karta
 
-            self.__i = i
-            self.__stop = stop
-            self.__inkr = inkr
+            self.__i = start
+            self.__stop = len(self.__karta) if stop is None else stop
+            self.__step = step
 
         def __copy__ (self):
             """
@@ -170,7 +170,7 @@ class Karta (object):
 
             """
 
-            return __Iterator(self.__karta, self.__i, self.__stop, self.__inkr)
+            return __Iterator(self.__karta, self.__i, self.__stop, self.__step)
 
         def __deepcopy__ (self, memodict = dict()):
             """
@@ -181,7 +181,7 @@ class Karta (object):
             return __Iterator(copy.deepcopy(self.__karta, memodict),
                               copy.deepcopy(self.__i, memodict),
                               copy.deepcopy(self.__stop, memodict),
-                              copy.deepcopy(self.__inkr, memodict))
+                              copy.deepcopy(self.__step, memodict))
 
         def __iter__ (self):
             """
@@ -197,15 +197,43 @@ class Karta (object):
 
             """
 
-            if self.__inkr >= 0 and self.__i >= self.__stop or self.__inkr <= 0 and self.__i <= self.__stop:
+            if self.__step >= 0 and self.__i >= self.__stop or self.__step <= 0 and self.__i <= self.__stop:
                 raise StopIteration()
 
-            x = self.__karta[self.__i]
-            self.__i += self.__inkr
+            try:
+                x = self.__karta[self.__i]
+            except KeyError:
+                raise StopIteration()
+
+            self.__i += self.__step
 
             return x
 
         __next__ = next
+
+        def __repr__ (self):
+            """
+            Dohvati repr(self).
+
+            """
+
+            return '<{0:s}: ({1:s}, {2:d}, {3:d}, {4:d})>'.format(self.__class__.__name__, repr(self.__karta), self.__i, self.__stop, self.__step)
+
+        def __str__ (self):
+            """
+            Dohvati str(self).
+
+            """
+
+            return '{0:s}({1:s}, {2:d}, {3:d}, {4:d})'.format(self.__class__.__name__, str(self.__karta), self.__i, self.__stop, self.__step)
+
+        def __unicode__ (self):
+            """
+            Dohvati unicode(self).
+
+            """
+
+            return unicode('{0:s}({1:s}, {2:d}, {3:d}, {4:d})').format(self.__class__.__name__, unicode(self.__karta), self.__i, self.__stop, self.__step)
 
     @classmethod
     def uKarte (cls, x):

@@ -544,22 +544,21 @@ class MinimaxIgrac (Tablic.Igrac):
         # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za sve karte ekvivalentne odigranoj poznato da ih igraci sigurno
         # nemaju, postavi odgovarajuce vrijednosti u self.__vjerojatnoNema na False.
         if self.__k:
-            R = None
+            resetiraj = False
             if karta.znak not in {Karta.Znak.BR2, Karta.Znak.BR10} and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
-                R = PohlepniLog.prevediKartu(karta)
+                resetiraj = True
             else:
                 for test in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)}:
                     if karta.znak != test.znak:
                         continue
                     if karta.boja == test.boja or sum(int(x.znak == karta.znak and x.znak != test.znak) for x in self.__sigurnoNema) == 3:
-                        R = PohlepniLog.prevediKartu(karta)
+                        resetiraj = True
 
-            if R is not None:
+            if resetiraj:
                 for j in range(self.__n):
                     if j == self.dohvatiIndeks():
                         continue
-                    for r in R:
-                        self.__vjerojatnoNema[j][r] = False
+                    self.__vjerojatnoNema[j][PohlepniLog.prevediKartu(karta)] = False
 
     def saznajRezultat (self, rezultat):
         pass

@@ -541,21 +541,25 @@ class MinimaxIgrac (Tablic.Igrac):
         # Azuriraj podatke o kartama koje igraci sigurno nemaju.
         self.__sigurnoNema |= {karta}
 
-        # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za svih 4 karata ovog
-        # znaka poznato da ih igraci sigurno nemaju, postavi odgovarajuce vrijednosti u
-        # self.__vjerojatnoNema na False.
-        if self.__k and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
-            R = [PohlepniLog.prevediKartu(Karta(karta.znak))]
-            if karta.znak is Karta.Znak.BR2:
-                R.append(PohlepniLog.prevediKartu(Karta(Karta.Boja.TREF, Karta.Znak.BR2)))
-            elif karta.znak is Karta.Znak.BR10:
-                R.append(PohlepniLog.prevediKartu(Karta(Karta.Boja.KARO, Karta.Znak.BR10)))
+        # Ako zadnje dijeljenje nije bilo posljednje u igri i ako je za sve karte ekvivalentne odigranoj poznato da ih igraci sigurno
+        # nemaju, postavi odgovarajuce vrijednosti u self.__vjerojatnoNema na False.
+        if self.__k:
+            R = None
+            if karta.znak not in {Karta.Znak.BR2, Karta.Znak.BR10} and sum(int(x.znak == karta.znak) for x in self.__sigurnoNema) == 4:
+                R = PohlepniLog.prevediKartu(karta)
+            else:
+                for test in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)}:
+                    if karta.znak != test.znak:
+                        continue
+                    if karta.boja == test.boja or sum(int(x.znak == karta.znak and x.znak != test.znak) for x in self.__sigurnoNema) == 3:
+                        R = PohlepniLog.prevediKartu(karta)
 
-            for j in range(self.__n):
-                if j == self.dohvatiIndeks():
-                    continue
-                for r in R:
-                    self.__vjerojatnoNema[j][r] = False
+            if R is not None:
+                for j in range(self.__n):
+                    if j == self.dohvatiIndeks():
+                        continue
+                    for r in R:
+                        self.__vjerojatnoNema[j][r] = False
 
     def saznajRezultat (self, rezultat):
         pass

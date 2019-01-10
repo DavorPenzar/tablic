@@ -278,6 +278,53 @@ class Tablic (object):
 
             return copy.deepcopy(self.__log)
 
+        def spremi (self, izlaz, razmak = "\n", tip = 'str'):
+            """
+            Ispisi sve poteze u datotek.
+
+            Ako je izlaz objekt klase string ili unicode, za izlaznu datoteku
+            otvara se datoteka imena jednakog vrijednosti varijable izlaz i to
+            s nacinom 'w' (sav eventualni prijasnji sadrzaj datoteke se brise).
+            Inace se varijabla izlaz smatra izlaznom datotekom (u koju se
+            ispisuje).  Ispis se vrsi pozivom
+                >>> izlaz.write(...)
+            gdje je kao argument dan string za ispis. Pri (uspjesnom) zavrsetku
+            funkcije izlazna se datoteka nuzno zatvara pozivom
+                >>> izlaz.close()
+
+            Potezi su odvojeni stringom razmak (ako je razmak = '', potezi nisu
+            odvojeni uopce, ni razmakom ni prelaskom u novi red; ako potezi
+            moraju biti odvojeni praznim redom, onda varijabla razmak mora
+            imati vrijednost "\n\n").  Potezi se u ispis konvertiraju ovisno o
+            vrijednosti varijable tip, i to po sljedecem pravilu:
+                --  tip = 'repr'    --  ispisuje se repr(potez),
+                --  tip = 'str' --  ispisuje se str(potez),
+                --  tip = 'unicode' --  ispisuje se unicode(potez),
+                --  inace se ispisuje ''.
+
+            """
+
+            # Otvaranje izlazne datoteke po potrebi.
+            if isinstance(izlaz, (str, unicode)):
+                izlaz = open(izlaz, 'w')
+
+            # Detekcija nacina ispisa poteza.
+            konverzija = lambda x : ''
+            if tip == 'repr':
+                konverzija = lambda x : repr(x)
+            elif tip == 'str':
+                konverzija = lambda x : str(x)
+            elif tip == 'unicode':
+                konverzija = lambda x : unicode(x)
+
+            # Ispis svih poteza.
+            for potez in self.__log:
+                izlaz.write(konverzija(potez))
+                izlaz.write(razmak)
+
+            # Zatvaranje izlazne datoteke.
+            izlaz.close()
+
         def logirajPotez (self, i, igraci, ruka, stol, karta, skupljeno):
             """
             Zapisi potez u zapisnik.

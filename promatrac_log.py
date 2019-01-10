@@ -15,19 +15,24 @@ class PromatracLog (Tablic.Log):
     """
     Klasa za "zapisnik" za ispis tijeka igre na stdout.
 
-    Zapisnik tijek igre ispisuje na stdout slicno kao sto se tijek igre
+    Zapisnik tijek igre moze ispisivati na stdout slicno kao sto se tijek igre
     ispisuje pri igranju objekta klase IOIgrac, a takav zapis svakog poteza
-    (objekt klase str) sprema se u zapisnik.
+    (objekt klase str) sprema se u zapisnik (neovisno o ispisu na stdout).
 
     """
 
-    def __init__ (self, log = list()):
+    def __init__ (self, log = list(), ispisi = True):
         """
         Inicijaliziraj objekt klase PromatracLog.
+
+        Ako je ispisi = True, na stdout se ispisuje tijek igre.  Inace se u
+        zapisnik zapisuju samo potezi, bez ikakvog ispisa na stdout.
 
         """
 
         Tablic.Log.__init__(self, log)
+
+        self.__ispisi = ispisi
 
         # Inicijaliziraj relevantne varijable.
 
@@ -63,11 +68,12 @@ class PromatracLog (Tablic.Log):
         self.__k = 52 - Tablic.inicijalniBrojKarata_stol()
         self.__n = n
 
-        # Ispisi pocetak partije.
-        print("Partija za {0:d} igraca:".format(self.__n))
-        for i in range(self.__n):
-            print("\t{0:d}.\t{1:s}".format(i + 1, igraci[i].dohvatiIme()))
-        print("\n")
+        if self.__ispisi:
+            # Ispisi pocetak partije.
+            print("Partija za {0:d} igraca:".format(self.__n))
+            for i in range(self.__n):
+                print("\t{0:d}.\t{1:s}".format(i + 1, igraci[i].dohvatiIme()))
+            print("\n")
 
     def novoDijeljenje (self, k, stol):
         """
@@ -81,10 +87,11 @@ class PromatracLog (Tablic.Log):
         # Azuriraj broj karata u spilu.
         self.__k -= self.__n * k
 
-        # Ispisi novo dijeljenje.
-        print('Dijeljenje {0:d}/{1:d}.'.format(ukupno - int(math.ceil(float(self.__k) / (self.__n * Tablic.inicijalniBrojKarata_ruka()))), ukupno))
-        print('Na stolu:')
-        print("\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
+        if self.__ispisi:
+            # Ispisi novo dijeljenje.
+            print('Dijeljenje {0:d}/{1:d}.'.format(ukupno - int(math.ceil(float(self.__k) / (self.__n * Tablic.inicijalniBrojKarata_ruka()))), ukupno))
+            print('Na stolu:')
+            print("\t{0:s}\n".format(IOIgrac.lijepiString(sorted(list(stol), reverse = True))))
 
     def prevediPotez (self, i, igraci, ruka, stol, karta, skupljeno):
         """
@@ -108,8 +115,9 @@ class PromatracLog (Tablic.Log):
         potez += "Potez:\n"
         potez += "\t{0:s} {1:s} {2:s}".format(IOIgrac.lijepiString(karta), '<' if skupljeno else '>', IOIgrac.lijepiString(sorted(list(skupljeno), reverse = True)))
 
-        # Ispisi potez.
-        print("{0:s}\n".format(potez))
+        if self.__ispisi:
+            # Ispisi potez.
+            print("{0:s}\n".format(potez))
 
         # Vrati prijevod (opis) poteza.
         return potez
@@ -119,6 +127,12 @@ class PromatracLog (Tablic.Log):
         Ispisi rezultat na kraju partije.
 
         """
+
+        if not self.__ispisi:
+            self.__k = None
+            self.__n = None
+
+            return
 
         # Dohvati konacni rezultat.
         konacni_rezultat = Tablic.Log.konacniRezultat(rezultat)

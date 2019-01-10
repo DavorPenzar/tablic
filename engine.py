@@ -1015,7 +1015,7 @@ class Tablic (object):
 
             self.__zavrsena = True
 
-            if not zadnji is None:
+            if zadnji is not None:
                 # "Pocisti" stol.
                 while self.__stol:
                     karta = self.__stol.pop()

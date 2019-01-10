@@ -82,7 +82,7 @@ class MinimaxIgrac (Tablic.Igrac):
         if kraj:
             # Azuriraj varijable u slucaju kraja igre.
 
-            if not zadnji is None:
+            if zadnji is not None:
                 # "Pocisti" stol.
                 bodovi[zadnji] += Tablic.vrijednostKarata(stol)
                 skupljeno[zadnji] += len(stol)
@@ -610,10 +610,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        if i is None:
-            return copy.deepcopy(self.__bodovi)
-
-        return self.__bodovi[i]
+        return copy.deepcopy(self.__bodovi) if i is None else self.__bodovi[i]
 
     def dohvatiSkupljeno (self, i = None):
         """
@@ -625,10 +622,7 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        if i is None:
-            return copy.deepcopy(self.__skupljeno)
-
-        return self.__skupljeno[i]
+        return copy.deepcopy(self.__skupljeno) if i is None else self.__skupljeno[i]
 
     def dohvatiZadnjeg (self):
         """
@@ -657,7 +651,4 @@ class MinimaxIgrac (Tablic.Igrac):
 
         """
 
-        if i is None:
-            return copy.deepcopy(self.__vjerojatnoNema)
-
-        return copy.deepcopy(self.__vjerojatnoNema[i])
+        return copy.deepcopy(self.__vjerojatnoNema) if i is None else copy.deepcopy(self.__vjerojatnoNema[i])

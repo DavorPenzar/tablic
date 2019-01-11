@@ -301,7 +301,7 @@ class Tablic (object):
             Tako se, na primjer, potez moze konvertirati u string oblika
             '{INDEX1:d}...', sto ce u konacnici rezultirati time da su potezi
             ispisani na nacin da je ispred svakog poteza ispisan njegov redni
-            broj u zapisniku, na nacin da prvi potez ima redni broj 1 (a ne 0).
+            broj u zapisniku tako da prvi potez ima redni broj 1 (a ne 0).
 
             Izmedu dva uzastopna poteza ispisuje se razmak (koji mora biti
             string), ali razmak se ne ispisuje prije prvog poteza ni nakon

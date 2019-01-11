@@ -153,8 +153,8 @@ print('Igraci redom po potezima:')
 for i in range(len(igraci)):
     print("\t{0:d}.\t{1:s}({2:s})".format(i + 1,
                                           igraci[i]['klasa'].__name__,
-                                          '{0:s}{2:s}{1:s}'.format(str.join(', ', [repr(x) for x in [i] + list(igraci[i]['args'])]),
-                                                                   str.join(', ', ['{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])]),
+                                          '{0:s}{2:s}{1:s}'.format(', '.join(repr(x) for x in [i] + list(igraci[i]['args'])),
+                                                                   ', '.join('{0:s} = {1:s}'.format(x, repr(y)) for x, y in six.iteritems(igraci[i]['kwargs'])),
                                                                    ', ' if igraci[i]['kwargs'] else '')))
 
 # Varijabla T "pamti" akumulirani broj sekundi trajanja partija.
@@ -261,7 +261,7 @@ for i in range(N):
     if not (i and (i + 1) % k or i + 1 == N):
         print("\nPartija {0:d}/{1:d}:".format(i + 1, N))
         print("\t{0:s} ({1:s}; {2:s} + {3:s} = {4:s})".format(izraziVrijeme(float(t1 - t0)), izraziVrijeme(T / (i + 1)), izraziVrijeme(T), izraziVrijeme((N - i - 1) * T / (i + 1)), izraziVrijeme(N * T / (i + 1))))
-        print("\t{0:s}".format(str.join(' vs. ', [igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca())])))
+        print("\t{0:s}".format(' vs. '.join(igra.dohvatiIme(j) for j in range(igra.dohvatiBrojIgraca()))))
         print("\t{0:s}".format(repr(konacni_rezultat)))
         print("\t{0:s}".format(repr(akumulirano)))
         print("\t{0:s}".format(repr(pobjede)))

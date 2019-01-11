@@ -64,9 +64,9 @@ class IOIgrac (Tablic.Igrac):
 
         # Tretiraj specijalne slucajeve da je x dict ili netekstualni iterabilni objekt.
         if isinstance(x, dict):
-            return '{{{0:s}}}'.format(str.join(', ', ['{0:s} : {1:s}'.format(IOIgrac.lijepiString(y), IOIgrac.lijepiString(z)) for y, z in six.iteritems(x)]))
+            return '{{{0:s}}}'.format(', '.join({0:s} : {1:s}'.format(IOIgrac.lijepiString(y), IOIgrac.lijepiString(z)) for y, z in six.iteritems(x)))
         elif hasattr(x, '__iter__') and not isinstance(x, (str, unicode)):
-            return '[{0:s}]'.format(str.join(', ', [IOIgrac.lijepiString(y) for y in x]))
+            return '[{0:s}]'.format(', '.join(IOIgrac.lijepiString(y) for y in x))
 
         # Vrati str(x).
         return str(x)
@@ -223,7 +223,7 @@ class IOIgrac (Tablic.Igrac):
                     greske.append('Znak {0:s} ne moze se dobiti sumiranjem nekih od skupljenih karata.'.format(IOIgrac.lijepiString(greska)))
                 elif greska == False:
                     greske.append('Skupljene karte ne mogu se particionirati na skupove odgovarajucih suma.')
-            print(str.join('  ', greske))
+            print('  '.join(greske))
             print('Igraj ponovo!')
         else:
             print('Tvoj je red.')

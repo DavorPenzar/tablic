@@ -244,7 +244,7 @@ class Tablic (object):
             # poteza u zapisniku.
             n = len(str(len(self.__log) - 1))
 
-            return '<{0:s}: [{1:s}]>'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
+            return '<{0:s}: [{1:s}]>'.format(self.__class__.__name__, "\n{0:s}\n".format("\n".join("\t{1:{0:d}d}.\t{2:s}".format(n, i, repr(self.__log[i])) for i in range(len(self.__log)))) if self.__log else '')
 
         def __str__ (self):
             """
@@ -256,7 +256,7 @@ class Tablic (object):
             # poteza u zapisniku.
             n = len(str(len(self.__log) - 1))
 
-            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format(str.join("\n", ["\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
+            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format("\n".join(\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log)))) if self.__log else '')
 
         def __unicode__ (self):
             """
@@ -268,7 +268,7 @@ class Tablic (object):
             # poteza u zapisniku.
             n = len(str(len(self.__log) - 1))
 
-            return unicode('{0:s}([{1:s}])').format(self.__class__.__name__, "\n{0:s}\n".format(unicode.join(unicode("\n"), ["\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log))])) if self.__log else '')
+            return unicode('{0:s}([{1:s}])').format(self.__class__.__name__, "\n{0:s}\n".format(unicode("\n").join("\t{1:{0:d}d}.\t{2:s}".format(n, i, unicode(self.__log[i])) for i in range(len(self.__log)))) if self.__log else '')
 
         def dohvatiLog (self):
             """
@@ -834,7 +834,7 @@ class Tablic (object):
 
         """
 
-        return '<{0:s}: {{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}}>'.format(self.__class__.__name__, repr(self.__pokrenuta), repr(self.__zavrsena), str.join(', ', [repr(igrac['igrac']) for igrac in self.__igraci]))
+        return '<{0:s}: {{pokrenuta: {1:s}, zavrsena: {2:s}, igraci: ({3:s})}}>'.format(self.__class__.__name__, repr(self.__pokrenuta), repr(self.__zavrsena), ', '.join(repr(igrac['igrac']) for igrac in self.__igraci))
 
     def __str__ (self):
         """
@@ -842,7 +842,7 @@ class Tablic (object):
 
         """
 
-        return '{0:s}({1:s})'.format(self.__class__.__name__, str.join(', ', [str(igrac['igrac']) for igrac in self.__igraci]))
+        return '{0:s}({1:s})'.format(self.__class__.__name__, ', '.join(str(igrac['igrac']) for igrac in self.__igraci))
 
     def __unicode__ (self):
         """
@@ -850,7 +850,7 @@ class Tablic (object):
 
         """
 
-        return unicode('{0:s}({1:s})').format(self.__class__.__name__, unicode.join(unicode(', '), [unicode(igrac['igrac']) for igrac in self.__igraci]))
+        return unicode('{0:s}({1:s})').format(self.__class__.__name__, unicode(', ').join(unicode(igrac['igrac']) for igrac in self.__igraci))
 
     def dodajIgraca (self, klasa = RandomIgrac, *args, **kwargs):
         """

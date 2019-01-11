@@ -256,7 +256,7 @@ class Tablic (object):
             # poteza u zapisniku.
             n = len(str(len(self.__log) - 1))
 
-            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format("\n".join(\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log)))) if self.__log else '')
+            return '{0:s}([{1:s}])'.format(self.__class__.__name__, "\n{0:s}\n".format("\n".join("\t{1:{0:d}d}.\t{2:s}".format(n, i, str(self.__log[i])) for i in range(len(self.__log)))) if self.__log else '')
 
         def __unicode__ (self):
             """

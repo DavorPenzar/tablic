@@ -64,7 +64,7 @@ class IOIgrac (Tablic.Igrac):
 
         # Tretiraj specijalne slucajeve da je x dict ili netekstualni iterabilni objekt.
         if isinstance(x, dict):
-            return '{{{0:s}}}'.format(', '.join({0:s} : {1:s}'.format(IOIgrac.lijepiString(y), IOIgrac.lijepiString(z)) for y, z in six.iteritems(x)))
+            return '{{{0:s}}}'.format(', '.join('{0:s} : {1:s}'.format(IOIgrac.lijepiString(y), IOIgrac.lijepiString(z)) for y, z in six.iteritems(x)))
         elif hasattr(x, '__iter__') and not isinstance(x, (str, unicode)):
             return '[{0:s}]'.format(', '.join(IOIgrac.lijepiString(y) for y in x))
 

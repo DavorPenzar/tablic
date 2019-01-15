@@ -57,16 +57,16 @@ class Tablic (object):
 
                 return __Iterator(self.__log, self.__i, self.__stop, self.__step)
 
-            def __deepcopy__ (self, memodict = dict()):
+            def __deepcopy__ (self, memo = dict()):
                 """
-                Dohvati copy.deepcopy(self, memodict).
+                Dohvati copy.deepcopy(self, memo).
 
                 """
 
-                return __Iterator(copy.deepcopy(self.__log, memodict),
-                                  copy.deepcopy(self.__i, memodict),
-                                  copy.deepcopy(self.__stop, memodict),
-                                  copy.deepcopy(self.__step, memodict))
+                return __Iterator(copy.deepcopy(self.__log, memo),
+                                  copy.deepcopy(self.__i, memo),
+                                  copy.deepcopy(self.__stop, memo),
+                                  copy.deepcopy(self.__step, memo))
 
             def __iter__ (self):
                 """
@@ -165,13 +165,13 @@ class Tablic (object):
 
             return self.__class__(self.__log)
 
-        def __deepcopy__ (self, memodict = dict()):
+        def __deepcopy__ (self, memo = dict()):
             """
             Dohvati copy.deepcopy(self).
 
             """
 
-            return self.__class__(copy.deepcopy(self.__log, memodict))
+            return self.__class__(copy.deepcopy(self.__log, memo))
 
         def __len__ (self):
             """
@@ -467,13 +467,13 @@ class Tablic (object):
 
             return self.__class__(self.__i, self.__ime)
 
-        def __deepcopy__ (self, memodict = dict()):
+        def __deepcopy__ (self, memo = dict()):
             """
-            Dohvati copy.deepcopy(self, memodict).
+            Dohvati copy.deepcopy(self, memo).
 
             """
 
-            return self.__class__(copy.deepcopy(self.__i, memodict), copy.deepcopy(self.__ime, memodict))
+            return self.__class__(copy.deepcopy(self.__i, memo), copy.deepcopy(self.__ime, memo))
 
         def __repr__ (self):
             """

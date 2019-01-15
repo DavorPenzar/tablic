@@ -172,16 +172,16 @@ class Karta (object):
 
             return __Iterator(self.__karta, self.__i, self.__stop, self.__step)
 
-        def __deepcopy__ (self, memodict = dict()):
+        def __deepcopy__ (self, memo = dict()):
             """
-            Dohvati copy.deepcopy(self, memodict).
+            Dohvati copy.deepcopy(self, memo).
 
             """
 
-            return __Iterator(copy.deepcopy(self.__karta, memodict),
-                              copy.deepcopy(self.__i, memodict),
-                              copy.deepcopy(self.__stop, memodict),
-                              copy.deepcopy(self.__step, memodict))
+            return __Iterator(copy.deepcopy(self.__karta, memo),
+                              copy.deepcopy(self.__i, memo),
+                              copy.deepcopy(self.__stop, memo),
+                              copy.deepcopy(self.__step, memo))
 
         def __iter__ (self):
             """
@@ -611,13 +611,13 @@ class Karta (object):
 
         return Karta(self.boja, self.znak)
 
-    def __deepcopy__ (self, memodict = dict()):
+    def __deepcopy__ (self, memo = dict()):
         """
-        Dohvati copy.deepcopy(self, memodict).
+        Dohvati copy.deepcopy(self, memo).
 
         """
 
-        return Karta(copy.deepcopy(self.boja, memodict), copy.deepcopy(self.znak, memodict))
+        return Karta(copy.deepcopy(self.boja, memo), copy.deepcopy(self.znak, memo))
 
     def __len__ (self):
         """

@@ -94,12 +94,12 @@ class IOIgrac (Tablic.Igrac):
 
         return igrac
 
-    def __deepcopy__ (self, memodict = dict()):
-        igrac = Tablic.Igrac.__deepcopy__(self, memodict)
+    def __deepcopy__ (self, memo = dict()):
+        igrac = Tablic.Igrac.__deepcopy__(self, memo)
 
-        igrac.__k = copy.deepcopy(self.__k, memodict)
-        igrac.__n = copy.deepcopy(self.__n, memodict)
-        igrac.__imena = copy.deepcopy(self.__imena, memodict)
+        igrac.__k = copy.deepcopy(self.__k, memo)
+        igrac.__n = copy.deepcopy(self.__n, memo)
+        igrac.__imena = copy.deepcopy(self.__imena, memo)
 
         return igrac
 

@@ -47,11 +47,11 @@ class PromatracLog (Tablic.Log):
 
         return log
 
-    def __deepcopy__ (self, memodict = dict()):
-        log = Tablic.Log.__deepcopy__(self, memodict)
+    def __deepcopy__ (self, memo = dict()):
+        log = Tablic.Log.__deepcopy__(self, memo)
 
-        log.__k = copy.deepcopy(self.__k, memodict)
-        log.__n = copy.deepcopy(self.__n, memodict)
+        log.__k = copy.deepcopy(self.__k, memo)
+        log.__n = copy.deepcopy(self.__n, memo)
 
         return log
 

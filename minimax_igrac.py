@@ -448,22 +448,22 @@ class MinimaxIgrac (Tablic.Igrac):
 
         return igrac
 
-    def __deepcopy__ (self, memodict = dict()):
-        igrac = Tablic.Igrac.__deepcopy__(self, memodict)
+    def __deepcopy__ (self, memo = dict()):
+        igrac = Tablic.Igrac.__deepcopy__(self, memo)
 
-        igrac.__maxDubina = copy.deepcopy(self.__maxDubina, memodict)
-        igrac.__maxT = copy.deepcopy(self.__maxT, memodict)
+        igrac.__maxDubina = copy.deepcopy(self.__maxDubina, memo)
+        igrac.__maxT = copy.deepcopy(self.__maxT, memo)
 
-        igrac.__k = copy.deepcopy(self.__k, memodict)
-        igrac.__n = copy.deepcopy(self.__n, memodict)
+        igrac.__k = copy.deepcopy(self.__k, memo)
+        igrac.__n = copy.deepcopy(self.__n, memo)
 
-        igrac.__bodovi = copy.deepcopy(self.__bodovi, memodict)
-        igrac.__skupljeno = copy.deepcopy(self.__skupljeno, memodict)
+        igrac.__bodovi = copy.deepcopy(self.__bodovi, memo)
+        igrac.__skupljeno = copy.deepcopy(self.__skupljeno, memo)
 
-        igrac.__zadnji = copy.deepcopy(self.__zadnji, memodict)
+        igrac.__zadnji = copy.deepcopy(self.__zadnji, memo)
 
-        igrac.__sigurnoNema = copy.deepcopy(self.__sigurnoNema, memodict)
-        igrac.__vjerojatnoNema = copy.deepcopy(self.__vjerojatnoNema, memodict)
+        igrac.__sigurnoNema = copy.deepcopy(self.__sigurnoNema, memo)
+        igrac.__vjerojatnoNema = copy.deepcopy(self.__vjerojatnoNema, memo)
 
         return igrac
 

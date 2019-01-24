@@ -26,7 +26,7 @@ Implementacija igre tablić i robota igrača za igru tablić.
 
 ### Tip igre
 
-Igra tablić društvena je kartaška igra koja se igra s jednim standardnim francuskim špilom karata bez *jokera* (4 boje i 13 znakova, to jest 52 karte).
+Igra tablić društvena je kartaška igra koja se igra s jednim standardnim francuskim špilom karata bez *jokera* (4 boje i 13 znakova, to jest, 52 karte).
 
 ### Broj igrača
 
@@ -68,7 +68,7 @@ Na primjer, kartom *karo J* može se skupiti:
 
 Štoviše, kako nijedne dvije od gore spomenutih varijanti ne sadrže nijednu istu kartu, u teoriji je sve spomenute karte moguće odjednom skupiti sa stola odigravši kartu znaka *J* (u praksi je, međutim, malo vjerojatno da će u nekom trenutku stol biti toliko *bogat* da će odjednom biti svih 5 kombinacija na stolu).
 
-Osim što više karata znaka *A* pri zbrajanju mogu imati različite vrijednosti (kao što je gore *herc A* + *tref A* = *karo J*), isto tako različite vrijednosti karata znaka *A* mogu se pojavljivati i s *različitih strana jednakosti*, to jest kartom *pik A* može se skupiti:
+Osim što više karata znaka *A* pri zbrajanju mogu imati različite vrijednosti (kao što je gore *herc A* + *tref A* = *karo J*), isto tako različite vrijednosti karata znaka *A* mogu se pojavljivati i s *različitih strana jednakosti*, to jest, kartom *pik A* može se skupiti:
 
 *   *herc A* (1 = 1 ili 11 = 11),
 *   *herc A*, *tref 10* (1 + 10 = 11),
@@ -77,7 +77,7 @@ Osim što više karata znaka *A* pri zbrajanju mogu imati različite vrijednosti
 
 ### Bodovanje
 
-Cilj je svakog igrača skupiti što veći broj bodova. U stvari, igra se obično igra tako da se igra više partija za redom, i to tako da, na prmijer, igrači X, Y, Z u partijama izmjenjuju redoslijede poteza: u prvoj partiji (X, Y, Z), u drugoj partiji (Y, Z, X), u trećoj partiji (Z, X, Y), &hellip;; a skupljeni bodovi u partijama se zbrajaju, i konačni je pobjednik onaj koji je ukupno skupio najveći broj bodova (a ne nužno onaj koji je u najviše partija imao najveći broj bodova).
+Cilj je svakog igrača skupiti što veći broj bodova. U stvari, igra se obično igra tako da se igra više partija za redom, i to tako da, na prmijer, igrači X, Y, Z u partijama izmjenjuju redoslijede kojim su na potezu: u prvoj partiji (X, Y, Z), u drugoj partiji (Y, Z, X), u trećoj partiji (Z, X, Y), &hellip;; a skupljeni bodovi u partijama se zbrajaju, i konačni je pobjednik onaj koji je ukupno skupio najveći broj bodova (a ne nužno onaj koji je u najviše partija imao najveći broj bodova).
 
 Osnovni broj bodova svakog igrača zbroj je bodovnih vrijednosti svih karata u njegovom skupu skupljenih karata. Na taj se broj nadodaje još broj ostvarenih *tabli* tijekom partije (v. [*Ostvarivanje* table](#ostvarivanje-table) dolje) i, ako postoji igrač koji je skupio strogo najveći broj karata, njemu se dodaju još 3 boda (ako su dva ili više igrača skupili najviše karata, nikome se ne dodjeljuju ti dodatni bodovi).
 
@@ -169,7 +169,7 @@ Kao i kod pohlepnog igrača, karta koju je *minimax* algoritam odabrao za odigra
 
 ## Testiranje igrača
 
-Igrači se mogu testirati pokretanjem skripte *usporedba.py*. Skripta je napisana vrlo *algoritamski*, to jest dovoljne su minimalne promjene nekih varijabli na početku skripte (na primjer, broj partija) &mdash; kao kakav *ulaz* algoritma &mdash; za postizanje drugačijih rezultata &mdash; kao kakav *izlaz* algoritma. Elementi *tuple*-a igrača rječnici su s ključevima *klasa* (klasa čija će instanca biti taj igrač), *args* (*tuple* argumenata za inicijalizaciju igrača) i *kwargs* (rječnik argumenata zadanih ključnom rječju za inicijalizaciju igrača). Igrač se tada inicijalizira pozivom `igrac['klasa'](i, *igrac['args'], **igrac['kwargs'])` (redni broj igrača `i` u partiji određuje partija, to jest, objekt klase `Tablic`). Redoslijed igrača u *tuple*-u igrača zadaje red kojim su na potezu, osim ako se skripta ne pokreče kao `./usporedba.py -r` (uzima se obrnuti redsolijed) ili `./usporedba.py -p` (uzima se slučajni redoslijed). Ispis programa objašnjen je u komentarima u skripti *usporedba.py*.
+Igrači se mogu testirati pokretanjem skripte *usporedba.py*. Skripta je napisana vrlo *algoritamski*, to jest, dovoljne su minimalne promjene nekih varijabli na početku skripte (na primjer, broj partija) &mdash; kao kakav *ulaz* algoritma &mdash; za postizanje drugačijih rezultata &mdash; kao kakav *izlaz* algoritma. Elementi *tuple*-a igrača rječnici su s ključevima *klasa* (klasa čija će instanca biti taj igrač), *args* (*tuple* argumenata za inicijalizaciju igrača) i *kwargs* (rječnik argumenata zadanih ključnom rječju za inicijalizaciju igrača). Igrač se tada inicijalizira pozivom `igrac['klasa'](i, *igrac['args'], **igrac['kwargs'])` (redni broj igrača `i` u partiji određuje partija, to jest, objekt klase `Tablic`). Redoslijed igrača u *tuple*-u igrača zadaje red kojim su na potezu, osim ako se skripta ne pokreče kao `./usporedba.py -r` (uzima se obrnuti redsolijed) ili `./usporedba.py -p` (uzima se slučajni redoslijed). Ispis programa objašnjen je u komentarima u skripti *usporedba.py*.
 
 ### Igranje protiv automatskih igrača
 

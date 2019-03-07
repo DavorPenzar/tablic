@@ -15,8 +15,8 @@ def partitivniSkup (S):
         2.  Iteriramo po svim elementima (x) skupa S.  Kako su svi dosadasnji
             skupovi u P disjunktni s {x}, za svaki A u P novi poznati podskup
             od S je A unija {x} --- stoga A unija X dodajemo u P.
-    Slozenost funkcije je stoga eksponencijalna, reda O(2^n), gdje je n ukupni
-    broj svih (razlicitih) elemenata u S.
+    Slozenost funkcije je, dakle, eksponencijalna, reda O(2^n), gdje je n
+    ukupni broj svih (razlicitih) elemenata u S.
 
     Elementi povratnog skupa P (objekt klase set) objekti su klase frozenset
     ciji se svi elementi nalaze u S.  Za svaku kolekciju nekih elemenata iz S
@@ -50,20 +50,20 @@ def unijeDisjunktnih (F):
     Familija svih unija u parovima disjunktnih elemenata familije F racuna se
     na nacin:
         1.  Inicijaliziramo familiju U unija u parovima disjunktnih elemenata
-            familije F na {{}}.
+            familije F na U = {{}}.
         2.  Iteriramo po svim elementima (S) familije F.  Za svaki A iz U takav
             da su A i S disjunktni A unija S nova je poznata unija u parovima
             disjunktnih elemenata familije F --- stoga A unija S dodajemo u U.
-    Slozenost funkcije je stoga reda O(2^n * k), gdje su n ukupni broj svih
+    Slozenost funkcije je, dakle, reda O(2^n * k), gdje su n ukupni broj svih
     (razlicitih) elemenata u F i k zbroj kardinaliteta svih elemenata familije
     F.  Prethodna ocjena pociva na pretpostavci da je slozenost funkcije
-    set.isdisjoint(X, Y) linearne slozenosti min/max({card(X), card(Y)}).
+    set.isdisjoint(X, Y) linearne slozenosti max({card(X), card(Y)}).
 
     Elementi povratne familije U (objekt klase set) objekti su klase frozenset.
     Za svaki A iz U postoji podfamilija G = {X1, X2, ..., Xm} familije F takva
     da za svake i, j iz {1, 2, ..., m} je Xi != Xj ako je i != j i da vrijedi
-    A = X1 unija X2 unija ... unija Xm.  Vrijedi i obrat (za svaku takvu
-    podfamiliju G postoji takav A).
+    A = X1 unija X2 unija ... unija Xm.  Vrijedi i obrat (za svaku podfamiliju
+    G s trazenim svojstvima postoji pripadni A iz U).
 
     """
 

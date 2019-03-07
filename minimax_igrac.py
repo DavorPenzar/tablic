@@ -90,9 +90,9 @@ class MinimaxIgrac (Tablic.Igrac):
             # Pronadi osobu sa strogo najvise skupljenih karata ako postoji.
             M = [0]
             for j in range(1, n):
-                if skupljeno[j] > M[0]:
+                if skupljeno[j] > skupljeno[M[0]]:
                     M = [j]
-                elif skupljeno[j] == M[0]:
+                elif skupljeno[j] == skupljeno[M[0]]:
                     M.append(j)
 
             if len(M) == 1:

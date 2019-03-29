@@ -716,9 +716,9 @@ class Tablic (object):
 
         # Vrati bodovnu vrijednost karte x ako je x karta.
         if isinstance(x, Karta):
-            if x.boja is Karta.Boja.TREF and x.znak is Karta.Znak.BR2:
+            if x.boja == Karta.Boja.TREF and x.znak == Karta.Znak.BR2:
                 return 1
-            if x.boja is Karta.Boja.KARO and x.znak is Karta.Znak.BR10:
+            if x.boja == Karta.Boja.KARO and x.znak == Karta.Znak.BR10:
                 return 2
             if x.znak < 10 and x.znak != 1:
                 return 0

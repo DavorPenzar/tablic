@@ -45,9 +45,9 @@ class IOIgrac (Tablic.Igrac):
         # Tretiraj specijalne slucajeve da je x kartaska boja, kartaski znak
         # ili karta.
         if isinstance(x, Karta.Boja):
-            return '??' if x is Karta.Boja.NA else x.name.lower()
+            return '??' if x == Karta.Boja.NA else x.name.lower()
         if isinstance(x, Karta.Znak):
-            if x is Karta.Znak.NA:
+            if x == Karta.Znak.NA:
                 return '??'
             elif x.value >= 2 and x.value <= 10:
                 return str(x.value)
@@ -252,19 +252,19 @@ class IOIgrac (Tablic.Igrac):
                 else:
                     break
             # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka u ruci.
-            if karta.boja is Karta.Boja.NA:
-                if (karta.znak is Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or
-                    karta.znak is Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka)):
+            if karta.boja == Karta.Boja.NA:
+                if (karta.znak == Karta.Znak.BR2 and any(x == Karta(Karta.Boja.TREF, Karta.Znak.BR2) for x in ruka) or
+                    karta.znak == Karta.Znak.BR10 and any(x == Karta(Karta.Boja.KARO, Karta.Znak.BR10) for x in ruka)):
                     # Ako je zadan znak 2/10 i u ruci postoji tref 2/karo 10 i neka druga karta znaka 2/10, provjeri zeli li igrac igrati tref 2/karo 10 ili neku drugu.
                     odgovor = ''
                     if sum(int(x.znak == karta.znak) for x in ruka) > 1:
                         while True:
-                            odgovor = six.moves.input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak is Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
+                            odgovor = six.moves.input("\t\t{0:s}? [D/n] ".format(Karta.Boja.TREF.name.lower() if karta.znak == Karta.Znak.BR2 else Karta.Boja.KARO.name.lower()))
                             if not odgovor or odgovor.upper() in {'D', 'N'}:
                                 break
                     if not odgovor or odgovor.upper() == 'D':
                         # Ako igrac zeli igrati tu specijalnu kartu, odaberi ju.
-                        karta = (Karta(Karta.Boja.TREF, Karta.Znak.BR2) if karta.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10))
+                        karta = (Karta(Karta.Boja.TREF, Karta.Znak.BR2) if karta.znak == Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10))
                     else:
                         # Inace pronadi (neku) kartu odgovarajuceg znaka u ruci.
                         karta = PohlepniIgrac.slucajniEkvivalentni(ruka, karta)
@@ -321,13 +321,13 @@ class IOIgrac (Tablic.Igrac):
                 if not citaj:
                     break
 
-                if x.boja is Karta.Boja.NA:
+                if x.boja == Karta.Boja.NA:
                     # Ako karti nije zadana boja, pronadi kartu odgovarajuceg znaka medu preostalim kartama na stolu.  Tref 2 i karo 10 imaju prednost pred ostalim
                     # kartama (ako je medu preostalim kartama npr. 2 karte znaka 10 od kojih je jedna karo 10, implicitno zadavanje '10' prevodi se u karo 10).
                     pronadeno = False
                     if (x.znak in {Karta.Znak.BR2, Karta.Znak.BR10} and
                         any(y in {Karta(Karta.Boja.TREF, Karta.Znak.BR2), Karta(Karta.Boja.KARO, Karta.Znak.BR10)} and y.znak == x.znak for y in stol - skupljeno)):
-                        skupljeno |= {Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak is Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)}
+                        skupljeno |= {Karta(Karta.Boja.TREF, Karta.Znak.BR2) if x.znak == Karta.Znak.BR2 else Karta(Karta.Boja.KARO, Karta.Znak.BR10)}
                         pronadeno = True
                     else:
                         for y in sorted(list(stol - skupljeno), reverse = True):

@@ -314,13 +314,13 @@ class MinimaxIgrac (Tablic.Igrac):
                     # Spremi prototip ovog poteza u varijablu zadnjiPotez.
                     zadnjiPotez = ovajPotez
 
-                    if potez['karta'].boja is Karta.Boja.NA:
+                    if potez['karta'].boja == Karta.Boja.NA:
                         # Zadaj boju odigranoj karti (zbog njezine znacajnosti nakon dodavanja u
                         # skup sigurnoNema) ako nije definirana.
                         for boja in boje:
-                            if potez['karta'].znak is Karta.Znak.BR2 and boja is Karta.Boja.TREF:
+                            if potez['karta'].znak == Karta.Znak.BR2 and boja == Karta.Boja.TREF:
                                 continue
-                            elif potez['karta'].znak is Karta.Znak.BR10 and boja is Karta.Boja.KARO:
+                            elif potez['karta'].znak == Karta.Znak.BR10 and boja == Karta.Boja.KARO:
                                 continue
                             if not Karta(boja, potez['karta'].znak) in sigurnoNema:
                                 potez['karta'].boja = boja

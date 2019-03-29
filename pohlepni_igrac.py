@@ -102,15 +102,15 @@ class PohlepniIgrac (Tablic.Igrac):
                     potez.update({'tabla' : skupljeno == stol})
                     skupljeno |= {karta}
                     potez.update({'vrijednost' : Tablic.vrijednostKarata(skupljeno),
-                                  Karta(Karta.Boja.KARO, Karta.Znak.BR10) : int(any(x.boja is Karta.Boja.KARO and x.znak is Karta.Znak.BR10 for x in skupljeno)),
-                                  Karta(Karta.Boja.TREF, Karta.Znak.BR2) : int(any(x.boja is Karta.Boja.TREF and x.znak is Karta.Znak.BR2 for x in skupljeno)),
-                                  Karta.Znak.A : sum(int(x.znak is Karta.Znak.A) for x in skupljeno)})
+                                  Karta(Karta.Boja.KARO, Karta.Znak.BR10) : int(any(x.boja == Karta.Boja.KARO and x.znak == Karta.Znak.BR10 for x in skupljeno)),
+                                  Karta(Karta.Boja.TREF, Karta.Znak.BR2) : int(any(x.boja == Karta.Boja.TREF and x.znak == Karta.Znak.BR2 for x in skupljeno)),
+                                  Karta.Znak.A : sum(int(x.znak == Karta.Znak.A) for x in skupljeno)})
                 else:
                     potez.update({'tabla' : False,
                                   'vrijednost' : -Tablic.vrijednostKarata(karta),
-                                  Karta(Karta.Boja.KARO, Karta.Znak.BR10) : -1 if (karta.boja is Karta.Boja.KARO and karta.znak is Karta.Znak.BR10) else 0,
-                                  Karta(Karta.Boja.TREF, Karta.Znak.BR2) : -1 if (karta.boja is Karta.Boja.TREF and karta.znak is Karta.Znak.BR2) else 0,
-                                  Karta.Znak.A : -1 if karta.znak is Karta.Znak.A else 0})
+                                  Karta(Karta.Boja.KARO, Karta.Znak.BR10) : -1 if (karta.boja == Karta.Boja.KARO and karta.znak == Karta.Znak.BR10) else 0,
+                                  Karta(Karta.Boja.TREF, Karta.Znak.BR2) : -1 if (karta.boja == Karta.Boja.TREF and karta.znak == Karta.Znak.BR2) else 0,
+                                  Karta.Znak.A : -1 if karta.znak == Karta.Znak.A else 0})
                 potezi.append(potez)
 
         # Vrati poteze sortirane po "korisnosti".

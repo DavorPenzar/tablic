@@ -719,7 +719,7 @@ class Karta (object):
 
         if value is None:
             # Tretiraj specijalni slucaj kada je value None.
-            if self.znak is Karta.Znak.NA:
+            if self.znak == Karta.Znak.NA:
                 return set()
             else:
                 return {self.znak.value}
@@ -745,10 +745,10 @@ class Karta (object):
             except ValueError:
                 raise ValueError("Vrijednost `{0:s}' nije valjani sumand za zbrajanje objekata klase `Karta'.".format(repr(value)))
 
-        if self.znak is Karta.Znak.A and value == 1:
+        if self.znak == Karta.Znak.A and value == 1:
             # Tretiraj specijalni slucaj zbrajanja 2 A.
             return {Karta.Znak.BR2.value, Karta.Znak.J.value}
-        if self.znak is Karta.Znak.A:
+        if self.znak == Karta.Znak.A:
             # Tretiraj specijalni slucaj kada je karta znaka A.
             if 1 + value > 14:
                 return set()

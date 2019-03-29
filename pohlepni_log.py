@@ -70,9 +70,9 @@ class PohlepniLog (Tablic.Log):
 
         # Tretiraj specijalne slucajeve da je karta neka od karata tref 2 i karo
         # 10.
-        if karta.boja is Karta.Boja.TREF and karta.znak is Karta.Znak.BR2:
+        if karta.boja == Karta.Boja.TREF and karta.znak == Karta.Znak.BR2:
             return 13
-        elif karta.boja is Karta.Boja.KARO and karta.znak is Karta.Znak.BR10:
+        elif karta.boja == Karta.Boja.KARO and karta.znak == Karta.Znak.BR10:
             return 14
 
         # Vrati indeks karte.
